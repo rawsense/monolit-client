@@ -2,6 +2,8 @@
 
 VPN-клиент для Windows на ядре Xray. Через VPN идёт только то, что без него не открывается, остальное работает напрямую.
 
+![Окно Monolit: кнопка подключения, список серверов с задержкой и выбор режима](.github/screenshot.png)
+
 ## Что умеет
 
 - Подписки: monolit proxy, Remnawave и любые другие — списком ссылок или готовым конфигом Xray. Протоколы VLESS (Vision, Reality, XHTTP, WS, gRPC), Hysteria2, Trojan, VMess, Shadowsocks
