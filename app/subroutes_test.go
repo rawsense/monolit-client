@@ -115,7 +115,7 @@ func TestSubRoutesOn(t *testing.T) {
 			}
 			seen[r.RuleTag] = true
 			pos[r.RuleTag] = i
-			if strings.HasPrefix(r.RuleTag, "sub-") {
+			if strings.Contains(r.RuleTag, "sub-") {
 				got = append(got, r.RuleTag+">"+r.OutboundTag+" "+strings.Join(append(r.Domain, r.IP...), ","))
 			}
 		}
@@ -123,8 +123,8 @@ func TestSubRoutesOn(t *testing.T) {
 			"sub-0>block geosite:category-ads-all",
 			"sub-1>px-0 domain:habr.com",
 			"sub-2>direct-ru domain:ifconfig.me,domain:ru", // неизвестная группа выброшена, остальное осталось
-			"sub-3>direct-ru geoip:ru",
-			"sub-5>block domain:q.com", // sub-4 целиком из неизвестной группы — правила нет
+			"nameless-sub-3>direct-ru geoip:ru",            // только адреса: решает, лишь когда имя сайта неизвестно
+			"sub-5>block domain:q.com",                     // sub-4 целиком из неизвестной группы — правила нет
 		}
 		if !reflect.DeepEqual(got, want) {
 			t.Fatalf("%s:\n%s\nждали:\n%s", mode, strings.Join(got, "\n"), strings.Join(want, "\n"))

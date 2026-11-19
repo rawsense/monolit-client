@@ -176,6 +176,11 @@ func subRouteRules(routes []SubRoute, via func(genRule) genRule) (rules []any, d
 			continue
 		}
 		r := genRule{"ruleTag": fmt.Sprintf("sub-%d", i)}
+		if len(d) == 0 {
+			// правило только по адресам — как наши nameless-*: в TUN у соединения есть и имя, и адрес, и без этого
+			// сайт с известным именем уходил бы по адресу мимо правил «найдено» и «заблокировано»
+			r["ruleTag"] = fmt.Sprintf("nameless-sub-%d", i)
+		}
 		if len(d) > 0 {
 			r["domain"] = d
 		}

@@ -502,7 +502,7 @@
     'svc-direct': 'проверен: открывается напрямую', 'svc-vpn': 'проверен: напрямую не открывается', 'svc-wait': 'проверяется, пока через VPN', 'temp-ip': 'продолжение зависшего HTTP/3, через VPN', 'check-vpn': 'новый сайт: через VPN, пока идёт проверка', 'race-vpn': 'напрямую не ответил, пошёл через VPN' };
   function cxReason(r) {
     if (cxRules[r.rule]) return cxRules[r.rule];
-    if (/^sub-\d+$/.test(r.rule)) return cxRules.sub;
+    if (/^(nameless-)?sub-\d+$/.test(r.rule)) return cxRules.sub;
     if (r.rule === 'rest') return r.path === 'vpn' ? 'режим «Всё»' : 'нет в списках заблокированных';
     return 'по умолчанию';
   }
