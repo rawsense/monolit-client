@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="ru" data-store="coreless" data-theme-default="system" data-accent-default="azure" data-auth="guest">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Что такое headless CMS и когда она нужна</title>
+<meta name="description" content="Чем она отличается от WordPress и конструкторов, кому подходит и где только усложнит жизнь">
+<link rel="icon" href="coreless-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://picsum.photos">
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&family=JetBrains+Mono:wght@400;500&family=Unbounded:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../tokens/colors.css"><link rel="stylesheet" href="../tokens/accents.css"><link rel="stylesheet" href="../tokens/palettes.css">
+<link rel="stylesheet" href="../tokens/motion.css">
+<link rel="stylesheet" href="../tokens/type.css">
+<link rel="stylesheet" href="../tokens/space.css">
+<link rel="stylesheet" href="../tokens/scrollbar.css">
+<link rel="stylesheet" href="../tokens/icons.css">
+<link rel="stylesheet" href="../tokens/components.css">
+<link rel="stylesheet" href="../tokens/inputs.css">
+<link rel="stylesheet" href="../tokens/layers.css">
+<link rel="stylesheet" href="../tokens/data.css">
+<link rel="stylesheet" href="../tokens/nav.css">
+<link rel="stylesheet" href="coreless.css">
+<link rel="stylesheet" href="site.css">
+<link rel="stylesheet" href="blog.css">
+<script src="../js/theme.js"></script>
+<script>document.documentElement.classList.add('js')</script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<script src="../js/scroll-lock.js" defer></script>
+<script src="../js/layers.js" defer></script>
+<script src="../js/inputs.js" defer></script>
+<script src="../js/data.js" defer></script>
+<script src="../js/nav.js" defer></script>
+<script src="../js/scrollbar.js" defer></script>
+<script src="blog.js" defer></script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="landing.html" aria-label="Coreless, на главную"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12V6a3 3 0 0 1 3-3h6M21 12v6a3 3 0 0 1-3 3h-6" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/><rect x="8.5" y="8.5" width="7" height="7" rx="2" fill="currentColor"/></svg>Coreless</a>
+    <nav class="navmenu" aria-label="Основная навигация">
+      <button class="nav-trigger" data-menu="product" aria-expanded="false" aria-haspopup="true">Продукт<i data-lucide="chevron-down"></i></button>
+      <button class="nav-trigger" data-menu="dev" aria-expanded="false" aria-haspopup="true">Разработчикам<i data-lucide="chevron-down"></i></button>
+      <a class="nav-link" href="landing.html#pricing">Цены</a>
+      <a class="nav-link" href="landing.html#faq">Вопросы</a>
+      <a class="nav-link" href="blog.html" aria-current="page">Блог</a>
+    </nav>
+    <div class="nav-panel" id="nav-panel">
+      <div class="nav-content" data-menu="product" role="region" aria-label="Продукт"><div class="mega" style="width:864px;grid-template-columns:1fr 1fr 200px">
+        <div class="mega-col"><span class="mega-label">Панель</span>
+          <a class="mega-item" href="landing.html#demo"><span class="mega-ic"><i data-lucide="pencil-line"></i></span><span><span class="mega-t">Правки без кода<i data-lucide="chevron-right"></i></span><span class="mega-d">Тексты, цены и фото в полях</span></span></a>
+          <a class="mega-item" href="landing.html#features"><span class="mega-ic"><i data-lucide="table-2"></i></span><span><span class="mega-t">Каталоги и статьи<i data-lucide="chevron-right"></i></span><span class="mega-d">Товары и новости таблицами</span></span></a>
+        </div>
+        <div class="mega-col"><span class="mega-label">Сайт</span>
+          <a class="mega-item" href="landing.html#features"><span class="mega-ic"><i data-lucide="shield-check"></i></span><span><span class="mega-t">Нечего сломать<i data-lucide="chevron-right"></i></span><span class="mega-d">Код и вёрстка вне панели</span></span></a>
+          <a class="mega-item" href="landing.html#features"><span class="mega-ic"><i data-lucide="zap"></i></span><span><span class="mega-t">Быстрые страницы<i data-lucide="chevron-right"></i></span><span class="mega-d">Контент отдаётся из памяти</span></span></a>
+        </div>
+        <div class="mega-col mega-aside"><span class="mega-label">Для каких сайтов</span>
+          <a class="mega-row" href="landing.html#fit"><span>Лендинги</span></a><a class="mega-row" href="landing.html#fit"><span>Сайты компаний</span></a><a class="mega-row" href="landing.html#fit"><span>Каталоги</span></a><a class="mega-row" href="landing.html#fit"><span>Блоги и портфолио</span></a>
+        </div>
+      </div></div>
+      <div class="nav-content" data-menu="dev" role="region" aria-label="Разработчикам"><div class="mega" style="width:688px;grid-template-columns:1fr 1fr">
+        <div class="mega-col"><span class="mega-label">Начать</span>
+          <a class="mega-item" href="landing.html#audience"><span class="mega-ic"><i data-lucide="book-open"></i></span><span><span class="mega-t">Документация<i data-lucide="chevron-right"></i></span><span class="mega-d">Подключение за один вечер</span></span></a>
+          <a class="mega-item" href="landing.html#audience"><span class="mega-ic"><i data-lucide="package"></i></span><span><span class="mega-t">Библиотека<i data-lucide="chevron-right"></i></span><span class="mega-d">TypeScript, React, Next.js</span></span></a>
+        </div>
+        <div class="mega-col"><span class="mega-label">Устройство</span>
+          <a class="mega-item" href="landing.html#audience"><span class="mega-ic"><i data-lucide="network"></i></span><span><span class="mega-t">Дерево контента<i data-lucide="chevron-right"></i></span><span class="mega-d">Одна схема для всего</span></span></a>
+          <a class="mega-item" href="landing.html#audience"><span class="mega-ic"><i data-lucide="code-xml"></i></span><span><span class="mega-t">REST API<i data-lucide="chevron-right"></i></span><span class="mega-d">Обычный GET, ответ в JSON</span></span></a>
+        </div>
+      </div></div>
+    </div>
+    <div class="nav-end">
+      <div class="nav-guest">
+        <a class="btn btn-secondary btn-sm nav-signin" href="auth.html#signin">Войти</a>
+        <a class="btn btn-primary btn-sm" href="auth.html#signup">Начать</a>
+      </div>
+    </div>
+    <button class="burger" id="burger" aria-label="Меню" aria-expanded="false" aria-controls="mnav"><span></span><span></span></button>
+  </div>
+</header>
+<div class="mnav" id="mnav" data-modal-layer role="dialog" aria-modal="true" aria-label="Меню навигации"><div class="mnav-in">
+  <nav class="mnav-list" id="mnav-list"></nav>
+  <div class="mnav-actions">
+    <div class="m-guest">
+      <a class="btn btn-secondary" href="auth.html#signin">Войти</a>
+      <a class="btn btn-primary" href="auth.html#signup">Начать бесплатно</a>
+    </div>
+    <div class="mtheme"><span>Тема</span><div class="tseg" role="group" aria-label="Тема"><button class="tseg-b" role="radio" data-theme-v="light" aria-label="Светлая"><i data-lucide="sun"></i></button><button class="tseg-b" role="radio" data-theme-v="dark" aria-label="Тёмная"><i data-lucide="moon"></i></button><button class="tseg-b" role="radio" data-theme-v="system" aria-label="Как в системе"><i data-lucide="monitor"></i></button></div></div>
+  </div>
+</div></div>
+
+<div class="read-progress" aria-hidden="true"><i id="progress"></i></div>
+<main id="top" class="art">
+  <div class="wrap art-wrap">
+    <header class="art-head">
+      <nav class="crumbs" aria-label="Путь"><ol><li><a href="blog.html">Блог</a></li><li><a href="blog.html#guide">Гайды</a></li></ol></nav>
+      <h1>Что такое headless CMS и когда она нужна</h1>
+      <p class="art-meta"><time datetime="2026-11-04">4 ноября 2026</time><span>7 минут чтения</span></p>
+      <div class="authors"><span class="author"><span class="avatar avatar-md">АК</span><span><b>Анна Ковалёва</b><small>Продукт</small></span></span></div>
+    </header>
+
+    <div class="art-grid">
+      <article class="prose" id="prose">
+        <figure class="art-cover"><span class="cover"><img src="https://picsum.photos/seed/coreless-headless-cms/1200/630" alt="" width="1200" height="630" fetchpriority="high"></span></figure>
+        <div class="acc mtoc"><details class="acc-item"><summary><span>На этой странице</span></summary><div class="acc-body"><nav aria-label="Содержание"><a href="#how">Как устроена обычная CMS</a><a href="#headless">Что меняет headless</a><a href="#when">Когда это оправдано</a><a href="#when-not">Когда она не нужна</a><a href="#coreless">Как это устроено в Coreless</a><a href="#sum">Коротко</a></nav></div></details></div>
+        
+<p class="lead">Слово «headless» встречается в каждом втором обсуждении сайтов, но объясняют его обычно через архитектурные схемы. Разберём проще: что это значит для владельца сайта, для разработчика и для бюджета.</p>
+
+<h2 id="how">Как устроена обычная CMS</h2>
+<p>WordPress, Битрикс и конструкторы вроде Tilda хранят в одном месте и содержимое сайта, и то, как он выглядит. Тексты лежат в базе, шаблоны и стили рядом, а редактор в админке видит и то и другое.</p>
+<p>Это удобно, пока сайт простой. Сложности начинаются, когда дизайн нестандартный: шаблон приходится обходить плагинами, а редактор получает доступ к настройкам, которые лучше не трогать.</p>
+<ul>
+  <li>правка текста может сдвинуть вёрстку, если шаблон не рассчитан на длинную строку;</li>
+  <li>обновление плагина ломает страницу, которую никто не трогал;</li>
+  <li>скорость зависит от темы и плагинов, а не от того, как написан сайт.</li>
+</ul>
+
+<h2 id="headless">Что меняет headless</h2>
+<p>В headless CMS «головы», то есть внешнего вида, нет. Она хранит только содержимое и отдаёт его по API. Сайт разработчик пишет отдельно, на чём хочет, и забирает тексты и картинки запросом.</p>
+<figure><span class="cover"><img src="https://picsum.photos/seed/coreless-headless-fig/1300/680" alt="" loading="lazy" width="1300" height="680"></span><figcaption>Контент живёт в одном месте, а показывать его можно где угодно: на сайте, в приложении, в рассылке</figcaption></figure>
+<p>Для владельца сайта это значит простую панель с полями. Для разработчика это полная свобода в вёрстке и обычный JSON вместо чужого шаблонизатора.</p>
+<blockquote><p>Редактор меняет то, что должен менять, и ничего больше. Это главное, что даёт разделение контента и кода.</p></blockquote>
+
+<h2 id="when">Когда это оправдано</h2>
+<p>Headless стоит рассматривать, если хотя бы два пункта про вас:</p>
+<ol>
+  <li>дизайн сайта сделан с нуля, а не из шаблона;</li>
+  <li>тексты и цены меняются чаще раза в месяц;</li>
+  <li>правки вносит не тот, кто делал сайт;</li>
+  <li>важна скорость загрузки, особенно с телефона;</li>
+  <li>один и тот же контент нужен в нескольких местах.</li>
+</ol>
+<div class="table-wrap"><table class="table">
+  <thead><tr><th>Что важно</th><th>Конструктор</th><th>WordPress</th><th>Headless</th></tr></thead>
+  <tbody>
+    <tr><td>Свобода дизайна</td><td>Шаблоны</td><td>Темы и плагины</td><td>Любой</td></tr>
+    <tr><td>Кто правит тексты</td><td>Владелец</td><td>Владелец</td><td>Владелец</td></tr>
+    <tr><td>Можно сломать вёрстку</td><td>Да</td><td>Да</td><td>Нет</td></tr>
+    <tr><td>Нужен разработчик на старте</td><td>Нет</td><td>Иногда</td><td>Да</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="when-not">Когда она не нужна</h2>
+<p>Если сайт собран в конструкторе и вас всё устраивает, менять ничего не нужно. Headless требует разработчика на старте, и для визитки из трёх блоков это лишние расходы.</p>
+<div class="alert alert-info"><i data-lucide="info"></i><div><b>Простое правило</b><p>Если разработчика нет и не будет, берите конструктор. Если есть разработчик и свой дизайн, берите headless.</p></div></div>
+
+<h2 id="coreless">Как это устроено в Coreless</h2>
+<p>Разработчик отмечает в коде места, которые можно менять. Они появляются в панели полями с понятными подписями, а на сайт попадают одним запросом:</p>
+<div class="code"><div class="code-head"><span class="code-file"><i data-lucide="file-code"></i>app/page.tsx</span><button type="button" class="icon-btn icon-btn-sm" data-copy="" aria-label="Копировать код"></button></div>
+<pre><code><span class="line"><span class="tk-k">import</span> { Coreless } <span class="tk-k">from</span> <span class="tk-s">'coreless'</span></span>
+<span class="line"></span>
+<span class="line"><span class="tk-k">const</span> cms <span class="tk-p">=</span> <span class="tk-k">new</span> <span class="tk-f">Coreless</span>({ project: <span class="tk-s">'zerno'</span> })</span>
+<span class="line"></span>
+<span class="line"><span class="tk-k">export default async function</span> <span class="tk-f">Page</span>() {</span>
+<span class="line">  <span class="tk-k">const</span> home <span class="tk-p">=</span> <span class="tk-k">await</span> cms.<span class="tk-f">get</span>(<span class="tk-s">'home'</span>)</span>
+<span class="line">  <span class="tk-k">return</span> &lt;<span class="tk-f">h1</span>&gt;{home.hero.title}&lt;/<span class="tk-f">h1</span>&gt;</span>
+<span class="line">}</span></code></pre></div>
+<p>Путь <code>hero/title</code> типизирован, поэтому опечатку редактор кода подсветит ещё до сборки. Подробнее о подключении в статье <a href="article.html#nextjs-coreless">«Подключаем Coreless к Next.js за вечер»</a>.</p>
+
+<h2 id="sum">Коротко</h2>
+<p>Headless CMS разделяет содержимое и внешний вид. Владелец получает панель, в которой нельзя ничего сломать, разработчик получает свободу в вёрстке. Если сайт простой и сделан в конструкторе, переезжать незачем.</p>
+
+        <div class="art-end">
+          <a class="btn btn-secondary btn-sm" href="blog.html"><i data-lucide="arrow-left"></i>Все статьи</a>
+          <div class="share"><button type="button" class="btn btn-secondary btn-sm" data-done="Ссылка скопирована" data-copy="https://coreless.ru/blog/headless-cms"><i data-lucide="link"></i>Скопировать ссылку</button></div>
+        </div>
+      </article>
+
+      <aside class="art-side">
+        <div class="side-in">
+          <div class="tags"><span class="badge badge-mono">CMS</span><span class="badge badge-mono">Гайды</span><span class="badge badge-mono">Архитектура</span></div>
+          <nav class="onpage" aria-label="На этой странице"><span class="t-label">На этой странице</span><ul><li><a href="#how">Как устроена обычная CMS</a></li><li><a href="#headless">Что меняет headless</a></li><li><a href="#when">Когда это оправдано</a></li><li><a href="#when-not">Когда она не нужна</a></li><li><a href="#coreless">Как это устроено в Coreless</a></li><li><a href="#sum">Коротко</a></li></ul></nav>
+          <span class="t-label">Поделиться</span>
+          <div class="side-share">
+            <button type="button" class="icon-btn" data-copy="https://coreless.ru/blog/headless-cms" aria-label="Скопировать ссылку"></button>
+            <a class="icon-btn" href="https://t.me/share/url?url=https%3A%2F%2Fcoreless.ru%2Fblog%2Fheadless-cms" target="_blank" rel="noopener" aria-label="Отправить в Telegram"><i data-lucide="send"></i></a>
+            <a class="icon-btn" href="mailto:?subject=%D0%A7%D1%82%D0%BE%20%D1%82%D0%B0%D0%BA%D0%BE%D0%B5%20headless%20CMS" aria-label="Отправить по почте"><i data-lucide="mail"></i></a>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <section class="related" aria-labelledby="rel-h">
+    <div class="wrap">
+      <h2 id="rel-h" class="rel-t">Читайте также</h2>
+      <div class="rel-grid"><a class="post-card" href="article.html#tilda-wp-custom" data-cat="guide" data-q="tilda, wordpress или сайт на заказ: как выбрать сравнили по цене, скорости, свободе дизайна и тому, кто будет вносить правки">
+        <span class="cover"><img src="https://picsum.photos/seed/coreless-tilda-wp-custom/800/420" alt="" loading="lazy" width="800" height="420"></span>
+        <span class="pc-meta"><span class="badge badge-mono">Гайды</span><time>24 октября 2026</time></span>
+        <span class="pc-t">Tilda, WordPress или сайт на заказ: как выбрать</span><span class="pc-x">Сравнили по цене, скорости, свободе дизайна и тому, кто будет вносить правки</span></a><a class="post-card" href="article.html#tables" data-cat="product" data-q="каталоги и новости в виде таблиц новая позиция в каталоге добавляется строкой, картинки загружаются перетаскиванием">
+        <span class="cover"><img src="https://picsum.photos/seed/coreless-tables/800/420" alt="" loading="lazy" width="800" height="420"></span>
+        <span class="pc-meta"><span class="badge badge-mono">Продукт</span><time>21 октября 2026</time></span>
+        <span class="pc-t">Каталоги и новости в виде таблиц</span><span class="pc-x">Новая позиция в каталоге добавляется строкой, картинки загружаются перетаскиванием</span></a><a class="post-card" href="article.html#why-separate" data-cat="product" data-q="почему мы отделили контент от кода короткая история о том, откуда взялся coreless и что мы решили не делать">
+        <span class="cover"><img src="https://picsum.photos/seed/coreless-why-separate/800/420" alt="" loading="lazy" width="800" height="420"></span>
+        <span class="pc-meta"><span class="badge badge-mono">Продукт</span><time>17 октября 2026</time></span>
+        <span class="pc-t">Почему мы отделили контент от кода</span><span class="pc-x">Короткая история о том, откуда взялся Coreless и что мы решили не делать</span></a></div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand"><a class="logo" href="landing.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12V6a3 3 0 0 1 3-3h6M21 12v6a3 3 0 0 1-3 3h-6" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/><rect x="8.5" y="8.5" width="7" height="7" rx="2" fill="currentColor"/></svg>Coreless</a><p>Редактор контента для сайтов с любым дизайном</p></div>
+      <nav class="foot-cols" aria-label="Подвал">
+        <div><b>Продукт</b><a href="landing.html#features">Возможности</a><a href="landing.html#how">Как это работает</a><a href="landing.html#pricing">Цены</a><a href="landing.html#faq">Вопросы</a></div>
+        <div><b>Разработчикам</b><a href="landing.html#audience">Документация</a><a href="landing.html#audience">Библиотека</a><a href="landing.html#audience">REST API</a></div>
+        <div><b>Компания</b><a href="blog.html">Блог</a><a href="landing.html#start">Связаться</a><a href="landing.html#start">Конфиденциальность</a></div>
+      </nav>
+    </div>
+    <div class="foot-bottom"><span>© 2026 Coreless</span><div class="tseg" role="group" aria-label="Тема"><button class="tseg-b" role="radio" data-theme-v="light" aria-label="Светлая"><i data-lucide="sun"></i></button><button class="tseg-b" role="radio" data-theme-v="dark" aria-label="Тёмная"><i data-lucide="moon"></i></button><button class="tseg-b" role="radio" data-theme-v="system" aria-label="Как в системе"><i data-lucide="monitor"></i></button></div></div>
+  </div>
+</footer>
+</body>
+</html>

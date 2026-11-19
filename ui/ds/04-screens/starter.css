@@ -1,0 +1,5 @@
+/* Шаблон: стили только этой страницы. Общее (база, .wrap, .sec-head, .ticks, вопросы, финал, подвал, появление) — в site.css. */
+
+/* в шаблоне подвал из одной нижней строки: без верхнего отступа и второй линии */
+.foot { padding: var(--sp-8) 0 }
+.foot .foot-bottom:first-child { margin-top: 0; padding-top: 0; box-shadow: none }

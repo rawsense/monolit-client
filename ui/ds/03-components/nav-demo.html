@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Шапка сайта</title>
+<!-- Образец шапки: только библиотечные файлы. Демо-параметры: ?auth=user|guest, ?menu=product|solutions|resources, ?m=1&acc=0, ?acct=1 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../tokens/colors.css"><link rel="stylesheet" href="../tokens/accents.css"><link rel="stylesheet" href="../tokens/palettes.css">
+<link rel="stylesheet" href="../tokens/motion.css">
+<link rel="stylesheet" href="../tokens/type.css">
+<link rel="stylesheet" href="../tokens/space.css">
+<link rel="stylesheet" href="../tokens/scrollbar.css">
+<link rel="stylesheet" href="../tokens/icons.css">
+<link rel="stylesheet" href="../tokens/components.css">
+<link rel="stylesheet" href="../tokens/nav.css">
+<script>/* ?soft=1 — мягкий стиль, для витрины soft.html */if(new URLSearchParams(location.search).has('soft'))document.write('<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400..700&display=swap" rel="stylesheet"><link rel="stylesheet" href="../tokens/soft.css">')</script>
+<script src="../js/theme.js"></script>
+<script>(()=>{const a=new URLSearchParams(location.search).get('auth');document.documentElement.dataset.auth=a==='user'?'user':'guest'})()</script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<script src="../js/nav.js" defer></script>
+<script src="../js/scroll-lock.js" defer></script>
+<style>
+*{box-sizing:border-box}
+html{color-scheme:dark}
+[data-theme="light"]{color-scheme:light}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-sans);font-size:var(--fs-base);line-height:var(--lh-base);letter-spacing:var(--ls-base);
+  font-optical-sizing:auto;font-feature-settings:"cv01","ss03";-webkit-font-smoothing:antialiased}
+.wrap{max-width:var(--container);margin:0 auto;padding:0 var(--gutter)}
+.demo-body{padding:var(--sp-16) 0;color:var(--text-muted)}
+.demo-body h1{margin:0 0 var(--sp-3);font-size:var(--fs-2xl);line-height:var(--lh-2xl);letter-spacing:var(--ls-2xl);font-weight:var(--w-semibold);color:var(--text)}
+.demo-body p{margin:0;max-width:var(--measure)}
+</style>
+<script src="../js/scrollbar.js" defer></script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <span class="logo"><i></i>Brand</span>
+    <nav class="navmenu" aria-label="Основная навигация">
+      <button class="nav-trigger" data-menu="product" aria-expanded="false" aria-haspopup="true">Продукт<i data-lucide="chevron-down"></i></button>
+      <button class="nav-trigger" data-menu="solutions" aria-expanded="false" aria-haspopup="true">Решения<i data-lucide="chevron-down"></i></button>
+      <button class="nav-trigger" data-menu="resources" aria-expanded="false" aria-haspopup="true">Ресурсы<i data-lucide="chevron-down"></i></button>
+      <a class="nav-link" href="#">Цены</a>
+      <a class="nav-link" href="#">Документация</a>
+    </nav>
+    <div class="nav-panel" id="nav-panel"><div class="nav-content" data-menu="product" role="region" aria-label="Продукт"><div class="mega" style="width:896px;grid-template-columns:1fr 1fr 264px"><div class="mega-col"><span class="mega-label">Возможности</span><a class="mega-item" href="#"><span class="mega-ic"><i data-lucide="list-checks"></i></span><span><span class="mega-t">Задачи<i data-lucide="chevron-right"></i></span><span class="mega-d">Планирование и трекинг работы</span></span></a><a class="mega-item" href="#"><span class="mega-ic"><i data-lucide="folder-kanban"></i></span><span><span class="mega-t">Проекты<i data-lucide="chevron-right"></i></span><span class="mega-d">Дорожные карты, сроки, вехи</span></span></a><a class="mega-item" href="#"><span class="mega-ic"><i data-lucide="file-text"></i></span><span><span class="mega-t">Документы<i data-lucide="chevron-right"></i></span><span class="mega-d">База знаний рядом с задачами</span></span></a><a class="mega-item" href="#"><span class="mega-ic"><i data-lucide="workflow"></i></span><span><span class="mega-t">Автоматизации<span class="mega-chip">бета</span><i data-lucide="chevron-right"></i></span><span class="mega-d">Правила и триггеры без кода</span></span></a></div><div class="mega-col"><span class="mega-label">Платформа</span><a class="mega-item" href="#"><span class="mega-ic"><i data-lucide="code-xml"></i></span><span><span class="mega-t">API<i data-lucide="chevron-right"></i></span><span class="mega-d">REST, GraphQL и вебхуки</span></span></a><a class="mega-item" href="#"><span class="mega-ic"><i data-lucide="blocks"></i></span><span><span class="mega-t">Интеграции<i data-lucide="chevron-right"></i></span><span class="mega-d">Slack, GitHub, Figma и ещё 40</span></span></a><a class="mega-item" href="#"><span class="mega-ic"><i data-lucide="shield-check"></i></span><span><span class="mega-t">Безопасность<i data-lucide="chevron-right"></i></span><span class="mega-d">SSO, аудит действий, SOC 2</span></span></a><a class="mega-item" href="#"><span class="mega-ic"><i data-lucide="chart-no-axes-column"></i></span><span><span class="mega-t">Аналитика<i data-lucide="chevron-right"></i></span><span class="mega-d">Скорость команды и узкие места</span></span></a></div><div class="mega-aside"><span class="mega-label">Истории клиентов</span><a class="story" href="#" data-m="Кейс Acme: релизы за 6 дней"><span class="story-thumb">Acme</span><span class="story-t">Как Acme сократила цикл релиза с 3 недель до 6 дней</span></a><span class="mega-label" style="margin-top:18px">Переход</span><a class="mega-row" href="#"><i data-lucide="arrow-right-left"></i><span>С Jira</span></a><a class="mega-row" href="#"><i data-lucide="arrow-right-left"></i><span>С Trello</span></a><a class="mega-row" href="#"><i data-lucide="arrow-right-left"></i><span>С таблиц</span></a></div><a class="mega-foot" href="#"><b>Новое</b>Задачи закрываются сами при слиянии pull request<span class="more">Подробнее <i data-lucide="arrow-right" class="arrow icon-sm"></i></span></a></div></div><div class="nav-content" data-menu="solutions" role="region" aria-label="Решения"><div class="mega" style="width:700px;grid-template-columns:1fr 1fr 200px"><div class="mega-col"><a class="mega-item" href="#"><span><span class="mega-t">Для стартапов<i data-lucide="chevron-right"></i></span><span class="mega-d">Быстрый старт без настройки,<br>бесплатно до 10 человек</span></span></a><a class="mega-item" href="#"><span><span class="mega-t">Для дизайнеров<i data-lucide="chevron-right"></i></span><span class="mega-d">Макеты, ревью и правки<br>в одном потоке</span></span></a></div><div class="mega-col"><a class="mega-item" href="#"><span><span class="mega-t">Для enterprise<i data-lucide="chevron-right"></i></span><span class="mega-d">Роли, SSO, изоляция данных<br>и выделенная поддержка</span></span></a><a class="mega-item" href="#"><span><span class="mega-t">Для разработчиков<i data-lucide="chevron-right"></i></span><span class="mega-d">Ветки, PR и релизы<br>связаны с задачами</span></span></a></div><div class="mega-col mega-aside"><a class="mega-row" href="#"><span>Шаблоны</span></a><a class="mega-row" href="#"><span>Миграция</span></a><a class="mega-row" href="#"><span>Партнёры</span></a><a class="mega-row" href="#"><span>Вебинары</span></a></div></div></div><div class="nav-content" data-menu="resources" role="region" aria-label="Ресурсы"><div class="mega" style="width:720px;grid-template-columns:200px 200px 1fr"><div class="mega-col"><span class="mega-label">Узнать</span><a class="mega-row" href="#"><i data-lucide="book-open"></i><span>Документация</span></a><a class="mega-row" href="#"><i data-lucide="graduation-cap"></i><span>Гайды</span></a><a class="mega-row" href="#"><i data-lucide="history"></i><span>Что нового</span></a><a class="mega-row" href="#"><i data-lucide="life-buoy"></i><span>Поддержка</span></a></div><div class="mega-col"><span class="mega-label">Сообщество</span><a class="mega-row" href="#"><i data-lucide="users"></i><span>Форум</span></a><a class="mega-row" href="#"><i data-lucide="calendar"></i><span>События</span></a><a class="mega-row" href="#"><i data-lucide="briefcase"></i><span>Вакансии</span><small>12</small></a><a class="mega-row" href="#"><i data-lucide="handshake"></i><span>Партнёрам</span></a></div><div class="mega-aside"><span class="mega-label">Блог</span><a class="post" href="#"><b>Почему мы отказались от спринтов</b><span>Два года работы циклами по шесть недель: что сломалось, что выросло и почему назад не хочется.</span></a><a class="post" href="#"><b>Тёмная тема без компромиссов</b><span>Как мы подбирали слои, рамки и контраст, чтобы интерфейс не превращался в кашу.</span></a></div></div></div></div>
+    <div class="nav-end">
+      <div class="nav-guest">
+        <a class="btn btn-secondary btn-sm nav-signin" href="#" data-demo-auth="user">Войти</a>
+        <a class="btn btn-primary btn-sm" href="#">Начать</a>
+      </div>
+      <div class="nav-user">
+        <a class="btn btn-secondary btn-sm" href="#">Дашборд</a>
+        <div class="acct">
+          <button class="acct-btn" id="acct-btn" aria-haspopup="menu" aria-expanded="false" aria-controls="acct-menu" aria-label="Аккаунт: Анна Смирнова"><span class="nav-av">АС</span></button>
+          <div class="acct-menu" id="acct-menu" role="menu" aria-label="Аккаунт">
+            <div class="acct-head"><b>Анна Смирнова</b><small>anna@brand.io</small></div>
+            <div class="acct-group" role="group">
+              <a class="acct-item" role="menuitem" href="#"><i data-lucide="user"></i><span>Профиль</span></a>
+              <a class="acct-item" role="menuitem" href="#"><i data-lucide="settings"></i><span>Настройки</span></a>
+              <a class="acct-item" role="menuitem" href="#"><i data-lucide="credit-card"></i><span>Тариф</span><small>Pro</small></a>
+            </div>
+            <div class="acct-group" role="group">
+              <div class="acct-row"><i data-lucide="sun-moon"></i><span>Тема</span><div class="tseg" role="group" aria-label="Тема"><button class="tseg-b" role="menuitemradio" data-theme-v="light" aria-label="Светлая"><i data-lucide="sun"></i></button><button class="tseg-b" role="menuitemradio" data-theme-v="dark" aria-label="Тёмная"><i data-lucide="moon"></i></button><button class="tseg-b" role="menuitemradio" data-theme-v="system" aria-label="Как в системе"><i data-lucide="monitor"></i></button></div></div>
+            </div>
+            <div class="acct-group" role="group">
+              <button class="acct-item" role="menuitem" data-demo-auth="guest"><i data-lucide="log-out"></i><span>Выйти</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="burger" id="burger" aria-label="Меню" aria-expanded="false" aria-controls="mnav"><span></span><span></span></button>
+  </div>
+</header>
+<div class="mnav" id="mnav" data-modal-layer role="dialog" aria-modal="true" aria-label="Меню навигации"><div class="mnav-in">
+  <nav class="mnav-list" id="mnav-list"></nav>
+  <div class="mnav-actions">
+    <div class="m-guest">
+      <a class="btn btn-secondary" href="#" data-demo-auth="user">Войти</a>
+      <a class="btn btn-primary" href="#">Начать бесплатно</a>
+    </div>
+    <div class="m-user">
+      <div class="macct"><span class="nav-av">АС</span><span><b>Анна Смирнова</b><small>anna@brand.io</small></span></div>
+      <a class="btn btn-primary" href="#">Открыть дашборд</a>
+      <button class="btn btn-secondary" data-demo-auth="guest">Выйти</button>
+    </div>
+    <div class="mtheme"><span>Тема</span><div class="tseg" role="group" aria-label="Тема"><button class="tseg-b" role="radio" data-theme-v="light" aria-label="Светлая"><i data-lucide="sun"></i></button><button class="tseg-b" role="radio" data-theme-v="dark" aria-label="Тёмная"><i data-lucide="moon"></i></button><button class="tseg-b" role="radio" data-theme-v="system" aria-label="Как в системе"><i data-lucide="monitor"></i></button></div></div>
+  </div>
+</div></div>
+
+<main class="wrap demo-body">
+  <h1>Содержимое страницы</h1>
+  <p>Образец шапки из библиотеки: tokens/nav.css, js/nav.js, js/theme.js. Наведите на «Продукт», откройте меню аккаунта, сузьте окно до 960px — появится бургер.</p>
+</main>
+<script>
+try{lucide.createIcons()}catch(e){}
+/* демо: ссылки никуда не ведут; «Войти» и «Выйти» переключают состояние */
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-demo-auth]');
+  if(t){e.preventDefault();siteNav.account?.(false);document.documentElement.dataset.auth=t.dataset.demoAuth;return}
+  if(e.target.closest('a[href="#"]'))e.preventDefault();
+});
+addEventListener('DOMContentLoaded',()=>{
+  const q=new URLSearchParams(location.search);
+  if(q.get('menu'))setTimeout(()=>siteNav.show?.(q.get('menu')),200);
+  if(q.get('acct')==='1')setTimeout(()=>siteNav.account?.(true),200);
+  if(q.get('m')==='1')siteNav.mobile?.(true,q.get('acc')===null?null:+q.get('acc'));
+});
+</script>
+</body>
+</html>

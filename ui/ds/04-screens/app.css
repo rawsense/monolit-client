@@ -1,0 +1,67 @@
+/* Экран «Заявки» Coreless: только то, чего нет в системе. Каркас (.app-shell, .app-main, .app-head) — layers.css */
+*, *::before, *::after { box-sizing: border-box }
+html { color-scheme: dark; -webkit-tap-highlight-color: transparent }
+[data-theme="light"] { color-scheme: light }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font-sans);
+  font-size: var(--fs-md); line-height: var(--lh-md); letter-spacing: var(--ls-md) }
+h1, h2, h3, h4, p { margin: 0 }
+.side-ws.logo { text-decoration: none }
+
+/* Ряд цифр: лимит шире (у него полоса и подпись), четыре счетчика по доле. Вещи похожей высоты — один ряд */
+.ap-stats { display: grid; grid-template-columns: minmax(0, 2fr) repeat(4, minmax(0, 1fr)); gap: var(--sp-3); margin: var(--sp-8) 0 }
+.ap-stats .stat { padding: var(--sp-4) }
+.ap-limit .stat-num small { white-space: nowrap }
+.ap-limit .progress { margin: var(--sp-2) 0 var(--sp-1) }
+.ap-bad .stat-num { color: var(--danger) }
+@media (max-width: 1100px) { .ap-stats { grid-template-columns: repeat(4, minmax(0, 1fr)) } .ap-limit { grid-column: 1 / -1 } }
+@media (max-width: 900px) { .ap-stats { grid-template-columns: repeat(2, minmax(0, 1fr)) } }
+@media (max-width: 640px) { .ap-stats { margin: var(--sp-4) 0 } .ap-stats .stat:not(.ap-limit) .stat-foot { display: none } }
+
+/* Вкладки с числами и панель над таблицей */
+.ap-n { margin-left: var(--sp-1); color: var(--text-muted); font-weight: var(--w-regular) }
+.ap-tools { display: flex; align-items: center; gap: var(--sp-2); margin: var(--sp-4) 0 }
+.ap-tools .search { flex: 1; min-width: 0 }
+.ap-tools > select.select, .ap-tools > .select-ui { width: 220px; flex: none }   /* select.js оборачивает поле в .select-ui: ширину задавать обёртке */
+.ap-tools .select-ui > select.select { width: 100% }
+
+/* Таблица: строку нажимают целиком, на телефоне — карточки (table-stack) */
+.ap-table tbody tr { cursor: pointer }
+.ap-table tbody tr:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px }
+@media (min-width: 641px) { .ap-table tbody :is(th, td) { height: auto; padding-top: var(--sp-3); padding-bottom: var(--sp-3) } }
+.ap-who { display: block; color: var(--text); font-weight: var(--w-medium) }
+.ap-what { display: block; margin-top: 2px; color: var(--text-secondary); font-size: var(--fs-sm); line-height: var(--lh-sm); white-space: nowrap }
+.ap-row-st, .ap-site-in { display: none }
+.ap-when { color: var(--text-muted) }
+.ap-list { transition: opacity 360ms var(--ease-out) }
+.ap-list.out { opacity: 0; transition-duration: 200ms }
+.ap-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); padding: var(--sp-4) 0 }
+@media (max-width: 640px) {
+  .ap-table { --cols: 2; --stack-top: 0px }
+  .ap-table :is(.ap-st-col, .ap-site-col) { display: none }   /* статус и сайт уходят в первую ячейку: домен в трети ширины переносится */
+  .ap-site-in { display: inline }
+  .ap-row-st { display: inline-flex; margin-top: var(--sp-2) }
+  .ap-table tbody th { color: var(--text) }
+  .ap-table tbody td { padding-bottom: var(--sp-3) }
+  .ap-what { white-space: normal }
+  .ap-tools { flex-wrap: wrap }
+  .ap-tools .search { flex-basis: 100% }
+  .ap-tools > select.select, .ap-tools > .select-ui { width: 100% }
+  .ap-foot { flex-direction: column; align-items: stretch }
+}
+
+/* Шторки: сведения и карточка строки */
+.ap-group { display: grid; gap: var(--sp-3) }
+.ap-group + .ap-group { margin-top: var(--sp-8) }
+.ap-kv { display: grid; gap: var(--sp-3); margin: 0 }
+.ap-kv div { display: flex; justify-content: space-between; gap: var(--sp-4); font-size: var(--fs-sm); line-height: var(--lh-sm) }
+.ap-kv dt { color: var(--text-muted) }
+.ap-kv dd { margin: 0; font-weight: var(--w-medium); text-align: right; overflow-wrap: anywhere }
+.ap-note { color: var(--text-muted); font-size: var(--fs-sm); line-height: var(--lh-sm) }
+.sheet-side.ap-detail { width: min(560px, 100vw) }   /* 420 системы мало для таблицы или пар «название — значение» в карточке строки */
+.ap-detail .sheet-head > div:first-child { flex: 1; min-width: 0 }
+.ap-did { font-family: var(--font-mono); font-size: var(--fs-xs); line-height: var(--lh-xs); color: var(--text-muted) }
+.ap-section { display: grid; gap: var(--sp-4) }
+.ap-section + .ap-section { margin-top: var(--sp-8) }
+.ap-claim { display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap }
+.ap-reply { display: grid; gap: var(--sp-3) }
+.ap-raw { margin: 0; font-family: var(--font-mono); font-size: var(--fs-xs); line-height: var(--lh-xs); color: var(--text-secondary); white-space: pre-wrap; word-break: break-word }

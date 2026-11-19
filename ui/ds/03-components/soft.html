@@ -1,0 +1,1023 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Компоненты, мягкий стиль</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../tokens/colors.css"><link rel="stylesheet" href="../tokens/accents.css"><link rel="stylesheet" href="../tokens/palettes.css">
+<link rel="stylesheet" href="../tokens/motion.css">
+<link rel="stylesheet" href="../tokens/type.css">
+<link rel="stylesheet" href="../tokens/space.css">
+<link rel="stylesheet" href="../tokens/scrollbar.css">
+<link rel="stylesheet" href="../tokens/icons.css">
+<link rel="stylesheet" href="../tokens/components.css">
+<link rel="stylesheet" href="../tokens/inputs.css">
+<link rel="stylesheet" href="../tokens/layers.css">
+<link rel="stylesheet" href="../tokens/data.css">
+<link rel="stylesheet" href="../tokens/nav.css">
+<link rel="stylesheet" href="../tokens/tiles.css">
+<link rel="stylesheet" href="../tokens/soft.css">
+<script src="../js/theme.js"></script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<script src="../js/select.js" defer></script>
+<script src="../js/inputs.js" defer></script>
+<script src="../js/scroll-lock.js" defer></script>
+<script src="../js/layers.js" defer></script>
+<script src="showcase.js" defer></script>
+<script src="../js/data.js" defer></script>
+<script src="../js/nav.js" defer></script>
+<style>
+*{box-sizing:border-box}
+html{color-scheme:dark}
+[data-theme="light"]{color-scheme:light}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-sans);font-size:var(--fs-base);line-height:var(--lh-base);letter-spacing:var(--ls-base);
+  font-optical-sizing:auto;font-feature-settings:"cv01","ss03";-webkit-font-smoothing:antialiased}
+.wrap{max-width:var(--container);margin:0 auto;padding:0 var(--gutter)}
+
+:root.nav-compact .site-header .nav-end{display:none}   /* в бургере режим и тема — внизу мобильного меню */
+section{padding-top:var(--sp-16)}
+section:last-of-type{padding-bottom:var(--section-y)}
+.head{display:grid;gap:var(--sp-2);margin-bottom:var(--sp-6)}
+.head h2{margin:0;font-size:var(--fs-2xl);line-height:var(--lh-2xl);letter-spacing:var(--ls-2xl);font-weight:var(--w-medium)}
+.head p{margin:0;color:var(--text-muted);max-width:var(--measure);text-wrap:pretty}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--grid-gap)}
+.box{grid-column:span 6;grid-template-columns:minmax(0,1fr);padding:var(--sp-6);border-radius:var(--r-xl);background:var(--surface);box-shadow:inset 0 0 0 1px var(--border-subtle);display:grid;gap:var(--sp-4);align-content:start}
+.box.full{grid-column:span 12}.box.third{grid-column:span 4}
+.box h3{margin:0}
+.box h3.t-label:not(:first-child){margin-top:var(--sp-4)}   /* группы внутри карточки разделены воздухом: 16 + 16 */
+@media(max-width:900px){.box,.box.third{grid-column:span 12}}
+@media(max-width:520px){.box{padding:var(--sp-5)}}   /* телефон: рамка витрины не съедает ширину у образцов */
+@media(min-width:601px) and (max-width:900px){.box.third{grid-column:span 6}}   /* две в ряд: во всю ширину списки из коротких строк оставляют пустую правую половину */
+/* Пары рамок — колонками, а не рядами сетки: в ряду сетки соседи тянутся до высоты старшего, и у младшего внизу пустота.
+   В колонке каждая рамка высотой по своему содержимому. Рамка .full идёт во всю ширину между колонками. */
+.grid.cols{display:block;columns:2;column-gap:var(--grid-gap)}
+.grid.cols>.box{break-inside:avoid;margin-bottom:var(--grid-gap);width:100%}
+.grid.cols>.box.full,.grid.cols>.span12{column-span:all}
+.grid.cols>.span12{margin-bottom:var(--grid-gap)}
+.grid.cols>:is(.box.full,.span12):not(:first-child){margin-top:var(--grid-gap)}   /* отступ последней рамки колонки съедается на разрыве колонок */
+.grid.cols>.box:last-child{margin-bottom:0}
+@media(max-width:900px){.grid.cols{columns:1}}
+.cap{margin:0}
+.stack{display:grid;gap:var(--sp-3)}
+.matrix{display:grid;grid-template-columns:96px repeat(5,minmax(max-content,1fr));gap:var(--sp-3) var(--sp-3);align-items:center;overflow-x:auto}
+.matrix .t-label{white-space:nowrap}
+.matrix>.btn{justify-self:start}
+.ib-pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--sp-4) var(--sp-6)}
+.ib-col{display:grid;gap:var(--sp-2);align-content:start}
+.rel{position:relative;display:inline-block}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--grid-gap)}
+@media(max-width:900px){.cards{grid-template-columns:1fr}}
+.sk{display:grid;gap:var(--sp-2)}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-4)}
+@media(max-width:640px){.pair{grid-template-columns:1fr}}
+/* окна-образцы: живые страницы из библиотеки в рамке */
+.frames{display:grid;gap:var(--sp-6)}
+.frames figure{margin:0;display:grid;gap:var(--sp-2);align-content:start}
+.frames-m{display:flex;flex-wrap:wrap;gap:var(--sp-6)}
+.frame{border-radius:var(--r-xl);overflow:hidden;box-shadow:0 0 0 1px var(--border);background:var(--bg)}
+.frame iframe{display:block;width:100%;border:0}
+.frames-m>figure{flex:0 1 375px;min-width:0}
+.frames-m .frame{width:100%}
+/* десктоп-образец: страница шириной 1200px, уменьшенная под колонку — шапка видна в десктопном виде на любом экране */
+.frame-d iframe{width:1200px;transform-origin:0 0}
+.span12{grid-column:1/-1}
+.bare{padding:0;background:none;box-shadow:none}
+/* окно приложения: боковое меню + содержимое */
+.app-demo{display:flex;height:520px;border-radius:var(--r-xl);overflow:hidden;background:var(--bg);box-shadow:0 0 0 1px var(--border-subtle)}
+.app-main{flex:1;min-width:0;display:grid;align-content:start;gap:var(--sp-5);padding:var(--sp-5) var(--sp-6)}
+.app-main h3{margin:0;font-size:var(--fs-lg);line-height:var(--lh-lg);font-weight:var(--w-semibold)}
+.app-rows{display:grid;gap:var(--sp-3)}
+.app-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sp-3)}
+.app-main{container-type:inline-size}
+@container (max-width:420px){.app-stats{grid-template-columns:minmax(0,1fr)}}   /* три в ряд или столбцом, как в строгом: при переносе 2 + 1 справа дыра, три на телефоне слишком узкие */
+.app-stat{display:grid;gap:var(--sp-2);padding:var(--sp-4);border-radius:var(--r-lg);box-shadow:inset 0 0 0 1px var(--border-subtle)}
+.app-chart{height:120px;border-radius:var(--r-lg)}
+.app-row{display:grid;grid-template-columns:16px 1fr 64px;gap:var(--sp-3);align-items:center}
+/* оглавление: статья прокручивается внутри карточки */
+.op-demo{display:grid;grid-template-columns:minmax(0,1fr) 180px;gap:var(--sp-6)}
+.op-doc{height:224px;overflow-y:auto;padding-right:var(--sp-4);color:var(--text-muted);font-size:var(--fs-sm);line-height:var(--lh-sm);overscroll-behavior:contain}
+.op-doc h4{margin:var(--sp-6) 0 var(--sp-2);color:var(--text);font-size:var(--fs-md);line-height:var(--lh-md);font-weight:var(--w-semibold)}
+.op-doc h4:first-child{margin-top:0}
+.op-doc h5{margin:var(--sp-4) 0 var(--sp-2);color:var(--text);font-size:var(--fs-sm);font-weight:var(--w-medium)}
+.op-doc p{margin:0 0 var(--sp-2);max-width:var(--measure)}
+@media(max-width:640px){.op-demo{grid-template-columns:1fr}.op-demo .onpage{order:-1}}
+.states{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--grid-gap)}
+.states .state:not(.state-dashed){box-shadow:inset 0 0 0 1px var(--border-subtle)}
+.states .state{align-content:start;grid-template-rows:72px}   /* заголовки трёх состояний на одной линии: картинка у каждого своя, место под неё одно */
+.states .state>:first-child{align-self:end}
+@media(max-width:900px){.states{grid-template-columns:repeat(2,minmax(0,1fr))}.states>.state:last-child:nth-child(odd){grid-column:1/-1}}   /* три в ряд при крупном шрифте — заголовки в две строки; две и одна во всю ширину */
+@media(max-width:600px){.states{grid-template-columns:minmax(0,1fr)}}
+/* 404 одна в широком ряду (601–900): цифра слева, текст и кнопка справа — иначе по бокам от узкого столбика пусто */
+@media(min-width:601px) and (max-width:900px){
+  .states>.state-404:last-child:nth-child(odd){grid-template-columns:auto minmax(0,40ch);grid-template-rows:auto auto auto;justify-content:center;justify-items:start;align-content:center;column-gap:var(--sp-8);text-align:left}
+  .states>.state-404:last-child:nth-child(odd) .big{grid-row:1/4;align-self:center;margin:0}
+  .states>.state-404:last-child:nth-child(odd) .btn-row{justify-content:flex-start}
+}
+/* баннер в контексте: мини-окно — баннер над шапкой страницы; скрыли — шапка плавно поднимается */
+.bn-demo{border-radius:var(--r-lg);overflow:hidden;background:var(--bg);box-shadow:0 0 0 1px var(--border-subtle)}
+.bn-nav{display:flex;align-items:center;gap:var(--sp-3);height:44px;padding:0 14px;box-shadow:inset 0 -1px 0 var(--border-subtle)}
+.bn-logo{flex:none;width:18px;height:18px;border-radius:5px;background:var(--accent)}
+.bn-nav .skeleton{height:8px;width:36px;animation:none}
+.bn-cta{flex:none;margin-left:auto;width:52px;height:22px;border-radius:var(--r-sm);background:var(--invert)}
+.bn-page{display:grid;gap:var(--sp-2);padding:var(--sp-4) 14px var(--sp-5)}
+.bn-page .skeleton{animation:none}
+.bn-foot{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-3)}
+.sizes{display:flex;align-items:center;gap:var(--sp-5)}
+.nh-bell,.nh-act{display:flex;align-items:center;gap:var(--sp-3)}
+.sp-kinds{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:var(--sp-3) var(--sp-6)}
+.sp-row{display:grid;grid-template-columns:12px 16px 24px auto 1fr;gap:var(--sp-3);align-items:center;justify-items:center}
+.sp-row .hint{justify-self:start}
+/* код из SMS: ячейки фиксированной ширины, подсказка рядом, а не под ними с пустотой справа */
+.otp-row{display:flex;flex-wrap:wrap;align-items:center;gap:var(--sp-4) var(--sp-6)}
+.otp-row .otp{flex:0 1 auto;min-width:0}
+.otp-row .hint{flex:1 1 160px;margin:0}
+.app-demo{height:568px}   /* мягкий стиль: пункты меню выше, окну нужно больше места */
+</style>
+<script src="../js/scrollbar.js" defer></script>
+</head>
+<body>
+<header class="site-header"><div class="wrap">
+  <span class="logo"><i></i>Компоненты</span>
+  <nav class="navmenu" aria-label="Разделы"><button class="nav-trigger" data-menu="system" aria-expanded="false" aria-haspopup="true">Система<i data-lucide="chevron-down"></i></button><button class="nav-trigger" data-menu="forms" aria-expanded="false" aria-haspopup="true">Формы<i data-lucide="chevron-down"></i></button><button class="nav-trigger" data-menu="nav" aria-expanded="false" aria-haspopup="true">Навигация<i data-lucide="chevron-down"></i></button><a class="nav-link" href="#data">Данные</a><a class="nav-link" href="#tiles">Плитки</a><a class="nav-link" href="#feedback">Статусы</a></nav>
+  <div class="nav-panel" id="nav-panel"><div class="nav-content" data-menu="system" role="region" aria-label="Система"><div class="mega" style="width:560px;grid-template-columns:1fr 1fr"><div class="mega-col"><span class="mega-label">Этапы</span><a class="mega-item" href="../01-colors/v2.html"><span class="mega-ic"><i data-lucide="palette"></i></span><span><span class="mega-t">Цвета<i data-lucide="chevron-right"></i></span><span class="mega-d">Палитра, режимы цвета, контраст</span></span></a><a class="mega-item" href="../02-type/index.html"><span class="mega-ic"><i data-lucide="type"></i></span><span><span class="mega-t">Типографика<i data-lucide="chevron-right"></i></span><span class="mega-d">Шкала текста, отступы, сетка</span></span></a><a class="mega-item" href="#buttons"><span class="mega-ic"><i data-lucide="component"></i></span><span><span class="mega-t">Компоненты<i data-lucide="chevron-right"></i></span><span class="mega-d">Все элементы на одной странице</span></span></a></div><div class="mega-col"><span class="mega-label">Образцы</span><a class="mega-item" href="nav-demo.html"><span class="mega-ic"><i data-lucide="panel-top"></i></span><span><span class="mega-t">Шапка сайта<i data-lucide="chevron-right"></i></span><span class="mega-d">Подменю, аккаунт, мобильное меню</span></span></a></div></div></div><div class="nav-content" data-menu="forms" role="region" aria-label="Формы"><div class="mega" style="width:600px;grid-template-columns:1fr 1fr"><div class="mega-col"><span class="mega-label">Действия</span><a class="mega-item" href="#buttons"><span class="mega-ic"><i data-lucide="mouse-pointer-click"></i></span><span><span class="mega-t">Кнопки<i data-lucide="chevron-right"></i></span><span class="mega-d">Виды, размеры, загрузка, итог</span></span></a><a class="mega-item" href="#choice"><span class="mega-ic"><i data-lucide="square-check"></i></span><span><span class="mega-t">Выбор<i data-lucide="chevron-right"></i></span><span class="mega-d">Чекбоксы, радио, вкладки</span></span></a></div><div class="mega-col"><span class="mega-label">Ввод</span><a class="mega-item" href="#fields"><span class="mega-ic"><i data-lucide="text-cursor-input"></i></span><span><span class="mega-t">Поля<i data-lucide="chevron-right"></i></span><span class="mega-d">Текст, ошибки, подсказки</span></span></a><a class="mega-item" href="#inputs"><span class="mega-ic"><i data-lucide="sliders-horizontal"></i></span><span><span class="mega-t">Сложный ввод<i data-lucide="chevron-right"></i></span><span class="mega-d">Числа, даты, цвет, файлы</span></span></a></div></div></div><div class="nav-content" data-menu="nav" role="region" aria-label="Навигация"><div class="mega" style="width:600px;grid-template-columns:1fr 1fr"><div class="mega-col"><span class="mega-label">Переходы</span><a class="mega-item" href="#nav"><span class="mega-ic"><i data-lucide="panel-top"></i></span><span><span class="mega-t">Шапка<i data-lucide="chevron-right"></i></span><span class="mega-d">Пункты, подменю, бургер</span></span></a><a class="mega-item" href="#navigation"><span class="mega-ic"><i data-lucide="route"></i></span><span><span class="mega-t">Навигация<i data-lucide="chevron-right"></i></span><span class="mega-d">Крошки, страницы, шаги, сайдбар</span></span></a></div><div class="mega-col"><span class="mega-label">Поверх страницы</span><a class="mega-item" href="#overlays"><span class="mega-ic"><i data-lucide="layers"></i></span><span><span class="mega-t">Слои<i data-lucide="chevron-right"></i></span><span class="mega-d">Окна, меню, шторки, палитра</span></span></a></div></div></div></div>
+  <div class="nav-end"><div class="accp"><button class="accp-btn" type="button" aria-haspopup="menu" aria-expanded="false" aria-label="Акцентный цвет" title="Акцентный цвет"><span class="sw"></span><i data-lucide="chevron-down"></i></button><div class="acct-menu accp-menu" role="menu" aria-label="Акцентный цвет"><button class="acct-item" type="button" role="menuitemradio" data-accent-v="evory"><span class="sw" style="--c:#0a806c"></span><span>Бирюза</span><i data-lucide="check"></i></button><button class="acct-item" type="button" role="menuitemradio" data-accent-v="ink"><span class="sw" style="--c:#5466b8"></span><span>Чернила</span><i data-lucide="check"></i></button><button class="acct-item" type="button" role="menuitemradio" data-accent-v="slate"><span class="sw" style="--c:#46749f"></span><span>Сланец</span><i data-lucide="check"></i></button><button class="acct-item" type="button" role="menuitemradio" data-accent-v="petrol"><span class="sw" style="--c:#2c7b89"></span><span>Петроль</span><i data-lucide="check"></i></button><button class="acct-item" type="button" role="menuitemradio" data-accent-v="aubergine"><span class="sw" style="--c:#8b5693"></span><span>Баклажан</span><i data-lucide="check"></i></button><button class="acct-item" type="button" role="menuitemradio" data-accent-v="wine"><span class="sw" style="--c:#ab4c58"></span><span>Вино</span><i data-lucide="check"></i></button><button class="acct-item" type="button" role="menuitemradio" data-accent-v="terracotta"><span class="sw" style="--c:#b05d37"></span><span>Терракота</span><i data-lucide="check"></i></button><button class="acct-item" type="button" role="menuitemradio" data-accent-v="moss"><span class="sw" style="--c:#637d3e"></span><span>Мох</span><i data-lucide="check"></i></button><button class="acct-item" type="button" role="menuitemradio" data-accent-v="ochre"><span class="sw" style="--c:#9d6a1c"></span><span>Охра</span><i data-lucide="check"></i></button><button class="acct-item" type="button" role="menuitemradio" data-accent-v="brick"><span class="sw" style="--c:#b44f41"></span><span>Кирпич</span><i data-lucide="check"></i></button><button class="acct-item" type="button" role="menuitemradio" data-accent-v="dustrose"><span class="sw" style="--c:#a25a77"></span><span>Пыльная роза</span><i data-lucide="check"></i></button><button class="acct-item" type="button" role="menuitemradio" data-accent-v="lilac"><span class="sw" style="--c:#7b62a6"></span><span>Сирень</span><i data-lucide="check"></i></button><button class="acct-item" type="button" role="menuitemradio" data-accent-v="heather"><span class="sw" style="--c:#6a6899"></span><span>Вереск</span><i data-lucide="check"></i></button><button class="acct-item" type="button" role="menuitemradio" data-accent-v="azure"><span class="sw" style="--c:#2c7ca1"></span><span>Лазурь</span><i data-lucide="check"></i></button><button class="acct-item" type="button" role="menuitemradio" data-accent-v="seawave"><span class="sw" style="--c:#22817e"></span><span>Морская волна</span><i data-lucide="check"></i></button><button class="acct-item" type="button" role="menuitemradio" data-accent-v="sage"><span class="sw" style="--c:#4d7e62"></span><span>Шалфей</span><i data-lucide="check"></i></button><button class="acct-item" type="button" role="menuitemradio" data-accent-v="pine"><span class="sw" style="--c:#367b63"></span><span>Хвоя</span><i data-lucide="check"></i></button><button class="acct-item" type="button" role="menuitemradio" data-accent-v="graphite"><span class="sw" style="--c:#5a6a80"></span><span>Графит</span><i data-lucide="check"></i></button></div></div><div class="tseg" role="group" aria-label="Режим цвета"><button class="tseg-b tx" role="radio" data-palette-v="mono" title="Монохром — как Vercel">Моно</button><button class="tseg-b tx" role="radio" data-palette-v="accent" title="Монохром с акцентом — как Linear">С акцентом</button><button class="tseg-b tx" role="radio" data-palette-v="tint" title="Акцентная — как Supabase">Акцентная</button><button class="tseg-b tx" role="radio" data-palette-v="rich" title="Выраженная — фон и слои в тон акцента">Выраженная</button></div><div class="tseg" role="group" aria-label="Тема"><button class="tseg-b" role="radio" data-theme-v="light" aria-label="Светлая" title="Светлая"><i data-lucide="sun"></i></button><button class="tseg-b" role="radio" data-theme-v="dark" aria-label="Тёмная" title="Тёмная"><i data-lucide="moon"></i></button><button class="tseg-b" role="radio" data-theme-v="system" aria-label="Как в системе" title="Как в системе"><i data-lucide="monitor"></i></button></div></div>
+  <button class="burger" id="burger" aria-label="Меню" aria-expanded="false" aria-controls="mnav"><span></span><span></span></button>
+</div></header>
+<div class="mnav" id="mnav" data-modal-layer role="dialog" aria-modal="true" aria-label="Разделы"><div class="mnav-in">
+  <nav class="mnav-list"></nav>
+  <div class="mnav-actions"><div class="mtheme mt-acc"><span>Акцент</span><div class="tseg" role="group" aria-label="Акцентный цвет"><button class="tseg-b" role="radio" data-accent-v="evory" aria-label="Бирюза" title="Бирюза"><span class="sw" style="--c:#0a806c"></span></button><button class="tseg-b" role="radio" data-accent-v="ink" aria-label="Чернила" title="Чернила"><span class="sw" style="--c:#5466b8"></span></button><button class="tseg-b" role="radio" data-accent-v="slate" aria-label="Сланец" title="Сланец"><span class="sw" style="--c:#46749f"></span></button><button class="tseg-b" role="radio" data-accent-v="petrol" aria-label="Петроль" title="Петроль"><span class="sw" style="--c:#2c7b89"></span></button><button class="tseg-b" role="radio" data-accent-v="aubergine" aria-label="Баклажан" title="Баклажан"><span class="sw" style="--c:#8b5693"></span></button><button class="tseg-b" role="radio" data-accent-v="wine" aria-label="Вино" title="Вино"><span class="sw" style="--c:#ab4c58"></span></button><button class="tseg-b" role="radio" data-accent-v="terracotta" aria-label="Терракота" title="Терракота"><span class="sw" style="--c:#b05d37"></span></button><button class="tseg-b" role="radio" data-accent-v="moss" aria-label="Мох" title="Мох"><span class="sw" style="--c:#637d3e"></span></button><button class="tseg-b" role="radio" data-accent-v="ochre" aria-label="Охра" title="Охра"><span class="sw" style="--c:#9d6a1c"></span></button><button class="tseg-b" role="radio" data-accent-v="brick" aria-label="Кирпич" title="Кирпич"><span class="sw" style="--c:#b44f41"></span></button><button class="tseg-b" role="radio" data-accent-v="dustrose" aria-label="Пыльная роза" title="Пыльная роза"><span class="sw" style="--c:#a25a77"></span></button><button class="tseg-b" role="radio" data-accent-v="lilac" aria-label="Сирень" title="Сирень"><span class="sw" style="--c:#7b62a6"></span></button><button class="tseg-b" role="radio" data-accent-v="heather" aria-label="Вереск" title="Вереск"><span class="sw" style="--c:#6a6899"></span></button><button class="tseg-b" role="radio" data-accent-v="azure" aria-label="Лазурь" title="Лазурь"><span class="sw" style="--c:#2c7ca1"></span></button><button class="tseg-b" role="radio" data-accent-v="seawave" aria-label="Морская волна" title="Морская волна"><span class="sw" style="--c:#22817e"></span></button><button class="tseg-b" role="radio" data-accent-v="sage" aria-label="Шалфей" title="Шалфей"><span class="sw" style="--c:#4d7e62"></span></button><button class="tseg-b" role="radio" data-accent-v="pine" aria-label="Хвоя" title="Хвоя"><span class="sw" style="--c:#367b63"></span></button><button class="tseg-b" role="radio" data-accent-v="graphite" aria-label="Графит" title="Графит"><span class="sw" style="--c:#5a6a80"></span></button></div></div><div class="mtheme"><span>Режим</span><div class="tseg" role="group" aria-label="Режим цвета"><button class="tseg-b tx" role="radio" data-palette-v="mono" title="Монохром — как Vercel">Моно</button><button class="tseg-b tx" role="radio" data-palette-v="accent" title="Монохром с акцентом — как Linear">С акцентом</button><button class="tseg-b tx" role="radio" data-palette-v="tint" title="Акцентная — как Supabase">Акцентная</button><button class="tseg-b tx" role="radio" data-palette-v="rich" title="Выраженная — фон и слои в тон акцента">Выраженная</button></div></div><div class="mtheme"><span>Тема</span><div class="tseg" role="group" aria-label="Тема"><button class="tseg-b" role="radio" data-theme-v="light" aria-label="Светлая" title="Светлая"><i data-lucide="sun"></i></button><button class="tseg-b" role="radio" data-theme-v="dark" aria-label="Тёмная" title="Тёмная"><i data-lucide="moon"></i></button><button class="tseg-b" role="radio" data-theme-v="system" aria-label="Как в системе" title="Как в системе"><i data-lucide="monitor"></i></button></div></div></div>
+</div></div>
+
+<main class="wrap">
+
+<!-- ============ Кнопки ============ -->
+<!-- ============ Шапка ============ -->
+<section id="nav">
+  <div class="head"><h2>Шапка</h2><p>Живые образцы из библиотеки: tokens/nav.css, js/nav.js, js/theme.js, страница nav-demo.html. Пункты без подложки, одна панель подменю на все пункты, меню аккаунта с темой, бургер с 960px и уже.</p></div>
+  <div class="frames">
+    <figure><figcaption class="t-label">Гость, десктоп, подменю «Решения»</figcaption><div class="frame frame-d"><iframe loading="lazy" src="nav-demo.html?soft=1&amp;auth=guest&amp;menu=solutions" title="Шапка: гость, открыто подменю" style="height:330px"></iframe></div></figure>
+    <figure><figcaption class="t-label">Вошёл, десктоп, меню аккаунта</figcaption><div class="frame frame-d"><iframe loading="lazy" src="nav-demo.html?soft=1&amp;auth=user&amp;acct=1" title="Шапка: вошёл, открыто меню аккаунта" style="height:400px"></iframe></div></figure>
+    <div class="frames-m">
+      <figure><figcaption class="t-label">Гость, телефон</figcaption><div class="frame"><iframe loading="lazy" src="nav-demo.html?soft=1&amp;auth=guest&amp;m=1" title="Мобильное меню: гость" style="height:800px"></iframe></div></figure>
+      <figure><figcaption class="t-label">Вошёл, телефон</figcaption><div class="frame"><iframe loading="lazy" src="nav-demo.html?soft=1&amp;auth=user&amp;m=1" title="Мобильное меню: вошёл" style="height:800px"></iframe></div></figure>
+    </div>
+  </div>
+</section>
+
+<section id="buttons">
+  <div class="head"><h2>Кнопки</h2><p>Основная на тёмной теме светлая. Акцентная одна на экран, для целевого действия. Опасная красная во всех состояниях. Нажатие размер не меняет, загрузка не меняет ширину.</p></div>
+  <div class="grid cols">
+    <div class="box full">
+      <div class="matrix">
+        <span></span><span class="t-label">Основная</span><span class="t-label">Акцентная</span><span class="t-label">Вторичная</span><span class="t-label">Тихая</span><span class="t-label">Опасная</span>
+        <span class="t-label">xl 60</span>
+        <button class="btn btn-xl btn-primary">Начать бесплатно</button><button class="btn btn-xl btn-accent">Записаться</button><button class="btn btn-xl btn-secondary">Как это работает</button><span></span><span></span>
+        <span class="t-label">lg 52</span>
+        <button class="btn btn-lg btn-primary">Начать бесплатно</button><button class="btn btn-lg btn-accent">Создать проект</button><button class="btn btn-lg btn-secondary">Документация</button><button class="btn btn-lg btn-ghost">Отмена</button><button class="btn btn-lg btn-danger">Удалить</button>
+        <span class="t-label">md 44</span>
+        <button class="btn btn-primary">Начать <i data-lucide="arrow-right" class="arrow"></i></button><button class="btn btn-accent"><i data-lucide="plus"></i>Создать</button><button class="btn btn-secondary"><i data-lucide="github"></i>GitHub</button><button class="btn btn-ghost">Отмена</button><button class="btn btn-danger"><i data-lucide="trash-2"></i>Удалить</button>
+        <span class="t-label">sm 36</span>
+        <button class="btn btn-sm btn-primary">Начать</button><button class="btn btn-sm btn-accent">Создать</button><button class="btn btn-sm btn-secondary">Изменить</button><button class="btn btn-sm btn-ghost">Отмена</button><button class="btn btn-sm btn-danger">Удалить</button>
+        <span class="t-label">Отключена</span>
+        <button class="btn btn-primary" disabled>Начать</button><button class="btn btn-accent" disabled>Создать</button><button class="btn btn-secondary" disabled>Изменить</button><button class="btn btn-ghost" disabled>Отмена</button><button class="btn btn-danger" disabled>Удалить</button>
+        <span class="t-label">Загрузка</span>
+        <button class="btn btn-primary load">Сохранить</button><button class="btn btn-accent load">Создать проект</button><button class="btn btn-secondary load">Обновить</button><button class="btn btn-ghost load">Проверить</button><button class="btn btn-danger load">Удалить</button>
+        <span class="t-label">С итогом</span>
+        <button class="btn btn-primary" data-load="1200" data-done="Сохранено">Сохранить</button><button class="btn btn-accent" data-load="1200" data-done="Опубликовано"><i data-lucide="send"></i>Опубликовать</button><button class="btn btn-secondary" data-done="Скопировано" data-copy="https://example.com/invite/7Kx2"><i data-lucide="link"></i>Копировать</button><button class="btn btn-ghost" data-done="Отправлено"><i data-lucide="mail"></i>Отправить</button><button class="btn btn-danger" data-load="1200" data-done="Удалено">Удалить</button>
+      </div>
+      <p class="hint cap">Нажми кнопку из строки «Загрузка»: 1,5 секунды крутится индикатор, ширина не прыгает. «С итогом»: после действия (или загрузки) надпись сменяется галочкой и итогом, через 2 с возвращается; ширина рассчитана на более длинную из двух.</p>
+    </div>
+    <div class="box">
+      <h3 class="t-label">Кнопки-иконки</h3>
+      <div class="ib-pair">
+      <div class="ib-col"><span class="hint cap">Действия</span><div class="btn-row">
+        <button class="icon-btn" aria-label="Копировать" data-tip="Копировать" data-kbd="⌘C" data-copy="https://example.com/invite/7Kx2"><i data-lucide="copy"></i></button>
+        <button class="icon-btn" aria-label="Поделиться" data-tip="Поделиться"><i data-lucide="share-2"></i></button>
+        <button class="icon-btn" aria-label="Настройки" data-tip="Настройки" data-kbd="⌘,"><i data-lucide="settings"></i></button>
+        <button class="icon-btn" aria-label="Ещё" data-tip="Ещё"><i data-lucide="ellipsis"></i></button>
+        <button class="icon-btn" aria-label="Удалить" disabled><i data-lucide="trash-2"></i></button>
+      </div>
+      </div>
+      <div class="ib-col"><span class="hint cap">Размеры 24 / 28 / 32 / 36 / 40</span><div class="btn-row ib-sizes">
+        <button class="icon-btn icon-btn-xs" aria-label="Копировать, 24" data-tip="xs · 24" data-copy="xs"><i data-lucide="copy"></i></button>
+        <button class="icon-btn icon-btn-sm" aria-label="Копировать, 28" data-tip="sm · 28" data-copy="sm"><i data-lucide="copy"></i></button>
+        <button class="icon-btn" aria-label="Копировать, 32" data-tip="по умолчанию · 32" data-copy="default"><i data-lucide="copy"></i></button>
+        <button class="icon-btn icon-btn-md" aria-label="Копировать, 36" data-tip="md · 36" data-copy="md"><i data-lucide="copy"></i></button>
+        <button class="icon-btn icon-btn-lg" aria-label="Копировать, 40" data-tip="lg · 40" data-copy="lg"><i data-lucide="copy"></i></button>
+      </div></div>
+      </div>
+      <p class="hint cap">Наведи на одну и веди по соседним: первая подсказка ждёт 400 мс, следующие появляются сразу. «Копировать» по клику превращается в галочку. Размеры: <code>icon-btn-xs</code> 24, <code>-sm</code> 28, по умолчанию 32, <code>-md</code> 36, <code>-lg</code> 40. Иконка 14 / 16 / 16 / 16 / 20.</p>
+    </div>
+    <div class="box">
+      <h3 class="t-label">В ряду с полем</h3>
+      <div class="btn-row" style="flex-wrap:nowrap">
+        <span class="input-wrap" style="flex:1"><i data-lucide="mail"></i><input class="input" placeholder="you@company.com"></span>
+        <button class="btn btn-primary">Подписаться</button>
+      </div>
+      <p class="hint cap">Поле и кнопка обе по 36: совпадают по верху и низу.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Поля ============ -->
+<section id="fields">
+  <div class="head"><h2>Поля</h2><p>Фокус: тонкий контур 1px без свечения. Ошибка: красный контур и сообщение под полем, которое мягко выезжает. Подпись над полем через 8px.</p></div>
+  <div class="grid cols">
+    <div class="box">
+      <label class="field"><span class="label">Название проекта</span><input class="input" value="Brand / Web"></label>
+      <label class="field"><span class="label">Поиск</span><span class="input-wrap"><i data-lucide="search"></i><input class="input" placeholder="Найти задачу…"><span class="trail"><span class="kbd">/</span></span></span></label>
+      <label class="field"><span class="label">Email <span class="opt">необязательно</span></span><span class="input-wrap"><i data-lucide="mail"></i><input class="input" type="email" placeholder="you@company.com"></span><span class="hint">Пришлём ссылку для входа</span></label>
+    </div>
+    <div class="box">
+      <form class="field" id="slug-form" novalidate><span class="label">Адрес</span><input class="input" id="slug" value="мой проект" aria-describedby="slug-msg"><span class="hint" id="slug-msg">Только латиница, цифры и дефис.</span></form>
+      <label class="field"><span class="label">Регион</span><select class="select" id="region">
+  <optgroup label="Европа"><option data-meta="eu-central-1" selected>Франкфурт</option><option data-meta="eu-north-1">Стокгольм</option><option data-meta="eu-west-2">Лондон</option><option data-meta="eu-south-1" disabled>Милан (скоро)</option></optgroup>
+  <optgroup label="Америка"><option data-meta="us-east-1">Вирджиния</option><option data-meta="us-west-2">Орегон</option><option data-meta="sa-east-1">Сан-Паулу</option></optgroup>
+  <optgroup label="Азия"><option data-meta="ap-southeast-1">Сингапур</option><option data-meta="ap-northeast-1">Токио</option><option data-meta="ap-south-1">Мумбаи</option></optgroup>
+</select><span class="hint" id="region-hint">Выбрано: eu-central-1</span></label>
+      <label class="field"><span class="label">Роль</span><select class="select"><option value="" selected disabled hidden>Выберите роль</option><option>Владелец</option><option>Администратор</option><option>Разработчик</option><option>Только чтение</option></select></label>
+      <label class="field"><span class="label">Ключ API</span><input class="input" value="sk_live_••••••••4f2a" readonly></label>
+      <label class="field"><span class="label">Тариф</span><input class="input" value="Бесплатный" disabled></label>
+    </div>
+    <div class="box full">
+      <label class="field"><span class="label">Описание</span><textarea class="textarea" placeholder="Что делает этот проект? Поле растёт вместе с текстом."></textarea></label>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Выбор ============ -->
+<!-- ============ Ввод ============ -->
+<section id="inputs">
+  <div class="head"><h2>Ввод</h2><p>Расширенные поля: tokens/inputs.css + js/inputs.js. У всего, что выглядит как поле, высота 36 и тот же фокус. Внутренние кнопки и теги отстоят от края на 4px. Выпадающие части двигаются как меню.</p></div>
+  <div class="grid cols">
+    <div class="box">
+      <h3 class="t-label">Поиск</h3>
+      <span class="input-wrap search"><i data-lucide="search"></i><input class="input" type="search" placeholder="Поиск по проектам" data-hotkey="/" aria-label="Поиск по проектам"><span class="trail"><span class="kbd">/</span><button type="button" class="icon-btn icon-btn-sm clear" aria-label="Очистить"><i data-lucide="x"></i></button></span></span>
+      <p class="hint cap">«/» с любого места ставит фокус в поле. Когда появился текст, вместо подсказки кнопка очистки. Esc очищает, второй Esc уводит фокус.</p>
+      <h3 class="t-label">Пароль</h3>
+      <label class="field"><span class="label">Новый пароль</span>
+        <span class="input-wrap pw"><input class="input" type="password" id="pw1" autocomplete="new-password" placeholder="Минимум 8 символов"><span class="trail"><button type="button" class="icon-btn icon-btn-sm" data-pw-toggle aria-pressed="false" aria-label="Показать пароль"><i data-lucide="eye" class="i-show"></i><i data-lucide="eye-off" class="i-hide"></i></button></span></span>
+      </label>
+      <div class="strength" data-for="pw1" aria-live="polite"><div class="strength-bar"><i></i><i></i><i></i><i></i></div><span class="strength-text">Надёжность</span></div>
+    </div>
+
+    <div class="box">
+      <h3 class="t-label">Код из SMS</h3>
+      <div class="otp-row"><div class="otp" id="otp" role="group" aria-label="Код подтверждения"><input><input><input><span class="sep"></span><input><input><input></div>
+      <p class="hint cap">Верный код 123456. Вставка раскладывает код по ячейкам, Backspace идёт назад. При ошибке поле встряхивается и очищается.</p></div>
+      <h3 class="t-label">Число</h3>
+      <div class="pair">
+        <div class="field"><label class="label" for="seats">Места в команде</label><span class="stepper"><button type="button" aria-label="Меньше"><i data-lucide="minus"></i></button><input type="number" id="seats" value="5" min="1" max="50" step="1"><button type="button" aria-label="Больше"><i data-lucide="plus"></i></button></span></div>
+        <div class="field"><label class="label" for="quota">Лимит, ГБ</label><span class="stepper"><button type="button" aria-label="Меньше"><i data-lucide="minus"></i></button><input type="number" id="quota" value="2.5" min="0.5" max="10" step="0.5"><button type="button" aria-label="Больше"><i data-lucide="plus"></i></button></span></div>
+      </div>
+      <p class="hint cap">Удержание кнопки повторяет шаг. В поле работают ↑↓, с Shift шаг 10. На границе кнопка гаснет.</p>
+    </div>
+
+    <div class="box">
+      <h3 class="t-label">Поле с подсказками</h3>
+      <div class="field"><label class="label" for="tz">Часовой пояс</label>
+        <div class="combo" data-options="Москва:UTC+3|Калининград:UTC+2|Самара:UTC+4|Екатеринбург:UTC+5|Омск:UTC+6|Новосибирск:UTC+7|Красноярск:UTC+7|Иркутск:UTC+8|Якутск:UTC+9|Владивосток:UTC+10|Магадан:UTC+11|Камчатка:UTC+12" data-value="Москва"><input class="input" id="tz" placeholder="Начните вводить город"></div>
+      </div>
+      <h3 class="t-label">Мультивыбор</h3>
+      <div class="field"><label class="label" for="tags">Метки</label>
+        <div class="combo" data-multi data-create data-options="Баг|Улучшение|Дизайн|Бэкенд|Фронтенд|Документация|Срочно|Мобильное|Безопасность" data-value="Дизайн|Фронтенд"><div class="input multi"><input id="tags" placeholder="Добавить метку"></div></div>
+      </div>
+      <div class="field"><label class="label" for="team">Исполнители <span class="opt">одной строкой</span></label>
+        <div class="combo" data-multi data-one-line data-options="Анна Смирнова|Борис Ковалёв|Вера Лебедева|Глеб Орлов|Дарья Никитина|Егор Соколов|Жанна Фёдорова|Зоя Морозова" data-value="Анна Смирнова|Борис Ковалёв|Вера Лебедева|Глеб Орлов|Дарья Никитина"><div class="input multi"><input id="team" placeholder="Добавить человека"></div></div>
+      </div>
+      <p class="hint cap">Совпадение плотнее, без подсветки фоном. Если варианта нет в списке, появляется «Добавить». Backspace в пустом поле: первый подсвечивает тег, второй удаляет. Одной строкой: поле не растёт, теги сужаются с многоточием, лишние сворачиваются в «+N».</p>
+    </div>
+
+    <div class="box">
+      <h3 class="t-label">Дата</h3>
+      <div class="pair">
+        <div class="field"><span class="label" data-label-for="due">Срок</span><div class="date" id="due" data-mode="single" data-value="2026-11-12"></div></div>
+        <div class="field"><span class="label" data-label-for="per">Период отчёта</span><div class="date" id="per" data-mode="range" data-value="2026-10-30..2026-11-05" data-max="2026-11-05"></div></div>
+      </div>
+      <p class="hint cap">Неделя с понедельника, сегодня отмечен точкой. Выбранный день как основная кнопка. Период применяется кнопкой, при выборе конца полоса тянется за курсором. С клавиатуры: стрелки, PageUp/PageDown листают месяц, Esc.</p>
+    </div>
+
+    <div class="box">
+      <h3 class="t-label">Ползунок</h3>
+      <div class="field"><div class="slider-head"><span class="label">Громкость уведомлений</span><output id="vol-o"></output></div>
+        <div class="slider" data-out="vol-o" data-format="{}%"><input type="range" min="0" max="100" value="64" aria-label="Громкость уведомлений"><span class="track"></span></div></div>
+      <div class="field"><div class="slider-head"><span class="label">Цена</span><output id="price-o"></output></div>
+        <div class="slider range" data-out="price-o" data-format="{} ₽" data-gap="1000"><input type="range" min="0" max="50000" step="500" value="8000" aria-label="Цена от"><input type="range" min="0" max="50000" step="500" value="32000" aria-label="Цена до"><span class="track"></span></div>
+        <div class="slider-ticks"><span>0</span><span>25 000</span><span>50 000</span></div></div>
+      <div class="field"><div class="slider-head"><span class="label">Опыт, лет <span class="opt">со шкалой</span></span><output id="exp-o"></output></div>
+        <div class="slider range" data-scale data-out="exp-o" data-format="{}"><input type="range" min="1" max="10" step="1" value="3" aria-label="Опыт от"><input type="range" min="1" max="10" step="1" value="8" aria-label="Опыт до"><span class="track"></span></div></div>
+      <p class="hint cap">Родной range: клавиатура и формы работают сами. Дорожка-капсула 20px, заливка обнимает бегунки; размер при захвате не меняется. <code>data-scale</code> добавляет деления и подпись под каждым шагом, выбранные ярче.</p>
+    </div>
+
+    <div class="box">
+      <h3 class="t-label">Группа переключателей</h3>
+      <div class="btn-row">
+        <div class="tgl" role="group" aria-label="Начертание"><button type="button" data-v="b" aria-label="Жирный" aria-pressed="true"><i data-lucide="bold"></i></button><button type="button" data-v="i" aria-label="Курсив"><i data-lucide="italic"></i></button><button type="button" data-v="u" aria-label="Подчёркнутый"><i data-lucide="underline"></i></button><span class="tgl-sep"></span><button type="button" data-v="s" aria-label="Зачёркнутый"><i data-lucide="strikethrough"></i></button></div>
+        <div class="tgl" data-mode="single" role="group" aria-label="Выравнивание"><button type="button" data-v="l" aria-label="По левому краю" aria-pressed="true"><i data-lucide="align-left"></i></button><button type="button" data-v="c" aria-label="По центру"><i data-lucide="align-center"></i></button><button type="button" data-v="r" aria-label="По правому краю"><i data-lucide="align-right"></i></button></div>
+      </div>
+      <p class="hint cap">Слева каждая кнопка включается сама. Справа включена одна. Когда выбор из 2–4 вариантов с подписями, лучше сегменты.</p>
+      <h3 class="t-label">Цвет</h3>
+      <div class="color" data-value="#0a806c" style="display:flex;flex-wrap:wrap;align-items:center;gap:var(--sp-3) var(--sp-5)">
+        <div class="swatches" role="radiogroup" aria-label="Цвет метки">
+          <button type="button" class="swatch" data-c="#0a806c" aria-label="Зелёный"></button><button type="button" class="swatch" data-c="#4ea7fc" aria-label="Голубой"></button><button type="button" class="swatch" data-c="#7170ff" aria-label="Индиго"></button><button type="button" class="swatch" data-c="#c968e6" aria-label="Сиреневый"></button><button type="button" class="swatch" data-c="#eb5757" aria-label="Красный"></button><button type="button" class="swatch" data-c="#f2994a" aria-label="Оранжевый"></button><button type="button" class="swatch" data-c="#f0bf00" aria-label="Жёлтый"></button><button type="button" class="swatch" data-c="#8a8f98" aria-label="Серый"></button>
+        </div>
+        <label class="hex"><span class="preview"><input type="color" aria-label="Палитра"></span><input class="input" maxlength="7" aria-label="Цвет в HEX" spellcheck="false"></label>
+      </div>
+    </div>
+
+    <div class="box">
+      <h3 class="t-label">Загрузка файлов</h3>
+      <div class="stack">
+          <label class="dz" data-max="10" data-accept="image/*,.pdf" data-demo tabindex="0"><input type="file" multiple><span class="dz-ic"><i data-lucide="upload"></i></span><span><b>Перетащите файлы</b> или <u>выберите</u></span><span>PNG, JPG или PDF, до 10 МБ</span></label>
+          <ul class="files" aria-live="polite"></ul>
+        <p class="hint cap">Зона с пунктиром; при перетаскивании сплошная рамка акцентом и тинт, иконка приподнимается. Строка файла: тип, имя (обрезается многоточием, полное в подсказке), размер или процент, тонкий прогресс. Неподходящий файл попадает в список с причиной, а не молча отбрасывается.</p>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section id="choice">
+  <div class="head"><h2>Выбор</h2><p>Контролы 16px стоят по центру первой строки текста. Галочка проявляется из 60%, а не из нуля.</p></div>
+  <div class="grid">
+    <div class="box third stack">
+      <h3 class="t-label">Чекбокс</h3>
+      <label class="choice"><input type="checkbox" class="check" checked><span>Уведомлять по почте<small>Когда вас упомянули или назначили</small></span></label>
+      <label class="choice"><input type="checkbox" class="check" id="ind"><span>Выбрать всё<small>Частично выбрано</small></span></label>
+      <label class="choice"><input type="checkbox" class="check"><span>Еженедельный отчёт<small>По понедельникам, сводка за неделю</small></span></label>
+      <label class="choice"><input type="checkbox" class="check" disabled><span>Экспорт в CSV<small>Недоступно на бесплатном тарифе</small></span></label>
+    </div>
+    <div class="box third stack">
+      <h3 class="t-label">Радио</h3>
+      <label class="choice"><input type="radio" name="r" class="radio" checked><span>Публичный<small>Виден всем по ссылке</small></span></label>
+      <label class="choice"><input type="radio" name="r" class="radio"><span>Команда<small>Участники проекта и гости</small></span></label>
+      <label class="choice"><input type="radio" name="r" class="radio"><span>Только я<small>Не видно даже администратору</small></span></label>
+      <label class="choice"><input type="radio" name="r" class="radio" disabled><span>По паролю<small>Доступно на тарифе «Команда»</small></span></label>
+    </div>
+    <div class="box third stack">
+      <h3 class="t-label">Переключатель</h3>
+      <label class="choice"><input type="checkbox" role="switch" class="switch" checked><span>Автосохранение<small>Черновик пишется каждые 10 секунд</small></span></label>
+      <label class="choice"><input type="checkbox" role="switch" class="switch"><span>Тёмные превью<small>Миниатюры в тёмной теме сайта</small></span></label>
+      <label class="choice"><input type="checkbox" role="switch" class="switch" disabled><span>Бета-функции<small>Включает администратор команды</small></span></label>
+      <label class="choice"><input type="checkbox" role="switch" class="switch"><span>Звук уведомлений<small>Короткий сигнал, когда вкладка в фоне</small></span></label>
+    </div>
+    <div class="box">
+      <h3 class="t-label">Сегменты</h3>
+      <div class="seg" role="group" aria-label="Период"><span class="thumb"></span><button aria-pressed="true">День</button><button aria-pressed="false">Неделя</button><button aria-pressed="false">Месяц</button><button aria-pressed="false">Год</button></div>
+      <p class="hint cap">Одна плашка едет между пунктами и не перерисовывается заново.</p>
+    </div>
+    <div class="box">
+      <h3 class="t-label">Вкладки</h3>
+      <div>
+        <div class="tabs" role="tablist"><span class="line"></span><button class="tab" role="tab" aria-selected="true">Обзор</button><button class="tab" role="tab" aria-selected="false">Логи</button><button class="tab" role="tab" aria-selected="false">Доступ</button></div>
+        <div class="tab-panel hint" id="tab-panel">Сводка по проекту: запросы, ошибки, задержка.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Навигация ============ -->
+<section id="navigation">
+  <div class="head"><h2>Навигация</h2><p>Где я и куда дальше. Текущее место отмечено плашкой или полоской, которая едет к новому месту, поэтому ничего не прыгает.</p></div>
+  <div class="grid cols">
+    <div class="box">
+      <h3 class="t-label">Хлебные крошки</h3>
+      <nav class="crumbs" aria-label="Путь"><ol><li><a href="#"><i data-lucide="house"></i>Главная</a></li><li><a href="#">Проекты</a></li><li><span aria-current="page">brand-web</span></li></ol></nav>
+      <nav class="crumbs" data-collapse aria-label="Путь"><ol><li><a href="#">Brand Studio</a></li><li><a href="#">Проекты</a></li><li><a href="#">brand-web</a></li><li><a href="#">Настройки</a></li><li><a href="#">Окружения</a></li><li><span aria-current="page">Продакшн</span></li></ol></nav>
+      <p class="hint cap">Длинный путь: первый, «…» и два последних. «…» раскрывает середину плавно.</p>
+    </div>
+    <div class="box">
+      <h3 class="t-label">Страницы</h3>
+      <nav class="pager" data-total="24" data-page="1" data-per="20" data-count="478"></nav>
+      <nav class="pager" data-total="5" data-page="2"></nav>
+      <p class="hint cap">Всегда 7 мест, ширина не меняется. На узком экране «Страница 3 из 24».</p>
+    </div>
+    <div class="box full">
+      <h3 class="t-label">Шаги</h3>
+      <ol class="steps steps-auto" id="steps" data-step="1">
+        <li><span class="step-dot"></span><span class="step-tx"><b>Аккаунт</b><span>Почта и пароль</span></span></li>
+        <li><span class="step-dot"></span><span class="step-tx"><b>Команда</b><span>Пригласите коллег</span></span></li>
+        <li><span class="step-dot"></span><span class="step-tx"><b>Проект</b><span>Название и регион</span></span></li>
+        <li><span class="step-dot"></span><span class="step-tx"><b>Готово</b><span>Можно работать</span></span></li>
+      </ol>
+      <div class="btn-row"><button class="btn btn-secondary" id="st-prev">Назад</button><button class="btn btn-primary" id="st-next">Далее</button></div>
+    </div>
+    <div class="box full">
+      <h3 class="t-label">Боковое меню приложения</h3>
+      <div class="app-demo">
+        <aside class="side" aria-label="Меню приложения">
+          <div class="side-head">
+            <button class="side-ws" type="button"><span class="ws-logo">B</span><span class="side-tx">Brand Studio</span><i data-lucide="chevrons-up-down"></i></button>
+            <button class="icon-btn icon-btn-sm side-toggle" type="button" data-side-toggle aria-label="Свернуть меню"><i data-lucide="panel-left"></i></button>
+          </div>
+          <button class="side-search" type="button" data-open="cmdk"><i data-lucide="search"></i><span class="side-tx">Поиск</span><span class="kbd">⌘K</span></button>
+          <nav class="side-nav">
+            <a class="side-item" href="#" aria-current="page"><i data-lucide="house"></i><span class="side-tx">Главная</span></a>
+            <a class="side-item" href="#"><i data-lucide="inbox"></i><span class="side-tx">Входящие</span><span class="side-count">4</span></a>
+            <a class="side-item" href="#"><i data-lucide="circle-check-big"></i><span class="side-tx">Мои задачи</span></a>
+            <button class="side-label" type="button" aria-expanded="true"><span class="side-tx">Проекты</span><i data-lucide="chevron-down"></i></button>
+            <div class="side-sub"><div>
+              <a class="side-item" href="#"><span class="side-dot" style="background:#4ea7fc"></span><span class="side-tx">brand-web</span></a>
+              <a class="side-item" href="#"><span class="side-dot" style="background:#e0a43c"></span><span class="side-tx">billing-api</span></a>
+              <a class="side-item" href="#"><span class="side-dot" style="background:#9b8afb"></span><span class="side-tx">docs</span></a>
+            </div></div>
+            <button class="side-label" type="button" aria-expanded="true"><span class="side-tx">Команда</span><i data-lucide="chevron-down"></i></button>
+            <div class="side-sub"><div>
+              <a class="side-item" href="#"><i data-lucide="users"></i><span class="side-tx">Участники</span></a>
+              <a class="side-item" href="#"><i data-lucide="settings"></i><span class="side-tx">Настройки</span></a>
+            </div></div>
+          </nav>
+          <div class="side-foot"><span class="avatar" data-hue="2">АК</span><span class="side-tx">Анна Ковалёва</span></div>
+        </aside>
+        <div class="app-main">
+          <nav class="crumbs" aria-label="Путь"><ol><li><a href="#">Главная</a></li><li><span aria-current="page">Обзор</span></li></ol></nav>
+          <h3>Обзор</h3>
+          <div class="app-stats">
+            <div class="app-stat"><div class="skeleton" style="height:12px;width:50%"></div><div class="skeleton" style="height:24px;width:70%"></div></div>
+            <div class="app-stat"><div class="skeleton" style="height:12px;width:40%"></div><div class="skeleton" style="height:24px;width:60%"></div></div>
+            <div class="app-stat"><div class="skeleton" style="height:12px;width:55%"></div><div class="skeleton" style="height:24px;width:50%"></div></div>
+          </div>
+          <div class="skeleton app-chart"></div>
+          <div class="app-rows">
+            <div class="app-row"><div class="skeleton" style="height:16px"></div><div class="skeleton" style="height:12px;width:70%"></div><div class="skeleton" style="height:12px"></div></div>
+            <div class="app-row"><div class="skeleton" style="height:16px"></div><div class="skeleton" style="height:12px;width:55%"></div><div class="skeleton" style="height:12px"></div></div>
+            <div class="app-row"><div class="skeleton" style="height:16px"></div><div class="skeleton" style="height:12px;width:80%"></div><div class="skeleton" style="height:12px"></div></div>
+            <div class="app-row"><div class="skeleton" style="height:16px"></div><div class="skeleton" style="height:12px;width:40%"></div><div class="skeleton" style="height:12px"></div></div>
+          </div>
+        </div>
+      </div>
+      <p class="hint cap">Кнопка у названия сворачивает меню в полосу иконок; иконки остаются на месте, подписи гаснут. В узком окне меню свёрнуто сразу. Поиск открывает палитру ⌘K.</p>
+    </div>
+    <div class="box full">
+      <h3 class="t-label">Оглавление страницы</h3>
+      <div class="op-demo">
+        <article class="op-doc" id="op-doc">
+          <h4 id="op-1">Установка</h4>
+          <p>Пакет ставится одной командой и не тянет за собой лишних зависимостей. После установки достаточно импортировать клиент и передать ключ проекта.</p>
+          <p>Ключ хранится в переменных окружения, а не в коде: так его не увидят в репозитории и не придётся менять после утечки.</p>
+          <h4 id="op-2">Первый запрос</h4>
+          <p>Клиент возвращает данные и ошибку отдельно, поэтому проверять результат удобно без try/catch. Запросы типизированы по схеме базы.</p>
+          <h5 id="op-3">Фильтры</h5>
+          <p>Условия складываются цепочкой: eq, gt, like, in. Порядок не важен, клиент соберёт запрос сам.</p>
+          <h5 id="op-4">Страницы</h5>
+          <p>Для длинных списков используйте range: он возвращает часть строк и общее количество, чтобы нарисовать переключатель страниц.</p>
+          <h4 id="op-5">Подписки</h4>
+          <p>Изменения в таблице приходят в реальном времени. Подписку стоит снимать, когда экран закрывается, иначе соединения копятся.</p>
+          <p>На медленной сети события собираются в пачки и приходят раз в секунду, и интерфейс не дёргается от каждого изменения.</p>
+          <h4 id="op-6">Ошибки</h4>
+          <p>У каждой ошибки есть код и понятное сообщение. Показывайте человеку сообщение, а код отправляйте в логи.</p>
+          <p>Повторять запрос имеет смысл только при сетевых ошибках; ошибки доступа и валидации повтор не исправит.</p>
+          <p>Если сервис недоступен дольше минуты, клиент сам переходит в режим ожидания и возобновляет работу, когда связь вернётся.</p>
+        </article>
+        <nav class="onpage" data-scroll="#op-doc" aria-label="На этой странице">
+          <span class="t-label">На странице</span>
+          <ul><li><a href="#op-1">Установка</a></li><li><a href="#op-2">Первый запрос</a></li><li class="sub"><a href="#op-3">Фильтры</a></li><li class="sub"><a href="#op-4">Страницы</a></li><li><a href="#op-5">Подписки</a></li><li><a href="#op-6">Ошибки</a></li></ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Слои ============ -->
+<section id="overlays">
+  <div class="head"><h2>Меню, подсказки, диалог, уведомление</h2><p>Всё, что появляется, идёт по ease-out, из 97% и со сдвигом 4–8px от источника. Уходит тем же путём и быстрее.</p></div>
+  <div class="grid cols">
+    <div class="box">
+      <h3 class="t-label">Меню</h3>
+      <div class="rel">
+        <button class="btn btn-secondary" id="menu-btn" aria-haspopup="menu" aria-controls="menu" aria-expanded="false">Действия <i data-lucide="chevron-down"></i></button>
+        <div class="menu" id="menu" role="menu" style="top:calc(100% + var(--sp-2));left:0">
+          <div class="menu-label">Задача</div>
+          <button class="menu-item" role="menuitem"><i data-lucide="pencil"></i><span>Переименовать</span><span class="kbd">R</span></button>
+          <button class="menu-item" role="menuitem"><i data-lucide="copy"></i><span>Дублировать</span><span class="kbd">⌘D</span></button>
+          <button class="menu-item" role="menuitem"><i data-lucide="link"></i><span>Скопировать ссылку</span></button>
+          <button class="menu-item" role="menuitem" aria-disabled="true"><i data-lucide="move-right"></i><span>Перенести</span></button>
+          <div class="menu-sep"></div>
+          <button class="menu-item danger" role="menuitem"><i data-lucide="trash-2"></i><span>Удалить</span><span class="kbd">⌫</span></button>
+        </div>
+      </div>
+      <p class="hint cap">Стрелки ↑↓ ходят по пунктам, Esc закрывает и возвращает фокус.</p>
+    </div>
+    <div class="box">
+      <h3 class="t-label">Диалоги</h3>
+      <div class="btn-row"><button class="btn btn-secondary" id="dlg-open">Простое подтверждение</button><button class="btn btn-danger" data-open="dlg-danger"><i data-lucide="trash-2"></i>Удалить с вводом имени</button><button class="btn btn-secondary" data-open="dlg-form"><i data-lucide="plus"></i>Форма</button><button class="btn btn-secondary" data-open="dlg-invite"><i data-lucide="user-plus"></i>Пригласить</button><button class="btn btn-secondary" data-open="dlg-wizard"><i data-lucide="globe"></i>По шагам</button><button class="btn btn-secondary" data-open="dlg-terms">Длинный текст</button><button class="btn btn-secondary" data-open="dlg-done">Успех</button><button class="btn btn-secondary" data-open="dlg-keys">Горячие клавиши <span class="kbd">?</span></button></div>
+      <p class="hint cap">Форму с введённым не закрыть случайно: фон, Esc и крестик сначала спросят. В длинном окне шапка и кнопки стоят, линии появляются, только когда за ними есть текст.</p>
+      <h3 class="t-label">Шторки</h3>
+      <div class="btn-row"><button class="btn btn-secondary" data-open="sheet-side"><i data-lucide="sliders-horizontal"></i>Сбоку</button><button class="btn btn-secondary" data-open="sheet-bottom"><i data-lucide="share"></i>Снизу</button></div>
+      <p class="hint cap">Нижнюю шторку можно смахнуть вниз за полоску.</p>
+    </div>
+    <div class="box">
+      <h3 class="t-label">Уведомления</h3>
+      <div class="btn-row"><button class="btn btn-secondary" id="t-ok">Успех</button><button class="btn btn-secondary" id="t-err">Ошибка</button><button class="btn btn-secondary" id="t-load">Загрузка → готово</button><button class="btn btn-secondary" id="t-act">С действием</button></div>
+      <p class="hint cap">Не больше трёх сразу; наведение на стопку останавливает таймер; смахните вбок, чтобы закрыть.</p>
+    </div>
+    <div class="box">
+      <h3 class="t-label">Палитра команд</h3>
+      <div class="btn-row"><button class="btn btn-secondary" data-open="cmdk"><i data-lucide="search"></i>Открыть палитру</button></div>
+      <p class="hint cap">⌘K или Ctrl+K. Открывают десятки раз в день, поэтому без выезда, только короткое проявление. Попробуйте «тема» или «тёмная».</p>
+    </div>
+    <div class="box">
+      <h3 class="t-label">Поповер</h3>
+      <div class="btn-row"><button class="btn btn-secondary" data-pop="pop-rename"><i data-lucide="pencil"></i>Переименовать</button><span class="hint">Автор: <a class="link" href="#" data-pop="pop-person" data-pop-hover>Анна Ковалёва</a></span></div>
+      <p class="hint cap">Клик открывает панель с формой. Наведение на имя показывает карточку человека через 400 мс.</p>
+    </div>
+    <div class="box">
+      <h3 class="t-label">Контекстное меню</h3>
+      <div class="ctx-list" data-ctx="ctx-menu" aria-label="Файлы">
+        <div class="ctx-row"><i data-lucide="file-text"></i><span>Бриф.pdf</span><span class="meta">2,4 МБ</span></div>
+        <div class="ctx-row"><i data-lucide="image"></i><span>Главная, макет.png</span><span class="meta">8,1 МБ</span></div>
+        <div class="ctx-row"><i data-lucide="file-spreadsheet"></i><span>Бюджет 2026.xlsx</span><span class="meta">316 КБ</span></div>
+        <div class="ctx-row"><i data-lucide="folder"></i><span>Исходники</span><span class="meta">12 файлов</span></div>
+      </div>
+      <p class="hint cap">Правый клик по строке, клавиша меню или долгое нажатие на телефоне.</p>
+    </div>
+    <div class="box full stack">
+      <h3 class="t-label">Сообщения</h3>
+      <div class="alert alert-info"><i data-lucide="info"></i><div><b>Миграция запланирована</b>База будет недоступна 5 минут в воскресенье в 03:00.</div></div>
+      <div class="alert alert-success"><i data-lucide="check"></i><div><b>Деплой прошёл</b>Версия 2.4.1 доступна всем пользователям.</div></div>
+      <div class="alert alert-warning"><i data-lucide="triangle-alert"></i><div><b>Лимит почти исчерпан</b>Использовано 92% запросов на этот месяц.</div><button class="icon-btn icon-btn-sm" aria-label="Скрыть"><i data-lucide="x"></i></button></div>
+      <div class="alert alert-danger"><i data-lucide="x"></i><div><b>Сборка упала</b>Неизвестный импорт в src/app.ts:42.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Данные ============ -->
+<section id="data">
+  <div class="head"><h2>Данные</h2><p>Цифры одинаковой ширины, чтобы столбцы не прыгали. Разделители строк не доходят до краёв, плитка наведения скруглена.</p></div>
+  <div class="grid">
+    <div class="box full" style="padding:0;background:none;box-shadow:none">
+      <div class="table-wrap"><table class="table">
+        <thead><tr><th>Проект</th><th>Статус</th><th>Владелец</th><th class="num">Запросы</th><th class="num">Задержка</th><th class="num">Обновлён</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">brand-web</td><td><span class="badge badge-success"><span class="dot"></span>Работает</span></td><td><span class="avatars"><span class="avatar">АК</span><span class="avatar">МЛ</span></span></td><td class="num">1 284 019</td><td class="num">42 мс</td><td class="num muted">2 мин назад</td></tr>
+          <tr><td class="strong">billing-api</td><td><span class="badge badge-warning"><span class="dot"></span>Деградация</span></td><td><span class="avatar">ИП</span></td><td class="num">318 442</td><td class="num">310 мс</td><td class="num muted">14 мин назад</td></tr>
+          <tr><td class="strong">auth</td><td><span class="badge badge-danger"><span class="dot"></span>Ошибка</span></td><td><span class="avatar">ДС</span></td><td class="num">90 117</td><td class="num">—</td><td class="num muted">1 ч назад</td></tr>
+          <tr><td class="strong">docs</td><td><span class="badge"><span class="dot"></span>Остановлен</span></td><td><span class="avatar">АК</span></td><td class="num">0</td><td class="num">—</td><td class="num muted">3 дня назад</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div class="box third stack">
+      <h3 class="t-label">Бейджи</h3>
+      <div class="btn-row"><span class="badge">Черновик</span><span class="badge badge-accent">Новое</span><span class="badge badge-success">Готово</span><span class="badge badge-warning">Ревью</span><span class="badge badge-danger">Баг</span><span class="badge badge-info">Бэклог</span><span class="badge badge-accent badge-mono">Beta</span></div>
+      <div class="btn-row"><span class="kbd">⌘</span><span class="kbd">K</span><span class="hint">сочетание клавиш</span></div>
+    </div>
+    <div class="box third stack">
+      <h3 class="t-label">Загрузка</h3>
+      <div class="sk"><div class="skeleton" style="height:16px;width:60%"></div><div class="skeleton" style="height:12px;width:90%"></div><div class="skeleton" style="height:12px;width:75%"></div></div>
+      <div class="btn-row"><span class="spinner"></span><span class="hint">Загружаем логи…</span></div>
+      <div class="progress" role="progressbar" aria-valuenow="64"><i id="prog" style="--p:.64"></i></div>
+    </div>
+    <div class="box third stack">
+      <h3 class="t-label">Ссылки</h3>
+      <a class="link" href="#">Читать документацию <i data-lucide="arrow-right" class="arrow icon-sm"></i></a>
+      <span class="hint">Подчёркивание проявляется при наведении, а не висит всегда.</span>
+    </div>
+  </div>
+  <div class="cards" style="margin-top:var(--grid-gap)">
+    <a class="card card-link" href="#"><h3 class="card-title"><i data-lucide="database"></i>База данных</h3><p class="card-text">Postgres с бэкапами и репликами. Карточка кликабельна целиком.</p><div class="card-foot"><span class="badge badge-success">Работает</span><i data-lucide="arrow-right" class="arrow"></i></div></a>
+    <a class="card card-link" href="#"><h3 class="card-title"><i data-lucide="key-round"></i>Авторизация</h3><p class="card-text">Вход по почте, OAuth и SSO.</p><div class="card-foot"><span class="badge">12 провайдеров</span><i data-lucide="arrow-right" class="arrow"></i></div></a>
+    <div class="card"><h3 class="card-title"><i data-lucide="hard-drive"></i>Хранилище</h3><p class="card-text">Обычная карточка: без наведения, действия внутри.</p><div class="card-foot"><button class="btn btn-sm btn-secondary">Открыть</button><button class="btn btn-sm btn-ghost">Настроить</button></div></div>
+  </div>
+  <div class="grid cols" style="margin-top:var(--grid-gap)">
+    <div class="span12 stats">
+      <div class="stat"><div class="stat-head"><span>Запросы</span><span class="delta up"><i data-lucide="arrow-up-right"></i>12,4%</span></div><div class="stat-num">1,28<small>млн</small></div><svg class="spark" data-values="82,90,86,97,104,99,112,118,109,124,131,128"></svg><div class="stat-foot">за 7 дней</div></div>
+      <div class="stat"><div class="stat-head"><span>Пользователи</span><span class="delta up"><i data-lucide="arrow-up-right"></i>3,1%</span></div><div class="stat-num">18 402</div><svg class="spark" data-values="160,162,161,166,170,168,171,175,174,178,181,184"></svg><div class="stat-foot">активные за месяц</div></div>
+      <div class="stat"><div class="stat-head"><span>Конверсия</span><span class="delta flat"><i data-lucide="arrow-right"></i>0,0%</span></div><div class="stat-num">4,2<small>%</small></div><svg class="spark" data-values="42,44,41,43,42,40,43,42,44,41,42,42"></svg><div class="stat-foot">из пробного в платный</div></div>
+      <div class="stat"><div class="stat-head"><span>Ошибки</span><span class="delta down"><i data-lucide="arrow-up-right"></i>0,3 п.п.</span></div><div class="stat-num">0,42<small>%</small></div><svg class="spark" data-values="12,14,11,13,15,18,16,21,24,22,27,31"></svg><div class="stat-foot">доля запросов с ошибкой</div></div>
+    </div>
+    <div class="box stack">
+      <h3 class="t-label">Люди</h3>
+      <div class="sizes"><span class="avatar avatar-xs" data-hue="1">АК</span><span class="avatar" data-hue="2">МЛ</span><span class="avatar avatar-md" data-hue="3">ИП</span><span class="avatar avatar-lg" data-hue="4">ДС<span class="st online"></span></span><span class="avatar avatar-xl" data-hue="5">ЕВ<span class="st away"></span></span></div>
+      <div class="avatars avatars-md"><span class="avatar avatar-md" data-hue="1">АК</span><span class="avatar avatar-md" data-hue="2">МЛ</span><span class="avatar avatar-md" data-hue="3">ИП</span><span class="avatar avatar-md" data-hue="5">ЕВ</span><span class="avatar avatar-md avatar-more">+5</span></div>
+      <div class="who"><span class="avatar avatar-md" data-hue="4">ДС<span class="st busy"></span></span><div><b>Денис Смирнов</b><span>Не беспокоить до 16:00</span></div></div>
+      <p class="hint cap">Цвет закреплён за человеком, а не за статусом. Статус показывает точка с кольцом цвета фона.</p>
+    </div>
+    <div class="box">
+      <h3 class="t-label">Частые вопросы</h3>
+      <div class="acc" data-single>
+        <details class="acc-item" open><summary><span>Можно ли сменить тариф в любой момент?</span></summary><div class="acc-body"><p>Да. Новый тариф начинает действовать сразу, разница пересчитывается по дням до конца периода.</p></div></details>
+        <details class="acc-item"><summary><span>Что будет с данными, если перестать платить?</span></summary><div class="acc-body"><p>Проект переходит в режим чтения на 30 дней. За это время можно выгрузить всё или вернуть оплату.</p><p>Потом данные удаляются, мы предупредим письмом за неделю.</p></div></details>
+        <details class="acc-item"><summary><span>Есть ли скидка для команд?</span></summary><div class="acc-body"><p>От десяти мест скидка 20% при оплате за год.</p></div></details>
+        <details class="acc-item"><summary><span>Где хранятся данные?</span></summary><div class="acc-body"><p>Регион выбирается при создании проекта: Европа, США или Азия.</p></div></details>
+      </div>
+    </div>
+    <div class="span12 states">
+      <div class="state state-dashed"><span class="state-ic"><i data-lucide="folder-open"></i></span><h4>Пока нет проектов</h4><p>Создайте первый проект или импортируйте готовый из GitHub.</p><div class="btn-row"><button class="btn btn-primary btn-sm"><i data-lucide="plus"></i>Создать проект</button><button class="btn btn-secondary btn-sm">Импорт</button></div></div>
+      <div class="state state-danger"><span class="state-ic"><i data-lucide="cloud-off"></i></span><h4>Не удалось загрузить</h4><p>Сервер не ответил. Данные на месте, попробуйте ещё раз.</p><div class="btn-row"><button class="btn btn-secondary btn-sm" id="retry"><span>Повторить</span></button></div></div>
+      <div class="state state-404"><div class="big">4<b>0</b>4</div><h4>Страница не найдена</h4><p>Возможно, её переименовали или удалили.</p><div class="btn-row"><a class="btn btn-secondary btn-sm" href="#">На главную</a></div></div>
+    </div>
+    <div class="box stack">
+      <h3 class="t-label">Список действий</h3>
+      <div class="alist">
+        <a class="alist-row" href="#"><span class="alist-ic"><i data-lucide="user-plus"></i></span><span class="alist-tx"><b>Пригласить команду</b><span>По почте или по ссылке</span></span><i data-lucide="chevron-right" class="alist-go"></i></a>
+        <a class="alist-row" href="#"><span class="alist-ic"><i data-lucide="globe"></i></span><span class="alist-tx"><b>Подключить домен</b><span>brand.studio вместо адреса по умолчанию</span></span><i data-lucide="chevron-right" class="alist-go"></i></a>
+        <a class="alist-row" href="#"><span class="alist-ic"><i data-lucide="key-round"></i></span><span class="alist-tx"><b>Создать ключ API</b><span>Для сервера и сборки</span></span><i data-lucide="chevron-right" class="alist-go"></i></a>
+        <a class="alist-row" href="#"><span class="alist-ic"><i data-lucide="credit-card"></i></span><span class="alist-tx"><b>Выбрать тариф</b><span>14 дней бесплатно</span></span><i data-lucide="chevron-right" class="alist-go"></i></a>
+      </div>
+    </div>
+    <div class="box stack">
+      <h3 class="t-label">Лента событий</h3>
+      <ol class="tl">
+        <li><span class="tl-mark ok"><i data-lucide="check"></i></span><div class="tl-body"><p><b>Деплой</b> версии 2.4.1 прошёл</p><time>2 мин назад</time></div></li>
+        <li><span class="tl-mark av"><span class="avatar" data-hue="2">АК</span></span><div class="tl-body"><p><b>Анна</b> оставила комментарий</p><div class="tl-quote">Поправила отступы в шапке, теперь всё по сетке 4px.</div><time>40 мин назад</time></div></li>
+        <li><span class="tl-mark"><i data-lucide="git-branch"></i></span><div class="tl-body"><p><b>Иван</b> создал ветку <code class="inline">fix/header</code></p><time>1 ч назад</time></div></li>
+        <li><span class="tl-mark"><i data-lucide="tag"></i></span><div class="tl-body"><p>Статус изменён на <span class="badge badge-warning">Ревью</span></p><time>вчера, 18:20</time></div></li>
+      </ol>
+    </div>
+    <div class="box">
+      <h3 class="t-label">Комментарии</h3>
+      <div class="cmts">
+        <article class="cmt"><span class="avatar avatar-md" data-hue="2">АК</span><div class="cmt-main">
+          <header class="cmt-head"><b>Анна Ковалёва</b><time>10:42</time></header>
+          <p class="cmt-text">Обновила макет главной, посмотрите блок с ценами, карточки стали ровнее.</p>
+          <div class="cmt-acts"><button class="react" type="button" aria-pressed="true" aria-label="Нравится"><i data-lucide="thumbs-up"></i><span class="n">3</span></button><button class="react" type="button" aria-pressed="false" aria-label="Отлично"><i data-lucide="heart"></i><span class="n">1</span></button><button class="cmt-reply" type="button">Ответить</button></div>
+          <article class="cmt"><span class="avatar avatar-md" data-hue="3">ИП</span><div class="cmt-main">
+            <header class="cmt-head"><b>Иван Петров</b><time>11:05</time></header>
+            <p class="cmt-text"><span class="mention">@Анна</span> да, так лучше. Только у последней карточки кнопка ниже остальных.</p>
+            <div class="cmt-acts"><button class="react" type="button" aria-pressed="false" aria-label="Нравится"><i data-lucide="thumbs-up"></i><span class="n">0</span></button><button class="cmt-reply" type="button">Ответить</button></div>
+          </div></article>
+        </div></article>
+        <form class="composer" data-name="Вы" data-initials="ДА" data-hue="5"><span class="avatar avatar-md" data-hue="5">ДА</span><div class="composer-box"><textarea rows="1" placeholder="Написать комментарий…" aria-label="Комментарий"></textarea><div class="composer-foot"><span class="hint">Ctrl+Enter, чтобы отправить</span><button class="btn btn-primary btn-sm" type="submit">Отправить</button></div></div></form>
+      </div>
+    </div>
+    <div class="box stack">
+      <h3 class="t-label">Код</h3>
+      <div class="code numbered"><div class="code-head"><span class="code-file"><i data-lucide="file-code"></i>app/client.ts</span><button class="icon-btn icon-btn-sm" type="button" aria-label="Скопировать код" data-copy="import { createClient } from '@brand/sdk'&#10;&#10;export const db = createClient(process.env.BRAND_KEY)&#10;const { data } = await db.from('projects').select('*').limit(20)"></button></div>
+<pre><code><span class="line"><span class="tk-k">import</span> { createClient } <span class="tk-k">from</span> <span class="tk-s">'@brand/sdk'</span></span><span class="line"></span><span class="line"><span class="tk-c">// ключ из окружения, не из кода</span></span><span class="line hl"><span class="tk-k">export const</span> db <span class="tk-p">=</span> <span class="tk-f">createClient</span>(process.env.BRAND_KEY)</span><span class="line"><span class="tk-k">const</span> { data } <span class="tk-p">=</span> <span class="tk-k">await</span> db.<span class="tk-f">from</span>(<span class="tk-s">'projects'</span>).<span class="tk-f">select</span>(<span class="tk-s">'*'</span>).<span class="tk-f">limit</span>(<span class="tk-n">20</span>)</span></code></pre></div>
+      <div class="code code-cmd" data-tabs><div class="code-head"><div class="code-tabs" role="tablist" aria-label="Менеджер пакетов"><button class="code-tab" type="button" aria-selected="true" data-cmd="npm install @brand/sdk">npm</button><button class="code-tab" type="button" data-cmd="pnpm add @brand/sdk">pnpm</button><button class="code-tab" type="button" data-cmd="yarn add @brand/sdk">yarn</button><button class="code-tab" type="button" data-cmd="bun add @brand/sdk">bun</button></div><button class="icon-btn icon-btn-sm" type="button" aria-label="Скопировать команду" data-copy="npm install @brand/sdk"></button></div><pre><code></code></pre></div>
+      <div class="btn-row"><span class="keys"><span class="kbd">⌘</span><span class="kbd">K</span></span><span class="hint">палитра</span><span class="keys"><span class="kbd">Ctrl</span><span class="plus">+</span><span class="kbd">Shift</span><span class="plus">+</span><span class="kbd">P</span></span><span class="hint">команды</span></div>
+      <label class="field"><span class="label">Публичный ключ</span><span class="copy-field"><input class="input" readonly value="bs_pub_7f3a9c21e84d0b56a1"><button class="icon-btn icon-btn-sm" type="button" aria-label="Скопировать ключ" data-copy="bs_pub_7f3a9c21e84d0b56a1"></button></span></label>
+    </div>
+    <div class="box full">
+      <h3 class="t-label">Таблица с сортировкой и выбором</h3>
+      <div class="dt" id="dt">
+        <div class="table-wrap"><table class="table">
+          <thead><tr><th class="cb"><input type="checkbox" class="check" aria-label="Выбрать все"></th><th data-sort="text">Проект</th><th>Статус</th><th class="num" data-sort="num">Запросы</th><th class="num" data-sort="num">Задержка</th><th class="num" data-sort="num">Обновлён</th></tr></thead>
+          <tbody>
+            <tr><td class="cb"><input type="checkbox" class="check" aria-label="Выбрать brand-web"></td><td class="strong">brand-web</td><td><span class="badge badge-success"><span class="dot"></span>Работает</span></td><td class="num">1 284 019</td><td class="num" data-v="42">42 мс</td><td class="num muted" data-v="2">2 мин назад</td></tr>
+            <tr><td class="cb"><input type="checkbox" class="check" aria-label="Выбрать billing-api"></td><td class="strong">billing-api</td><td><span class="badge badge-warning"><span class="dot"></span>Деградация</span></td><td class="num">318 442</td><td class="num" data-v="310">310 мс</td><td class="num muted" data-v="14">14 мин назад</td></tr>
+            <tr><td class="cb"><input type="checkbox" class="check" aria-label="Выбрать auth"></td><td class="strong">auth</td><td><span class="badge badge-danger"><span class="dot"></span>Ошибка</span></td><td class="num">90 117</td><td class="num" data-v="9999">—</td><td class="num muted" data-v="60">1 ч назад</td></tr>
+            <tr><td class="cb"><input type="checkbox" class="check" aria-label="Выбрать search"></td><td class="strong">search</td><td><span class="badge badge-success"><span class="dot"></span>Работает</span></td><td class="num">742 860</td><td class="num" data-v="58">58 мс</td><td class="num muted" data-v="25">25 мин назад</td></tr>
+            <tr><td class="cb"><input type="checkbox" class="check" aria-label="Выбрать media-cdn"></td><td class="strong">media-cdn</td><td><span class="badge badge-success"><span class="dot"></span>Работает</span></td><td class="num">2 016 334</td><td class="num" data-v="18">18 мс</td><td class="num muted" data-v="5">5 мин назад</td></tr>
+            <tr><td class="cb"><input type="checkbox" class="check" aria-label="Выбрать docs"></td><td class="strong">docs</td><td><span class="badge"><span class="dot"></span>Остановлен</span></td><td class="num">0</td><td class="num" data-v="9999">—</td><td class="num muted" data-v="4320">3 дня назад</td></tr>
+          </tbody>
+        </table></div>
+        <nav class="pager" data-total="12" data-per="6" data-count="68"></nav>
+        <div class="bulk" role="toolbar" aria-label="Действия с выбранными"><span class="bulk-n">Выбрано <b></b> из <i></i></span><span class="bulk-sep"></span><button class="btn btn-ghost btn-sm" type="button" data-bulk="archive"><i data-lucide="archive"></i><span>В архив</span></button><button class="btn btn-ghost btn-sm" type="button" data-bulk="remove"><i data-lucide="trash-2"></i><span>Удалить</span></button><span class="bulk-sep"></span><button class="icon-btn icon-btn-sm" type="button" data-bulk="clear" aria-label="Снять выбор"><i data-lucide="x"></i></button></div>
+      </div>
+      <p class="hint cap">Заголовок с иконкой сортирует, строки переезжают на новые места. Shift+клик выбирает диапазон, Esc снимает выбор.</p>
+    </div>
+    <div class="box stack">
+      <div class="chart-head"><div><h4>Запросы по дням</h4><div class="stat-num">48 210</div></div>
+        <div class="tgl" data-mode="single" id="cv1" role="group" aria-label="Вид"><button type="button" data-view="chart" aria-pressed="true" aria-label="График"><i data-lucide="chart-column"></i></button><button type="button" data-view="table" aria-label="Таблица"><i data-lucide="table"></i></button></div></div>
+      <div class="chart" data-type="bar" data-views="cv1" data-col="День" aria-label="Запросы по дням" data-values="2840,3120,2960,3410,3680,2210,1980,3290,3550,3720,3940,4100,2460,2240" data-labels="1 ноя,2 ноя,3 ноя,4 ноя,5 ноя,6 ноя,7 ноя,8 ноя,9 ноя,10 ноя,11 ноя,12 ноя,13 ноя,14 ноя"></div>
+    </div>
+    <div class="box stack">
+      <div class="chart-head"><div><h4>Активные пользователи</h4><div class="stat-num">18 402</div></div>
+        <div class="tgl" data-mode="single" id="cv2" role="group" aria-label="Вид"><button type="button" data-view="chart" aria-pressed="true" aria-label="График"><i data-lucide="chart-spline"></i></button><button type="button" data-view="table" aria-label="Таблица"><i data-lucide="table"></i></button></div></div>
+      <div class="chart" data-type="line" data-views="cv2" data-col="Неделя" aria-label="Активные пользователи" data-values="12100,12480,12390,13020,13610,13480,14120,14700,14550,15230,15910,16200,16840,17320,17150,17900,18402" data-labels="1 нед,2 нед,3 нед,4 нед,5 нед,6 нед,7 нед,8 нед,9 нед,10 нед,11 нед,12 нед,13 нед,14 нед,15 нед,16 нед,17 нед"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Обратная связь ============ -->
+<section id="tiles">
+  <div class="head"><h2>Плитки</h2><p>tokens/tiles.css. В плитке утопленная сцена с вещью продукта, под ней заголовок и одна строка. Ширина в ряду: w-4…w-12, t-2 занимает два ряда в высоту, w-12 ставит текст слева. Строки сцены и текста общие на весь ряд, поэтому заголовки соседей на одной линии. Компоновки на 2–6 плиток: <a href="tiles-layouts.html">tiles-layouts.html</a>.</p></div>
+  <div class="tiles">
+    <article class="tile w-7">
+      <div class="tile-stage" style="--w:380px"><div class="vz-box vz-rows" aria-hidden="true" style="padding:var(--sp-1) var(--sp-4)">
+        <div class="vz-row"><span>Заголовок</span><b class="hl">Кофе по пути</b></div>
+        <div class="vz-row"><span>Телефон</span><b>+7 900 000-00-00</b></div>
+        <div class="vz-row" style="box-shadow:none"><span>Вёрстка и код</span><b class="muted"><i data-lucide="lock"></i>Закрыто</b></div>
+      </div></div>
+      <div class="tile-tx"><h3>Поля вместо админки</h3><p>В панели только то, что можно менять. Вёрстка и код в неё не попадают.</p></div>
+    </article>
+    <article class="tile w-5">
+      <div class="tile-stage" style="--w:260px"><div class="vz-box vz-mono vz-hist" aria-hidden="true">
+        <div><span class="t">12:04</span><span class="hl">Латте 260 → 290</span></div>
+        <div><span class="t">11:52</span><span>Новость «Осень»</span></div>
+        <div><span class="t">вчера</span><span>Фото витрины</span></div>
+      </div></div>
+      <div class="tile-tx"><h3>История правок</h3><p>Любую правку можно вернуть.</p></div>
+    </article>
+    <article class="tile w-4">
+      <div class="tile-stage" style="--w:300px"><div class="vz-items" aria-hidden="true">
+        <div class="vz-item"><span><i data-lucide="user-round"></i>Анна</span><span class="badge">Редактор</span></div>
+        <div class="vz-item hl-box"><span><i data-lucide="user-round"></i>Олег</span><span class="badge badge-accent">Владелец</span></div>
+      </div></div>
+      <div class="tile-tx"><h3>Доступ по ролям</h3><p>Редактор меняет тексты, владелец всё.</p></div>
+    </article>
+    <article class="tile w-4">
+      <div class="tile-stage" style="--w:300px"><div class="vz-box vz-url" aria-hidden="true"><span><i data-lucide="globe"></i>zerno.coffee</span><span class="badge badge-success">SSL выдан</span></div></div>
+      <div class="tile-tx"><h3>Свой домен</h3><p>Подключается за минуту, сертификат сам.</p></div>
+    </article>
+    <article class="tile w-4">
+      <div class="tile-stage"><div class="vz-change" aria-hidden="true"><div><s>260 ₽</s><i data-lucide="arrow-right"></i><span class="hl">290 ₽</span></div><span><i data-lucide="check"></i>Сохранено</span></div></div>
+      <div class="tile-tx"><h3>Правка за секунды</h3><p>Сохранили, и сайт уже обновился.</p></div>
+    </article>
+  </div>
+</section>
+
+<section id="feedback">
+  <div class="head"><h2>Обратная связь</h2><p>Спиннер, баннер на всю ширину, счётчик на значке и точка «непрочитано». Всё, что исчезает, гаснет и схлопывается по высоте, соседи подъезжают плавно.</p></div>
+  <div class="grid">
+    <div class="box third stack">
+      <h3 class="t-label">Баннер новости</h3>
+      <div class="bn-demo">
+        <div class="banner-w"><div><div class="banner"><span>Новая панель аналитики. <a href="#">Посмотреть</a></span><button class="banner-x" type="button" aria-label="Скрыть"><i data-lucide="x"></i></button></div></div></div>
+        <div class="bn-nav"><span class="bn-logo"></span><span class="skeleton"></span><span class="skeleton"></span><span class="skeleton"></span><span class="bn-cta"></span></div>
+        <div class="bn-page"><div class="skeleton" style="height:14px;width:55%"></div><div class="skeleton" style="height:10px;width:85%"></div><div class="skeleton" style="height:10px;width:70%"></div></div>
+      </div>
+      <div class="bn-foot"><p class="hint cap">Новость о продукте. Нейтральный, не спорит со страницей.</p><button class="btn btn-ghost btn-sm bn-back" type="button" disabled>Вернуть</button></div>
+    </div>
+    <div class="box third stack">
+      <h3 class="t-label">Баннер акции</h3>
+      <div class="bn-demo">
+        <div class="banner-w"><div><div class="banner banner-accent"><span>−20% на год до 30 ноября. <a href="#">Тарифы</a></span><button class="banner-x" type="button" aria-label="Скрыть"><i data-lucide="x"></i></button></div></div></div>
+        <div class="bn-nav"><span class="bn-logo"></span><span class="skeleton"></span><span class="skeleton"></span><span class="skeleton"></span><span class="bn-cta"></span></div>
+        <div class="bn-page"><div class="skeleton" style="height:14px;width:55%"></div><div class="skeleton" style="height:10px;width:85%"></div><div class="skeleton" style="height:10px;width:70%"></div></div>
+      </div>
+      <div class="bn-foot"><p class="hint cap">Акция или важный призыв. Акцентный, один на сайт.</p><button class="btn btn-ghost btn-sm bn-back" type="button" disabled>Вернуть</button></div>
+    </div>
+    <div class="box third stack">
+      <h3 class="t-label">Баннер предупреждения</h3>
+      <div class="bn-demo">
+        <div class="banner-w"><div><div class="banner banner-warning"><i data-lucide="triangle-alert"></i><span>Работы в вс в 03:00</span><button class="banner-x" type="button" aria-label="Скрыть"><i data-lucide="x"></i></button></div></div></div>
+        <div class="bn-nav"><span class="bn-logo"></span><span class="skeleton"></span><span class="skeleton"></span><span class="skeleton"></span><span class="bn-cta"></span></div>
+        <div class="bn-page"><div class="skeleton" style="height:14px;width:55%"></div><div class="skeleton" style="height:10px;width:85%"></div><div class="skeleton" style="height:10px;width:70%"></div></div>
+      </div>
+      <div class="bn-foot"><p class="hint cap">Плановые работы, сбой. Если скрыть, шапка плавно поднимается.</p><button class="btn btn-ghost btn-sm bn-back" type="button" disabled>Вернуть</button></div>
+    </div>
+    </div>
+  <div class="grid cols" style="margin-top:var(--grid-gap)">
+    <div class="box stack">
+      <h3 class="t-label">Спиннер</h3>
+      <div class="sp-kinds"><div class="sp-row" data-spinner="tail"><span class="spinner spinner-sm"></span><span class="spinner"></span><span class="spinner spinner-lg"></span><code class="inline">tail</code><span class="hint">хвост, основной</span></div><div class="sp-row" data-spinner="ring"><span class="spinner spinner-sm"></span><span class="spinner"></span><span class="spinner spinner-lg"></span><code class="inline">ring</code><span class="hint">кольцо</span></div><div class="sp-row" data-spinner="arc"><span class="spinner spinner-sm"></span><span class="spinner"></span><span class="spinner spinner-lg"></span><code class="inline">arc</code><span class="hint">дышащая дуга</span></div><div class="sp-row" data-spinner="square"><span class="spinner spinner-sm"></span><span class="spinner"></span><span class="spinner spinner-lg"></span><code class="inline">square</code><span class="hint">обход квадрата</span></div><div class="sp-row" data-spinner="rays"><span class="spinner spinner-sm"></span><span class="spinner"></span><span class="spinner spinner-lg"></span><code class="inline">rays</code><span class="hint">лучи</span></div><div class="sp-row" data-spinner="dots"><span class="spinner spinner-sm"></span><span class="spinner"></span><span class="spinner spinner-lg"></span><code class="inline">dots</code><span class="hint">точки</span></div><div class="sp-row" data-spinner="bars"><span class="spinner spinner-sm"></span><span class="spinner"></span><span class="spinner spinner-lg"></span><code class="inline">bars</code><span class="hint">столбики</span></div><div class="sp-row" data-spinner="grid"><span class="spinner spinner-sm"></span><span class="spinner"></span><span class="spinner spinner-lg"></span><code class="inline">grid</code><span class="hint">сетка 3×3</span></div></div>
+      <p class="hint cap">12 / 16 / 24. Вид для всех страниц задаёт одна строка в <code class="inline">js/theme.js</code>; для страницы или места <code class="inline">data-spinner</code>.</p>
+    </div>
+        <div class="box stack">
+      <div class="notifs-head"><span class="nh-bell"><button class="icon-btn icon-btn-lg has-count" type="button" aria-label="Уведомления"><i data-lucide="bell"></i><span class="count" id="bell-c" data-n="0"></span></button><h3 class="t-label">Уведомления</h3></span><button class="btn btn-ghost btn-sm" id="read-all">Прочитать все</button></div>
+      <div class="notifs" id="notifs" data-count="bell-c">
+        <button class="notif" type="button"><span class="unread"></span><span class="avatar avatar-md" data-hue="2">АК</span><span class="notif-tx"><b>Анна</b> упомянула вас в «Главная v3»<time>5 мин назад</time></span></button>
+        <button class="notif" type="button"><span class="unread"></span><span class="avatar avatar-md" data-hue="3">ИП</span><span class="notif-tx"><b>Иван</b> назначил вам задачу<time>20 мин назад</time></span></button>
+        <button class="notif read" type="button"><span class="unread"></span><span class="avatar avatar-md" data-hue="5">ЕВ</span><span class="notif-tx"><b>Елена</b> одобрила изменения<time>вчера</time></span></button>
+      </div>
+      <div class="nh-act"><button class="btn btn-secondary btn-sm" id="bell-add">Пришло ещё</button></div>
+      <p class="hint cap">Счётчик на колокольчике: число сменяется сдвигом вверх или вниз, больше 99 показывается «99+», при нуле счётчик гаснет. Прочитанное уменьшает число.</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<dialog class="dialog" id="dlg" aria-labelledby="dlg-t">
+  <div class="dialog-body"><h2 id="dlg-t">Удалить проект brand-web?</h2><p>Данные, ключи и логи удалятся без возможности восстановления.</p></div>
+  <div class="dialog-foot"><button class="btn btn-ghost" id="dlg-cancel">Отмена</button><button class="btn btn-danger" id="dlg-ok">Удалить</button></div>
+</dialog>
+<dialog class="dialog dialog-danger" id="dlg-danger" data-name="brand-web" aria-labelledby="dd-t"><form>
+  <div class="dialog-body"><span class="danger-ic"><i data-lucide="triangle-alert"></i></span><div><h2 id="dd-t">Удалить проект?</h2><p>Удалятся база, ключи и логи. Вернуть их будет нельзя. Чтобы подтвердить, введите <code>brand-web</code>.</p>
+    <label class="field"><span class="label">Название проекта</span><input class="input" id="dd-in" autocomplete="off" spellcheck="false"></label></div></div>
+  <div class="dialog-foot"><button type="button" class="btn btn-ghost" data-close>Отмена</button><button class="btn btn-danger" data-confirm><span>Удалить проект</span></button></div>
+</form></dialog>
+
+<dialog class="dialog dialog-md" id="dlg-form" data-guard="dlg-leave" aria-labelledby="df-t"><form novalidate>
+  <div class="dialog-head"><div><h2 id="df-t">Новый проект</h2><p>Своя база, ключи и логи. Название можно сменить позже.</p></div><button class="icon-btn icon-btn-sm" type="button" data-close aria-label="Закрыть"><i data-lucide="x"></i></button></div>
+  <div class="dialog-main">
+    <label class="field"><span class="label">Название</span><input class="input" name="name" autocomplete="off" spellcheck="false" placeholder="brand-web" data-rule="slug"><span class="hint">Латиница, цифры и дефис, войдёт в адрес проекта</span></label>
+    <label class="field"><span class="label">Регион</span><select class="select" name="region"><option data-meta="eu-central-1">Франкфурт</option><option data-meta="eu-north-1">Стокгольм</option><option data-meta="us-east-1">Вирджиния</option><option data-meta="ap-southeast-1">Сингапур</option></select></label>
+    <label class="field"><span class="label">Описание <span class="opt">необязательно</span></span><textarea class="textarea" name="about" placeholder="Для чего проект"></textarea></label>
+  </div>
+  <div class="dialog-foot"><button type="button" class="btn btn-ghost" data-close>Отмена</button><button class="btn btn-primary" data-submit><span>Создать проект</span></button></div>
+</form></dialog>
+
+<dialog class="dialog" id="dlg-leave" aria-labelledby="dl-t">
+  <div class="dialog-body"><h2 id="dl-t">Закрыть без сохранения?</h2><p>Введённое в форме пропадёт.</p></div>
+  <div class="dialog-foot"><button type="button" class="btn btn-ghost" data-close>Вернуться к форме</button><button type="button" class="btn btn-danger" data-discard>Не сохранять</button></div>
+</dialog>
+
+<dialog class="dialog dialog-md" id="dlg-invite" aria-labelledby="di-t"><form novalidate>
+  <div class="dialog-head"><div><h2 id="di-t">Пригласить в brand-web</h2><p>Придёт письмо со ссылкой. Роль можно поменять позже.</p></div><button class="icon-btn icon-btn-sm" type="button" data-close aria-label="Закрыть"><i data-lucide="x"></i></button></div>
+  <div class="dialog-main">
+    <div class="field"><div class="invite-row"><input class="input" type="email" placeholder="Почта через запятую" aria-label="Почта" autocomplete="off" spellcheck="false"><select class="select" aria-label="Роль"><option>Разработчик</option><option>Администратор</option><option>Только чтение</option></select><button class="btn btn-secondary" data-add>Пригласить</button></div></div>
+    <div class="members-head"><h3 class="t-label">В проекте</h3><span class="hint" data-count>3 человека</span></div>
+    <ul class="members">
+      <li class="grow-in on"><div><div class="mem"><span class="avatar" data-hue="2">АК</span><span class="mem-tx"><b>Анна Ковалёва</b><span>anna@brand.studio</span></span><span class="mem-role">Владелец</span></div></div></li>
+      <li class="grow-in on"><div><div class="mem"><span class="avatar" data-hue="4">МЛ</span><span class="mem-tx"><b>Максим Лебедев</b><span>max@brand.studio</span></span><button class="role-btn" type="button" aria-haspopup="menu" aria-expanded="false"><span>Администратор</span><svg class="lucide" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></div></div></li>
+      <li class="grow-in on" data-pending><div><div class="mem"><span class="avatar" data-hue="5">ДС</span><span class="mem-tx"><b>dasha@brand.studio</b><span>Ждёт ответа</span></span><button class="role-btn" type="button" aria-haspopup="menu" aria-expanded="false"><span>Разработчик</span><svg class="lucide" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></div></div></li>
+    </ul>
+  </div>
+  <div class="dialog-foot"><button type="button" class="btn btn-ghost grow" data-done="Скопировано" data-copy="https://brand.studio/join/k7Qx2"><i data-lucide="link"></i>Ссылка-приглашение</button><button type="button" class="btn btn-primary" data-close>Готово</button></div>
+</form></dialog>
+
+<dialog class="dialog dialog-md dialog-wizard" id="dlg-wizard" aria-labelledby="dw-t"><form novalidate>
+  <div class="dialog-head"><div><h2 id="dw-t">Свой домен</h2>
+    <ol class="steps" data-step="0">
+      <li><span class="step-dot"></span><span class="step-tx"><b>Домен</b><span></span></span></li>
+      <li><span class="step-dot"></span><span class="step-tx"><b>Записи DNS</b><span></span></span></li>
+      <li><span class="step-dot"></span><span class="step-tx"><b>Проверка</b><span></span></span></li>
+    </ol></div><button class="icon-btn icon-btn-sm" type="button" data-close aria-label="Закрыть"><i data-lucide="x"></i></button></div>
+  <div class="dialog-main">
+    <div class="wz-pane">
+      <label class="field"><span class="label">Адрес сайта</span><input class="input" name="domain" placeholder="app.brand.studio" autocomplete="off" spellcheck="false" data-rule="domain"><span class="hint">Поддомен или корневой домен, без https://</span></label>
+    </div>
+    <div class="wz-pane" hidden>
+      <p>Добавьте две записи у регистратора домена. Обычно они начинают работать за несколько минут.</p>
+      <div class="dns" role="table" aria-label="Записи DNS">
+        <div class="dns-h" role="row"><span>Тип</span><span>Имя</span><span>Значение</span><span></span></div>
+        <div role="row"><code>CNAME</code><code data-name>app</code><code>edge.brand.studio</code><button class="icon-btn icon-btn-sm" type="button" aria-label="Скопировать значение" data-copy="edge.brand.studio"></button></div>
+        <div role="row"><code>TXT</code><code>_verify</code><code>bs-verify=7f3a91c2</code><button class="icon-btn icon-btn-sm" type="button" aria-label="Скопировать значение" data-copy="bs-verify=7f3a91c2"></button></div>
+      </div>
+    </div>
+    <div class="wz-pane" hidden>
+      <div class="wz-check" aria-live="polite"><span class="ic"><span class="spinner"></span><i data-lucide="check"></i></span>
+        <span class="tx"><span class="wait-tx"><b>Проверяем записи…</b>Это займёт пару секунд</span><span class="ok-tx"><b>Домен подключён</b><span data-domain>app.brand.studio</span> уже открывается</span></span></div>
+    </div>
+  </div>
+  <div class="dialog-foot"><button type="button" class="btn btn-ghost" data-back>Назад</button><button class="btn btn-primary" data-next>Далее</button></div>
+</form></dialog>
+
+<dialog class="dialog dialog-lg dialog-scroll" id="dlg-terms" aria-labelledby="dt-t">
+  <div class="dialog-head"><div><h2 id="dt-t">Условия использования</h2><p>Обновлены 1 ноября 2026</p></div><button class="icon-btn icon-btn-sm" type="button" data-close aria-label="Закрыть"><i data-lucide="x"></i></button></div>
+  <div class="dialog-main">
+    <p>Здесь коротко и по делу: что мы делаем с вашими данными, за что отвечаем и как прекратить пользоваться сервисом.</p>
+    <h3>1. Аккаунт</h3><p>Вы отвечаете за доступ к аккаунту и действия в нём. Включите вход по второму фактору: это занимает минуту и закрывает большинство угроз.</p>
+    <h3>2. Данные</h3><p>Данные проектов принадлежат вам. Мы храним их в выбранном регионе и не передаём третьим лицам, кроме случаев, которые требует закон. Резервные копии хранятся 30 дней.</p>
+    <h3>3. Оплата</h3><p>Тариф списывается в начале месяца. При переходе на тариф выше разница считается по дням. Вернуть деньги можно в течение 14 дней после первой оплаты.</p>
+    <h3>4. Ограничения</h3><p>Нельзя использовать сервис для рассылки спама, майнинга и атак на чужие системы. Нагрузку, которая мешает другим, мы можем ограничить и напишем об этом заранее.</p>
+    <h3>5. Доступность</h3><p>Мы стремимся к 99,9% времени работы в месяц. Если не получилось, вернём часть оплаты по таблице на странице статуса.</p>
+    <h3>6. Удаление</h3><p>Удалить аккаунт можно в настройках. Данные стираются через 30 дней, чтобы вы успели передумать. После этого вернуть их нельзя.</p>
+    <h3>7. Изменения</h3><p>Об изменениях условий напишем за 30 дней. Если вы не согласны, можно удалить аккаунт без штрафов.</p>
+  </div>
+  <div class="dialog-foot"><button type="button" class="btn btn-ghost" data-close>Не сейчас</button><button type="button" class="btn btn-primary" data-close>Принимаю</button></div>
+</dialog>
+
+<dialog class="dialog dialog-center" id="dlg-done" aria-labelledby="dn-t">
+  <div class="dialog-body"><svg class="lucide done-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" pathLength="1"/></svg><h2 id="dn-t">Тариф Pro подключён</h2><p>Лимиты уже выросли. Чек пришлёт почта anna@brand.studio.</p></div>
+  <div class="dialog-foot"><button type="button" class="btn btn-primary" data-close>Отлично</button></div>
+</dialog>
+
+<dialog class="dialog dialog-lg dialog-scroll" id="dlg-keys" aria-labelledby="dk-t">
+  <div class="dialog-head"><div><h2 id="dk-t">Горячие клавиши</h2><p>Открыть этот список: <span class="kbd">?</span> в любом месте</p></div><button class="icon-btn icon-btn-sm" type="button" data-close aria-label="Закрыть"><i data-lucide="x"></i></button></div>
+  <div class="dialog-main"><div class="keys-groups">
+    <div class="keys-group"><h3 class="t-label">Общие</h3>
+      <div class="key-row"><span>Палитра команд</span><span class="keys"><span class="kbd">Ctrl</span><span class="kbd">K</span></span></div>
+      <div class="key-row"><span>Поиск</span><span class="keys"><span class="kbd">/</span></span></div>
+      <div class="key-row"><span>Сменить тему</span><span class="keys"><span class="kbd">Ctrl</span><span class="kbd">Shift</span><span class="kbd">L</span></span></div>
+      <div class="key-row"><span>Закрыть окно</span><span class="keys"><span class="kbd">Esc</span></span></div></div>
+    <div class="keys-group"><h3 class="t-label">Переходы</h3>
+      <div class="key-row"><span>Проекты</span><span class="keys"><span class="kbd">G</span><span class="kbd">P</span></span></div>
+      <div class="key-row"><span>Журнал</span><span class="keys"><span class="kbd">G</span><span class="kbd">L</span></span></div>
+      <div class="key-row"><span>Настройки</span><span class="keys"><span class="kbd">G</span><span class="kbd">S</span></span></div>
+      <div class="key-row"><span>Назад</span><span class="keys"><span class="kbd">Alt</span><span class="kbd">←</span></span></div></div>
+    <div class="keys-group"><h3 class="t-label">Списки</h3>
+      <div class="key-row"><span>Вверх и вниз</span><span class="keys"><span class="kbd">↑</span><span class="kbd">↓</span></span></div>
+      <div class="key-row"><span>Выбрать строку</span><span class="keys"><span class="kbd">X</span></span></div>
+      <div class="key-row"><span>Выбрать диапазон</span><span class="keys"><span class="kbd">Shift</span><span class="kbd">Клик</span></span></div>
+      <div class="key-row"><span>Открыть</span><span class="keys"><span class="kbd">Enter</span></span></div></div>
+    <div class="keys-group"><h3 class="t-label">Редактор</h3>
+      <div class="key-row"><span>Сохранить</span><span class="keys"><span class="kbd">Ctrl</span><span class="kbd">S</span></span></div>
+      <div class="key-row"><span>Отправить комментарий</span><span class="keys"><span class="kbd">Ctrl</span><span class="kbd">Enter</span></span></div>
+      <div class="key-row"><span>Отменить</span><span class="keys"><span class="kbd">Ctrl</span><span class="kbd">Z</span></span></div>
+      <div class="key-row"><span>Переименовать</span><span class="keys"><span class="kbd">F2</span></span></div></div>
+  </div></div>
+</dialog>
+
+<dialog class="sheet sheet-side" id="sheet-side" aria-labelledby="ss-t">
+  <div class="sheet-head"><h2 id="ss-t">Фильтры</h2><button class="icon-btn icon-btn-sm" type="button" data-close aria-label="Закрыть"><i data-lucide="x"></i></button></div>
+  <div class="sheet-body">
+    <p>Покажем только проекты, которые подходят под все условия.</p>
+    <h3 class="t-label">Статус</h3>
+    <label class="choice"><input type="checkbox" class="check" checked><span>Работает</span></label>
+    <label class="choice"><input type="checkbox" class="check" checked><span>Деградация</span></label>
+    <label class="choice"><input type="checkbox" class="check"><span>Ошибка</span></label>
+    <label class="choice"><input type="checkbox" class="check"><span>Остановлен</span></label>
+    <label class="field"><span class="label">Владелец</span><input class="input" placeholder="Имя или почта"></label>
+  </div>
+  <div class="sheet-foot"><button class="btn btn-ghost" type="button" data-close>Сбросить</button><button class="btn btn-primary" type="button" data-close>Показать 24</button></div>
+</dialog>
+
+<dialog class="sheet sheet-bottom" id="sheet-bottom" aria-labelledby="sb-t">
+  <div class="sheet-grab" aria-hidden="true"></div>
+  <div class="sheet-head"><h2 id="sb-t">Поделиться</h2><button class="icon-btn icon-btn-sm" type="button" data-close aria-label="Закрыть"><i data-lucide="x"></i></button></div>
+  <div class="sheet-body">
+    <label class="field"><span class="label">Ссылка на проект</span><span class="copy-field"><input class="input" readonly value="brand.studio/p/brand-web"><button class="icon-btn icon-btn-sm" type="button" aria-label="Скопировать ссылку" data-copy="https://brand.studio/p/brand-web"></button></span></label>
+    <label class="choice"><input type="checkbox" class="switch" checked><span>Доступ по ссылке<small>Любой, у кого есть ссылка, может смотреть</small></span></label>
+  </div>
+  <div class="sheet-foot"><button class="btn btn-primary" type="button" data-close>Готово</button></div>
+</dialog>
+
+<div class="pop" id="pop-rename" role="dialog" aria-label="Переименовать проект"><form>
+  <label class="field"><span class="label">Название</span><input class="input" name="name" value="brand-web"></label>
+  <div class="pop-foot"><button type="button" class="btn btn-ghost btn-sm" data-pop-close>Отмена</button><button class="btn btn-primary btn-sm">Сохранить</button></div>
+</form></div>
+<div class="pop" id="pop-person" role="tooltip" style="--pop-w:280px;--av-ring:var(--bg-raised)">
+  <div class="pop-person"><span class="avatar avatar-lg" data-hue="2">АК<span class="st online"></span></span><div><h4>Анна Ковалёва</h4><p>Дизайнер в Brand Studio</p></div></div>
+  <div class="pop-meta"><span><i data-lucide="mail"></i>anna@brand.studio</span><span><i data-lucide="clock"></i>Москва, 14:20</span></div>
+</div>
+<div class="menu" id="ctx-menu" role="menu">
+  <button class="menu-item" role="menuitem"><i data-lucide="external-link"></i><span>Открыть</span></button>
+  <button class="menu-item" role="menuitem"><i data-lucide="pencil"></i><span>Переименовать</span><span class="kbd">F2</span></button>
+  <button class="menu-item" role="menuitem"><i data-lucide="download"></i><span>Скачать</span></button>
+  <div class="menu-sep"></div>
+  <button class="menu-item danger" role="menuitem"><i data-lucide="trash-2"></i><span>Удалить</span><span class="kbd">⌫</span></button>
+</div>
+
+<dialog class="cmdk" id="cmdk" aria-label="Палитра команд">
+  <div class="cmdk-in"><i data-lucide="search"></i><input placeholder="Команда или поиск…" aria-label="Команда или поиск" autocomplete="off" spellcheck="false"><span class="kbd">Esc</span></div>
+  <div class="cmdk-list" id="cmdk-list">
+    <div class="cmdk-group" role="group" aria-label="Перейти"><div class="cmdk-label">Перейти</div>
+      <div class="cmdk-item" data-run="go:#nav" data-k="шапка header"><i data-lucide="panel-top"></i><span>Шапка</span></div>
+      <div class="cmdk-item" data-run="go:#buttons" data-k="button кнопки"><i data-lucide="mouse-pointer-click"></i><span>Кнопки</span></div>
+      <div class="cmdk-item" data-run="go:#fields" data-k="input поля форма"><i data-lucide="text-cursor-input"></i><span>Поля</span></div>
+      <div class="cmdk-item" data-run="go:#navigation" data-k="sidebar меню крошки страницы шаги"><i data-lucide="compass"></i><span>Навигация</span></div>
+      <div class="cmdk-item" data-run="go:#overlays" data-k="dialog модальное шторка уведомление"><i data-lucide="layers"></i><span>Слои</span></div>
+      <div class="cmdk-item" data-run="go:#data" data-k="table таблица график chart"><i data-lucide="table"></i><span>Данные</span></div>
+    </div>
+    <div class="cmdk-group" role="group" aria-label="Действия"><div class="cmdk-label">Действия</div>
+      <div class="cmdk-item" data-run="toast:Проект создан" data-k="new создать добавить"><i data-lucide="plus"></i><span>Создать проект</span><span class="hint-r">C</span></div>
+      <div class="cmdk-item" data-run="toast:Приглашение отправлено" data-k="invite пригласить команда"><i data-lucide="user-plus"></i><span>Пригласить в команду</span></div>
+      <div class="cmdk-item" data-run="toast:Ссылка скопирована" data-k="link ссылка share"><i data-lucide="link"></i><span>Скопировать ссылку</span></div>
+    </div>
+    <div class="cmdk-group" role="group" aria-label="Тема"><div class="cmdk-label">Тема</div>
+      <div class="cmdk-item" data-run="theme:light" data-k="тема theme light светлая"><i data-lucide="sun"></i><span>Светлая тема</span></div>
+      <div class="cmdk-item" data-run="theme:dark" data-k="тема theme dark тёмная темная"><i data-lucide="moon"></i><span>Тёмная тема</span></div>
+      <div class="cmdk-item" data-run="theme:system" data-k="тема theme system системная авто"><i data-lucide="monitor"></i><span>Как в системе</span></div>
+    </div>
+    <div class="cmdk-empty" hidden><span>Ничего не нашлось по запросу</span><b></b></div>
+  </div>
+  <div class="cmdk-foot"><span><span class="kbd">↑</span><span class="kbd">↓</span>выбрать</span><span><span class="kbd">↵</span>выполнить</span><span><span class="kbd">Esc</span>закрыть</span></div>
+</dialog>
+
+<script>
+const root=document.documentElement,draw=()=>{try{lucide.createIcons()}catch(e){}};
+const q=new URLSearchParams(location.search);if(q.get('theme'))setThemePref(q.get('theme'));
+
+/* загрузка в кнопке */
+document.querySelectorAll('.load').forEach(b=>{b.innerHTML='<span>'+b.textContent+'</span>';b.onclick=()=>{btnLoading(b,true);setTimeout(()=>btnLoading(b,false),1500)}});
+
+/* сегменты и вкладки двигает inputs.js; страница только меняет содержимое по событию pick */
+const tabs=document.querySelector('.tabs'),tabItems=[...tabs.querySelectorAll('.tab')];
+const texts=['Сводка по проекту: запросы, ошибки, задержка.','Логи за последние 24 часа, фильтр по уровню.','Кто видит проект и что может менять.'];
+tabs.addEventListener('pick',e=>{const p=document.getElementById('tab-panel');p.textContent=texts[tabItems.indexOf(e.detail)];p.style.animation='none';p.offsetWidth;p.style.animation=''});
+
+/* select: значение читается из родного select, как обычно */
+document.getElementById('region').addEventListener('change',e=>{const o=e.target.selectedOptions[0];document.getElementById('region-hint').textContent='Выбрано: '+o.dataset.meta});
+/* неопределённое состояние */
+document.getElementById('ind').indeterminate=true;
+
+/* проверка поля: ошибка появляется после ухода из поля и исчезает, как только исправлено */
+(()=>{const inp=document.getElementById('slug'),msg=document.getElementById('slug-msg'),hint=msg.textContent;
+ const check=()=>{const ok=/^[a-z0-9-]+$/.test(inp.value);inp.setAttribute('aria-invalid',!ok);
+   if(ok){if(msg.className==='error'){msg.className='hint is-back';msg.textContent=hint}}else if(msg.className!=='error'){msg.className='error';msg.innerHTML='<i data-lucide="circle-alert"></i>Только латиница, цифры и дефис, например my-project';draw()}};
+ inp.addEventListener('blur',check);inp.addEventListener('input',()=>{if(inp.getAttribute('aria-invalid')==='true')check()});check()})();
+
+/* меню открывает layers.js; выбор пункта — событие menu-pick */
+document.getElementById('menu').addEventListener('menu-pick',e=>showToast(e.detail.label));
+
+/* подсказки [data-tip] показывает layers.js */
+
+/* диалог */
+(()=>{const d=document.getElementById('dlg');document.getElementById('dlg-open').onclick=()=>d.showModal();
+ document.getElementById('dlg-cancel').onclick=()=>d.close();document.getElementById('dlg-ok').onclick=()=>{d.close();toast({type:'success',title:'Проект удалён',action:{label:'Отменить',run:()=>toast({type:'info',title:'Удаление отменено'})}})}})();
+
+/* уведомления: стопка из layers.js */
+const showToast=(title)=>toast({type:'success',title});
+const $=(id)=>document.getElementById(id);
+$('t-ok').onclick=()=>toast({type:'success',title:'Изменения сохранены',text:'Версия 2.4.2 уже у всех пользователей'});
+$('t-err').onclick=()=>toast({type:'error',title:'Не удалось отправить',text:'Проверьте соединение и попробуйте ещё раз',action:{label:'Повторить',run:()=>toast({type:'success',title:'Отправлено'})}});
+$('t-load').onclick=()=>{const t=toast({type:'loading',title:'Загружаем файлы…'});setTimeout(()=>t.update({type:'success',title:'Файлы загружены',text:'12 файлов, 48 МБ'}),1600)};
+$('t-act').onclick=()=>toast({title:'Задача перенесена в архив',action:{label:'Отменить',run:()=>toast({type:'info',title:'Задача вернулась'})}});
+
+/* шаги */
+(()=>{const st=$('steps'),n=st.children.length,prev=$('st-prev'),next=$('st-next');
+ const sync=()=>{const i=+st.dataset.step;prev.disabled=i===0;next.textContent=i>=n-1?'Начать сначала':'Далее'};
+ prev.onclick=()=>{st.setStep(Math.max(0,+st.dataset.step-1));sync()};
+ next.onclick=()=>{const i=+st.dataset.step;st.setStep(i>=n-1?0:i+1);sync()};
+ addEventListener('DOMContentLoaded',sync)})();
+
+/* слои: события из layers.js */
+$('dlg-danger').addEventListener('confirmed',()=>toast({type:'success',title:'Проект brand-web удалён',action:{label:'Отменить',run:()=>toast({type:'info',title:'Удаление отменено'})}}));
+$('pop-rename').addEventListener('pop-submit',e=>toast({type:'success',title:'Новое название: '+e.detail.get('name')}));
+document.querySelector('[data-ctx]').addEventListener('ctx-pick',e=>toast({title:e.detail.label+' — '+e.detail.row.querySelector('span').textContent}));
+$('cmdk').addEventListener('cmdk-run',e=>{const [k,v]=(e.detail.action||'').split(/:(.*)/);
+ if(k==='theme')setThemePref(v,true);else if(k==='go')document.querySelector(v)?.scrollIntoView({behavior:'smooth'});else if(k==='toast')toast({type:'success',title:v})});
+
+/* данные */
+$('dt').addEventListener('bulk',e=>{const n=e.detail.rows.length,w=e.detail.action==='archive'?'в архиве':'удалено';
+ toast({title:(n===1?'1 проект ':n+' проекта ')+w,action:{label:'Отменить',run:e.detail.undo}})});
+$('retry').onclick=e=>{const b=e.currentTarget;btnLoading(b,true);setTimeout(()=>{btnLoading(b,false);toast({type:'error',title:'Сервер всё ещё не отвечает'})},1400)};
+document.querySelectorAll('.bn-demo .banner-w').forEach(w=>{const back=w.closest('.box').querySelector('.bn-back');w.addEventListener('dismiss',()=>back.disabled=false);back.onclick=()=>{w.classList.remove('off');back.disabled=true}});
+$('bell-add').onclick=()=>{const c=$('bell-c');setCount(c,(+c.dataset.n||0)+1)};
+$('read-all').onclick=()=>$('notifs').readAll();
+draw();
+
+/* десктоп-образцы: масштаб = ширина колонки / ширина страницы */
+(()=>{const fit=f=>{const i=f.querySelector('iframe'),cw=f.clientWidth,w=Math.max(1200,cw),k=cw/w,h=parseFloat(i.style.height);
+  i.style.width=w+'px';i.style.transform=k<1?`scale(${k})`:'';f.style.height=Math.round(h*k)+'px'};
+ const ro=new ResizeObserver(es=>es.forEach(e=>fit(e.target)));document.querySelectorAll('.frame-d').forEach(f=>ro.observe(f))})();
+
+/* ввод: демо кода */
+$('otp').addEventListener('otp-complete',e=>{if(e.detail.code==='123456')showToast('Код подтверждён');else e.currentTarget.otpError()});
+</script>
+</body>
+</html>

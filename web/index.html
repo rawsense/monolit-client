@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="ru" data-theme-default="dark" data-accent-default="slate">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="brand/fonts.css">
+<link rel="stylesheet" href="ds/tokens/colors.css"><link rel="stylesheet" href="ds/tokens/accents.css"><link rel="stylesheet" href="ds/tokens/palettes.css">
+<link rel="stylesheet" href="ds/tokens/motion.css"><link rel="stylesheet" href="ds/tokens/type.css"><link rel="stylesheet" href="ds/tokens/space.css">
+<link rel="stylesheet" href="ds/tokens/scrollbar.css"><link rel="stylesheet" href="ds/tokens/icons.css"><link rel="stylesheet" href="ds/tokens/components.css">
+<link rel="stylesheet" href="ds/tokens/inputs.css"><link rel="stylesheet" href="ds/tokens/layers.css"><link rel="stylesheet" href="ds/tokens/data.css">
+<link rel="stylesheet" href="ds/tokens/nav.css"><link rel="stylesheet" href="ds/tokens/soft.css">
+<link rel="stylesheet" href="brand/monolit.css"><link rel="stylesheet" href="app.css">
+<script src="ds/js/theme.js"></script>
+<script src="vendor/lucide.min.js"></script>
+<script src="ds/js/scroll-lock.js" defer></script><script src="ds/js/layers.js" defer></script>
+<script src="ds/js/inputs.js" defer></script><script src="ds/js/scrollbar.js" defer></script>
+<script src="app.js" defer></script>
+<title>Monolit</title>
+</head>
+<body>
+<div class="mc">
+  <section class="mc-stage" aria-label="Состояние">
+    <div class="mc-sw">
+      <div class="mc-subwrap">
+        <button class="mc-subsel" id="sub-btn" type="button" aria-haspopup="menu" aria-controls="m-sub" aria-expanded="false"><b id="sub-name">&nbsp;</b><i data-lucide="chevron-down"></i></button>
+        <div class="menu" id="m-sub" role="menu"></div>
+      </div>
+      <button class="icon-btn" type="button" data-go="settings" aria-label="Настройки" data-tip="Настройки"><i data-lucide="settings"></i></button>
+      <button class="icon-btn" type="button" data-open="dlg-add" aria-label="Добавить подписку" data-tip="Добавить подписку"><i data-lucide="plus"></i></button>
+    </div>
+    <button class="mc-pwr" id="pwr" type="button" aria-pressed="false" aria-label="Подключить"><i data-lucide="power"></i></button>
+    <div class="mc-state"><b id="st-title">Отключено</b><span id="st-sub" class="mc-num">&nbsp;</span></div>
+    <div class="mc-traffic" id="traffic">
+      <div class="mc-traffic-tx"><span class="mc-num" id="tr-used"></span><span class="mc-num" id="tr-left"></span></div>
+      <div class="progress" id="tr-bar" role="progressbar" aria-label="Трафик подписки"><i></i></div>
+    </div>
+  </section>
+
+  <main class="mc-main">
+    <!-- главная -->
+    <section class="mc-view" id="v-home">
+      <div class="mc-srv">
+        <div class="mc-srv-h"><h2>Серверы</h2><div class="mc-srv-acts"><button class="icon-btn mc-check" type="button" id="srv-check" aria-label="Проверить серверы" data-tip="Проверить серверы"><i data-lucide="gauge"></i></button><button class="icon-btn mc-check" type="button" id="sub-refresh" aria-label="Обновить подписку" data-tip="Обновить подписку"><i data-lucide="refresh-cw"></i></button></div></div>
+        <div class="mc-srvlist sb" id="servers" role="radiogroup" aria-label="Конфиг"></div>
+      </div>
+      <div class="mc-modes" role="group" aria-label="Режим">
+        <button class="mc-mode" data-mode="smart" aria-pressed="false"><i data-lucide="sparkles"></i><b>Умный</b><span>Через VPN только заблокированное</span></button>
+        <button class="mc-mode" data-mode="ai" aria-pressed="false" hidden><i data-lucide="bot"></i><b>Только ИИ</b><span>Claude, ChatGPT, Gemini</span></button>
+        <button class="mc-mode" data-mode="all" aria-pressed="false"><i data-lucide="shield"></i><b>Всё</b><span>Весь трафик, кроме российского</span></button>
+      </div>
+    </section>
+
+    <!-- первый запуск: нет подписки -->
+    <section class="mc-view" id="v-welcome" hidden>
+      <div class="mc-title"><h1>Подписка</h1><p>Подписка или ссылка на сервер: vless, vmess, trojan, ss, hysteria2</p></div>
+      <form class="mc-subform" id="sub-form">
+        <label class="field"><span class="label">Ссылка</span>
+          <input class="input" id="sub-url" type="text" placeholder="https://… или vless://…" autocomplete="off" spellcheck="false" required></label>
+        <button class="btn btn-primary" type="submit">Добавить</button>
+      </form>
+      <p class="hint mc-err" id="sub-err" hidden></p>
+    </section>
+
+    <!-- сайты -->
+    <section class="mc-view" id="v-sites" hidden>
+      <header class="mc-sub-h"><button class="icon-btn" data-go="s-routes" aria-label="Назад"><i data-lucide="arrow-left"></i></button><h2 id="sites-h">Сайты</h2></header>
+      <div class="tabs" role="tablist" id="site-tabs"><span class="line"></span>
+        <button class="tab" role="tab" data-list="always" aria-selected="true">Через VPN</button>
+        <button class="tab" role="tab" data-list="direct" aria-selected="false">Напрямую</button>
+        <button class="tab" role="tab" data-list="found" aria-selected="false">Найдено само</button>
+      </div>
+      <form class="mc-add" id="add-form">
+        <input class="input" id="add-val" placeholder="example.com" autocomplete="off" spellcheck="false">
+        <button class="btn btn-secondary" type="submit"><i data-lucide="plus"></i><span>Добавить</span></button>
+      </form>
+      <button class="btn btn-secondary mc-pick" type="button" id="app-pick" hidden><i data-lucide="plus"></i><span>Выбрать программу</span></button>
+      <p class="hint" id="list-hint"></p>
+      <div class="mc-list sb" id="list"></div>
+    </section>
+
+    <!-- настройки: список разделов, каждый открывается своим экраном -->
+    <section class="mc-view" id="v-settings" hidden>
+      <header class="mc-sub-h"><button class="icon-btn" data-go="home" aria-label="Назад"><i data-lucide="arrow-left"></i></button><h2>Настройки</h2></header>
+      <div class="mc-set sb">
+        <div class="alist">
+          <button class="alist-row" type="button" data-go="s-sub"><span class="alist-ic"><i data-lucide="ticket"></i></span><span class="alist-tx"><b>Подписка</b><span id="sr-sub">&nbsp;</span></span><i data-lucide="chevron-right" class="alist-go"></i></button>
+          <button class="alist-row" type="button" data-go="s-routes"><span class="alist-ic"><i data-lucide="route"></i></span><span class="alist-tx"><b>Маршруты</b><span>Сайты, программы, реклама</span></span><i data-lucide="chevron-right" class="alist-go"></i></button>
+          <button class="alist-row" type="button" data-go="s-net"><span class="alist-ic"><i data-lucide="activity"></i></span><span class="alist-tx"><b>Соединения</b><span id="sr-net">Что открыто сейчас и через что</span></span><i data-lucide="chevron-right" class="alist-go"></i></button>
+          <button class="alist-row" type="button" data-go="s-conn"><span class="alist-ic"><i data-lucide="plug"></i></span><span class="alist-tx"><b>Подключение</b><span id="sr-conn">&nbsp;</span></span><i data-lucide="chevron-right" class="alist-go"></i></button>
+        </div>
+        <div class="alist">
+          <button class="alist-row" type="button" data-go="s-adv"><span class="alist-ic"><i data-lucide="sliders-horizontal"></i></span><span class="alist-tx"><b>Для опытных</b><span>DNS, отпечаток TLS, порт прокси</span></span><i data-lucide="chevron-right" class="alist-go"></i></button>
+          <button class="alist-row" type="button" data-go="s-about"><span class="alist-ic"><i data-lucide="info"></i></span><span class="alist-tx"><b>О программе</b><span id="sr-about">&nbsp;</span></span><i data-lucide="chevron-right" class="alist-go"></i></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="mc-view mc-page" id="v-s-sub" hidden>
+      <header class="mc-sub-h"><button class="icon-btn" data-go="settings" aria-label="Назад"><i data-lucide="arrow-left"></i></button><h2>Подписка</h2></header>
+      <div class="mc-set sb">
+        <div class="mc-group">
+          <div class="mc-about"><span class="mc-row-tx"><b id="ss-title">&nbsp;</b><span id="ss-expire">&nbsp;</span></span></div>
+          <div class="mc-about"><span class="mc-row-tx"><b>Трафик</b><span id="ss-traffic">&nbsp;</span></span></div>
+          <div class="mc-about"><span class="mc-row-tx"><b>Серверы</b><span id="ss-updated">&nbsp;</span></span><button class="btn btn-secondary" id="ss-refresh" type="button"><i data-lucide="refresh-cw"></i><span>Обновить</span></button></div>
+        </div>
+        <div class="mc-group">
+          <label class="field"><span class="label">Обновлять автоматически</span>
+            <select class="select" data-set="updateHours"><option value="3">Каждые 3 часа</option><option value="12">Каждые 12 часов</option><option value="24">Раз в сутки</option></select></label>
+        </div>
+        <div class="mc-group">
+          <button class="btn btn-danger mc-start" id="ss-del" type="button"><i data-lucide="trash-2"></i><span>Удалить подписку</span></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="mc-view mc-page" id="v-s-routes" hidden>
+      <header class="mc-sub-h"><button class="icon-btn" data-go="settings" aria-label="Назад"><i data-lucide="arrow-left"></i></button><h2>Маршруты</h2></header>
+      <div class="mc-set sb">
+        <div class="alist">
+          <button class="alist-row" type="button" data-go="sites"><span class="alist-ic"><i data-lucide="globe"></i></span><span class="alist-tx"><b>Сайты</b><span>Через VPN, напрямую, найденные сами</span></span><i data-lucide="chevron-right" class="alist-go"></i></button>
+          <button class="alist-row" type="button" data-go="apps"><span class="alist-ic"><i data-lucide="app-window"></i></span><span class="alist-tx"><b>Программы</b><span>Через VPN или напрямую</span></span><i data-lucide="chevron-right" class="alist-go"></i></button>
+        </div>
+        <div class="mc-group">
+          <label class="choice"><input type="checkbox" role="switch" class="switch" data-set="showAI"><span>Режим «Только ИИ»<span class="mc-info" tabindex="0" role="img" aria-label="Через VPN только сайты ИИ, остальное напрямую" data-tip="Через VPN только сайты ИИ, остальное напрямую"><i data-lucide="info"></i></span></span></label>
+          <label class="choice"><input type="checkbox" role="switch" class="switch" data-set="vpnFirst"><span>Новые сайты сначала через VPN<span class="mc-info" tabindex="0" role="img" aria-label="Пока идёт проверка сайта, потом напрямую. Если выключить, первый заход на сайт с обрывами у провайдера займёт 10–15 секунд" data-tip="Пока идёт проверка сайта, потом напрямую. Если выключить, первый заход на сайт с обрывами у провайдера займёт 10–15 секунд"><i data-lucide="info"></i></span></span></label>
+          <label class="choice"><input type="checkbox" role="switch" class="switch" data-set="blockAds"><span>Блокировать рекламу и трекеры<span class="mc-info" tabindex="0" role="img" aria-label="По списку category-ads-all" data-tip="По списку category-ads-all"><i data-lucide="info"></i></span></span></label>
+        </div>
+      </div>
+    </section>
+
+    <!-- соединения: открытые и за 30 минут, по сайтам или по программам; строка открывает подробности -->
+    <section class="mc-view mc-page" id="v-s-net" hidden>
+      <header class="mc-sub-h"><button class="icon-btn" data-go="settings" aria-label="Назад"><i data-lucide="arrow-left"></i></button><h2>Соединения</h2>
+        <div class="cx-menus">
+          <div class="cx-mw">
+            <button class="btn btn-secondary btn-sm" type="button" aria-haspopup="menu" aria-controls="cx-m-time"><i data-lucide="clock"></i><span id="cx-time-l">Сейчас</span><i data-lucide="chevron-down"></i></button>
+            <div class="menu" id="cx-m-time" role="menu">
+              <button class="menu-item" role="menuitemradio" aria-checked="true" data-v="now" data-short="Сейчас"><span>Сейчас</span></button>
+              <button class="menu-item" role="menuitemradio" aria-checked="false" data-v="30" data-short="30 минут"><span>За 30 минут</span></button>
+            </div>
+          </div>
+          <div class="cx-mw">
+            <button class="btn btn-secondary btn-sm" type="button" aria-haspopup="menu" aria-controls="cx-m-by"><i data-lucide="globe" id="cx-by-i"></i><span id="cx-by-l">Сайты</span><i data-lucide="chevron-down"></i></button>
+            <div class="menu" id="cx-m-by" role="menu">
+              <button class="menu-item" role="menuitemradio" aria-checked="true" data-v="site" data-short="Сайты"><span>По сайтам</span></button>
+              <button class="menu-item" role="menuitemradio" aria-checked="false" data-v="proc" data-short="Программы"><span>По программам</span></button>
+            </div>
+          </div>
+        </div>
+      </header>
+      <div class="cx">
+        <!-- плитки путей: число и подпись; нажатие оставляет в списке только этот путь, повторное — все -->
+        <div class="cx-stats" id="cx-path">
+          <button class="stat cx-st" type="button" data-v="vpn" aria-pressed="false"><span class="stat-num">0</span><span class="stat-head">через VPN</span></button>
+          <button class="stat cx-st" type="button" data-v="direct" aria-pressed="false"><span class="stat-num">0</span><span class="stat-head">напрямую</span></button>
+          <button class="stat cx-st" type="button" data-v="block" aria-pressed="false"><span class="stat-num">0</span><span class="stat-head">заблокировано</span></button>
+        </div>
+        <div class="mc-list sb" id="cx-list"></div>
+      </div>
+    </section>
+
+    <section class="mc-view mc-page" id="v-s-conn" hidden>
+      <header class="mc-sub-h"><button class="icon-btn" data-go="settings" aria-label="Назад"><i data-lucide="arrow-left"></i></button><h2>Подключение</h2></header>
+      <div class="mc-set sb">
+        <div class="mc-group">
+          <span class="t-label">Способ подключения</span>
+          <div class="seg" role="group" aria-label="Подключение" id="s-connect"><span class="thumb"></span>
+            <button data-v="auto" aria-pressed="true">Авто</button><button data-v="tun" aria-pressed="false">TUN</button><button data-v="proxy" aria-pressed="false">Прокси</button></div>
+          <p class="hint" id="s-connect-hint"></p>
+        </div>
+        <div class="mc-group">
+          <label class="choice"><input type="checkbox" role="switch" class="switch" data-set="autoStart"><span>Запускать вместе с Windows</span></label>
+          <label class="choice"><input type="checkbox" role="switch" class="switch" data-set="autoOn"><span>Подключать VPN при запуске</span></label>
+        </div>
+      </div>
+    </section>
+
+    <section class="mc-view mc-page" id="v-s-adv" hidden>
+      <header class="mc-sub-h"><button class="icon-btn" data-go="settings" aria-label="Назад"><i data-lucide="arrow-left"></i></button><h2>Для опытных</h2></header>
+      <div class="mc-set sb">
+        <div class="mc-group">
+          <label class="field"><span class="label">DNS для заблокированных сайтов</span>
+            <select class="select" data-set="dns">
+              <option value="https://1.1.1.1/dns-query">Cloudflare</option>
+              <option value="https://8.8.8.8/dns-query">Google</option>
+              <option value="https://9.9.9.9/dns-query">Quad9</option>
+              <option value="https://94.140.14.14/dns-query">AdGuard, без рекламы</option>
+            </select></label>
+          <label class="field"><span class="label">Отпечаток TLS</span>
+            <select class="select" data-set="fingerprint">
+              <option value="">Как в подписке</option>
+              <option value="chrome">Chrome</option><option value="firefox">Firefox</option><option value="safari">Safari</option><option value="edge">Edge</option><option value="randomized">Случайный</option>
+            </select></label>
+          <label class="field"><span class="label">Порт прокси на 127.0.0.1</span>
+            <input class="input mc-port" type="number" min="1024" max="65528" step="1" data-set="port"></label>
+        </div>
+      </div>
+    </section>
+
+    <section class="mc-view mc-page" id="v-s-about" hidden>
+      <header class="mc-sub-h"><button class="icon-btn" data-go="settings" aria-label="Назад"><i data-lucide="arrow-left"></i></button><h2>О программе</h2></header>
+      <div class="mc-set sb">
+        <div class="mc-brand"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 19 V10.5 Q4.5 6 8.25 6 Q12 6 12 10.5 V19 M12 10.5 Q12 6 15.75 6 Q19.5 6 19.5 10.5 V19"/></svg><span class="mp-wm">Monolit</span></div>
+        <div class="mc-group">
+          <div class="mc-about"><span class="mc-row-tx"><b id="s-version"></b><span id="s-update"></span></span><button class="btn btn-primary" id="s-upd-btn" type="button" hidden>Обновить</button></div>
+          <div class="mc-about"><span class="mc-row-tx"><b>Базы сайтов</b><span id="s-geo"></span></span><button class="btn btn-secondary" id="s-geo-btn" type="button"><i data-lucide="refresh-cw"></i><span>Обновить</span></button></div>
+          <div class="mc-about"><span class="mc-row-tx"><b>Журнал</b><span>Ошибки ядра и решения клиента</span></span><button class="btn btn-secondary" data-go="log" type="button"><i data-lucide="scroll-text"></i><span>Открыть</span></button></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- журнал -->
+    <section class="mc-view" id="v-log" hidden>
+      <header class="mc-sub-h"><button class="icon-btn" data-go="s-about" aria-label="Назад"><i data-lucide="arrow-left"></i></button><h2>Журнал</h2></header>
+      <pre class="mc-log sb" id="log"></pre>
+    </section>
+  </main>
+</div>
+
+<dialog class="dialog dialog-md" id="dlg-add" aria-labelledby="da-t"><form id="add-sub-form" novalidate>
+  <div class="dialog-head"><div><h2 id="da-t">Новая подписка</h2><p>Подписка или ссылка на сервер: vless, vmess, trojan, ss, hysteria2</p></div>
+    <button class="icon-btn icon-btn-sm" type="button" data-close aria-label="Закрыть"><i data-lucide="x"></i></button></div>
+  <div class="dialog-main">
+    <label class="field"><span class="label">Ссылка</span>
+      <input class="input" id="add-sub-url" type="text" placeholder="https://… или vless://…" autocomplete="off" spellcheck="false"></label>
+    <p class="hint mc-err" id="add-sub-err" hidden></p>
+  </div>
+  <div class="dialog-foot"><button class="btn btn-ghost" type="button" data-close>Отмена</button><button class="btn btn-primary" type="submit">Добавить</button></div>
+</form></dialog>
+
+<dialog class="dialog" id="dlg-del" aria-labelledby="dd-t">
+  <div class="dialog-head"><div><h2 id="dd-t">Удалить подписку?</h2></div>
+    <button class="icon-btn icon-btn-sm" type="button" data-close aria-label="Закрыть"><i data-lucide="x"></i></button></div>
+  <div class="dialog-body"><p id="dd-text"></p></div>
+  <div class="dialog-foot"><button class="btn btn-ghost" type="button" data-close>Отмена</button><button class="btn btn-danger" type="button" id="dd-ok">Удалить</button></div>
+</dialog>
+
+<dialog class="dialog" id="dlg-ok" aria-labelledby="do-t">
+  <div class="dialog-head"><div><h2 id="do-t"></h2></div>
+  <button class="icon-btn" type="button" data-close aria-label="Закрыть"><i data-lucide="x"></i></button></div>
+  <div class="dialog-body"><p id="do-text"></p></div>
+  <div class="dialog-foot"><button class="btn btn-ghost" type="button" data-close>Отмена</button><button class="btn btn-primary" type="button" id="do-ok"></button></div>
+</dialog>
+
+<!-- выбор программы для списка «через VPN»: запущенные со значками и поиском; нет в списке — файл через окно Windows -->
+<dialog class="dialog dialog-md dialog-scroll" id="dlg-apps" aria-labelledby="pk-t">
+  <div class="dialog-head"><div><h2 id="pk-t">Программа через VPN</h2><p>Запущенные сейчас. Весь трафик выбранной пойдёт через VPN</p>
+    <span class="input-wrap search pk-search"><i data-lucide="search"></i>
+      <input class="input" type="search" id="pk-q" placeholder="Поиск" aria-label="Поиск программы" autocomplete="off" spellcheck="false">
+      <span class="trail"><button type="button" class="icon-btn icon-btn-sm clear" aria-label="Очистить"><i data-lucide="x"></i></button></span></span></div>
+    <button class="icon-btn icon-btn-sm" type="button" data-close aria-label="Закрыть"><i data-lucide="x"></i></button></div>
+  <div class="dialog-main"><div id="pk-list"></div></div>
+  <div class="dialog-foot"><button class="link grow" type="button" id="pk-file">Нет в списке? Выбрать файл программы</button></div>
+</dialog>
+
+<!-- подробности строки «Соединений»: путь сайта или программы (Авто / VPN / Напрямую), объём, куда что идёт -->
+<dialog class="sheet sheet-side cx-sheet" id="cx-sheet" aria-labelledby="cx-st">
+  <div class="sheet-head"><div><h2 id="cx-st"></h2><p class="cx-sub" id="cx-ss"></p></div><button class="icon-btn icon-btn-sm" type="button" data-close aria-label="Закрыть"><i data-lucide="x"></i></button></div>
+  <div class="sheet-body">
+    <div class="seg cx-mode" id="cx-mode" role="group" aria-label="Путь"><span class="thumb"></span><button type="button" data-mode="auto" aria-pressed="true"><i data-lucide="sparkles"></i>Авто</button><button type="button" data-mode="vpn" aria-pressed="false"><i data-lucide="shield-check"></i>VPN</button><button type="button" data-mode="direct" aria-pressed="false"><i data-lucide="arrow-up-right"></i>Напрямую</button></div>
+    <div class="cx-tot" id="cx-tot"></div>
+    <div class="cx-groups" id="cx-groups"></div>
+  </div>
+  <div class="menu fixed cx-sm" id="cx-m-site" role="menu" aria-label="Путь сайта">
+    <button class="menu-item" type="button" role="menuitemradio" aria-checked="false" data-mode="auto"><i data-lucide="sparkles"></i><span>Авто</span></button>
+    <button class="menu-item" type="button" role="menuitemradio" aria-checked="false" data-mode="vpn"><i data-lucide="shield-check"></i><span>VPN</span></button>
+    <button class="menu-item" type="button" role="menuitemradio" aria-checked="false" data-mode="direct"><i data-lucide="arrow-up-right"></i><span>Напрямую</span></button>
+  </div>
+</dialog>
+</body>
+</html>

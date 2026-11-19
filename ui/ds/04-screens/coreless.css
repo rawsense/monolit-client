@@ -1,0 +1,7 @@
+/* Бренд Coreless · общий для всех экранов продукта (лендинг, вход, панель)
+   Логотип: знак «два уголка» + название Unbounded 500. Шрифт подключать: family=Unbounded:wght@500 */
+/* знак «два уголка» + название Unbounded 500. Знак 22px, зазор 8px, цвет из акцента */
+.logo { gap: 8px; font-family: Unbounded, var(--font-sans); font-weight: 500; font-size: 15px; line-height: 1; letter-spacing: -.02em; white-space: nowrap }
+.logo svg { width: 22px; height: 22px; flex: none; color: var(--accent) }
+/* акцент «Небо» светлый: на белом его заливка почти не видна (≈1.9:1), поэтому знак в светлой теме — кромочным тоном на ступень глубже */
+[data-theme="light"] .logo svg { color: var(--accent-edge, var(--accent)) }

@@ -1,0 +1,135 @@
+<!doctype html>
+<!-- Образец экрана приложения (кабинет, рабочий экран): боковое меню, ряд цифр, таблица, карточка строки в шторке.
+     Правила и почему так — references/app.md. Структура выведена из содержимого этого экрана: у другого продукта вещи и ряды будут другими. -->
+<html lang="ru" data-store="coreless" data-theme-default="system" data-accent-default="azure" data-auth="user">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Заявки Coreless</title>
+<link rel="icon" href="coreless-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&family=JetBrains+Mono:wght@400;500&family=Unbounded:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../tokens/colors.css"><link rel="stylesheet" href="../tokens/accents.css"><link rel="stylesheet" href="../tokens/palettes.css">
+<link rel="stylesheet" href="../tokens/motion.css">
+<link rel="stylesheet" href="../tokens/type.css">
+<link rel="stylesheet" href="../tokens/space.css">
+<link rel="stylesheet" href="../tokens/scrollbar.css">
+<link rel="stylesheet" href="../tokens/icons.css">
+<link rel="stylesheet" href="../tokens/components.css">
+<link rel="stylesheet" href="../tokens/inputs.css">
+<link rel="stylesheet" href="../tokens/layers.css">
+<link rel="stylesheet" href="../tokens/data.css">
+<link rel="stylesheet" href="coreless.css">
+<link rel="stylesheet" href="app.css">
+<script src="../js/theme.js"></script>
+<script>document.documentElement.classList.add('js')</script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<script src="../js/scroll-lock.js" defer></script>
+<script src="../js/layers.js" defer></script>
+<script src="../js/inputs.js" defer></script>
+<script src="../js/data.js" defer></script>
+<script src="../js/select.js" defer></script>
+<script src="../js/scrollbar.js" defer></script>
+<script src="app.js" defer></script>
+</head>
+<body>
+<div class="app-shell">
+<aside class="side" aria-label="Меню Coreless">
+  <div class="side-head">
+    <a class="side-ws logo" href="landing.html" aria-label="Coreless, на главную"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12V6a3 3 0 0 1 3-3h6M21 12v6a3 3 0 0 1-3 3h-6" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/><rect x="8.5" y="8.5" width="7" height="7" rx="2" fill="currentColor"/></svg><span class="side-tx">Coreless</span></a>
+    <button class="icon-btn icon-btn-sm side-toggle" type="button" data-side-toggle aria-label="Свернуть меню"><i data-lucide="panel-left"></i></button>
+  </div>
+  <nav class="side-nav">
+    <a class="side-item" href="#"><i data-lucide="layout-grid"></i><span class="side-tx">Сайты</span></a>
+    <a class="side-item" href="#" aria-current="page"><i data-lucide="inbox"></i><span class="side-tx">Заявки</span><span class="side-count">12</span></a>
+    <a class="side-item" href="#" id="ap-info-open"><i data-lucide="gauge"></i><span class="side-tx">Тариф и лимиты</span></a>
+    <a class="side-item" href="#"><i data-lucide="users"></i><span class="side-tx">Команда</span></a>
+  </nav>
+  <div class="side-foot"><span class="avatar" data-hue="2">АК</span><span class="side-tx">Анна Ковалева</span>
+    <button class="icon-btn icon-btn-sm" type="button" aria-label="Выйти" data-tip="Выйти"><i data-lucide="log-out"></i></button></div>
+</aside>
+
+<main class="app-main"><div class="app-inner">
+  <div class="app-head">
+    <div>
+      <div class="app-title"><h1>Заявки</h1><span class="badge badge-success"><span class="dot"></span>Формы принимают</span></div>
+      <p class="app-sub" id="ap-updated">3 сайта, обновлено в 14:32</p>
+    </div>
+    <div class="btn-row"><button class="btn btn-secondary" type="button"><i data-lucide="download"></i>Выгрузить CSV</button></div>
+  </div>
+
+  <div class="ap-stats">
+    <div class="stat ap-limit">
+      <div class="stat-head"><span>Заявок в ноябре</span><span>41%</span></div>
+      <div class="stat-num" id="ap-month">412<small>из 1 000</small></div>
+      <div class="progress" role="progressbar" aria-label="Лимит заявок" aria-valuenow="41"><i style="--p:.412"></i></div>
+      <div class="stat-foot">Лимит обновится 1 декабря</div>
+    </div>
+    <div class="stat"><div class="stat-head"><span>Новые</span></div><div class="stat-num" id="ap-new">12</div><div class="stat-foot">ждут ответа</div></div>
+    <div class="stat"><div class="stat-head"><span>В работе</span></div><div class="stat-num">27</div><div class="stat-foot">у менеджеров</div></div>
+    <div class="stat"><div class="stat-head"><span>Закрыты</span></div><div class="stat-num">366</div><div class="stat-foot">за месяц</div></div>
+    <div class="stat ap-bad"><div class="stat-head"><span>Спам</span></div><div class="stat-num">7</div><div class="stat-foot">отсеяно</div></div>
+  </div>
+
+  <div class="tabs ap-tabs" role="tablist" aria-label="Заявки" id="ap-tabs"><span class="line"></span>
+    <button class="tab" role="tab" aria-selected="true" data-view="new">Новые<span class="ap-n">12</span></button>
+    <button class="tab" role="tab" aria-selected="false" data-view="work">В работе<span class="ap-n">27</span></button>
+    <button class="tab" role="tab" aria-selected="false" data-view="done">Закрыты<span class="ap-n">366</span></button>
+    <button class="tab" role="tab" aria-selected="false" data-view="all">Все</button>
+  </div>
+  <div class="ap-tools">
+    <span class="input-wrap search"><i data-lucide="search"></i>
+      <input class="input" type="search" id="ap-search" placeholder="Имя, почта или телефон" data-hotkey="/" aria-label="Поиск заявок" autocomplete="off">
+      <span class="trail"><span class="kbd">/</span><button type="button" class="icon-btn icon-btn-sm clear" aria-label="Очистить"><i data-lucide="x"></i></button></span></span>
+    <select class="select" id="ap-site" aria-label="Сайт">
+      <option value="" selected>Все сайты</option><option>studio-lumen.ru</option><option>vetclinic-ural.ru</option><option>kofe-na-gorkah.ru</option>
+    </select>
+  </div>
+  <div class="ap-list" id="ap-list">
+    <div class="table-wrap"><table class="table table-stack ap-table">
+      <thead><tr><th>Заявка</th><th class="ap-st-col">Статус</th><th class="ap-site-col">Сайт</th><th class="num">Сумма</th><th>Пришла</th></tr></thead>
+      <tbody id="ap-rows"></tbody>
+    </table></div>
+    <div class="state state-dashed" id="ap-empty" hidden><span class="state-ic"><i data-lucide="inbox"></i></span><h4>Заявок не нашлось</h4><p>Проверьте написание или выберите другой сайт</p></div>
+  </div>
+  <div class="ap-foot"><span class="hint">Новые заявки появляются сами, страницу обновлять не нужно</span><nav class="pager" id="ap-pager" data-total="3" data-page="1" data-per="50" data-count="128"></nav></div>
+</div></main>
+</div>
+
+<dialog class="sheet sheet-side" id="ap-info" aria-labelledby="ap-info-t">
+  <div class="sheet-head"><h2 id="ap-info-t">Тариф и лимиты</h2><button class="icon-btn icon-btn-sm" type="button" data-close aria-label="Закрыть"><i data-lucide="x"></i></button></div>
+  <div class="sheet-body">
+    <div class="ap-group">
+      <span class="t-label">Тариф «Команда»</span>
+      <dl class="ap-kv">
+        <div><dt>Сайтов</dt><dd>3 из 5</dd></div>
+        <div><dt>Заявок в месяц</dt><dd>1 000</dd></div>
+        <div><dt>Хранение заявок</dt><dd>12 месяцев</dd></div>
+        <div><dt>Следующее списание</dt><dd>1 декабря</dd></div>
+      </dl>
+      <p class="ap-note">Когда лимит закончится, формы продолжат принимать заявки, а новые будут видны после оплаты.</p>
+    </div>
+    <div class="ap-group"><span class="t-label">События</span><ol class="tl" id="ap-events"></ol></div>
+  </div>
+</dialog>
+
+<dialog class="sheet sheet-side ap-detail" id="ap-detail" aria-labelledby="ap-d-title">
+  <div class="sheet-head"><div><p class="ap-did" id="ap-d-id"></p><h2 id="ap-d-title">Заявка</h2></div><button class="icon-btn icon-btn-sm" type="button" data-close aria-label="Закрыть"><i data-lucide="x"></i></button></div>
+  <div class="sheet-body">
+    <div class="ap-section">
+      <div class="ap-claim"><button class="btn btn-secondary btn-sm" type="button"><i data-lucide="hand"></i>Взять в работу</button><span class="ap-note">Заявка закрепится за вами</span></div>
+      <dl class="ap-kv" id="ap-d-kv"></dl>
+    </div>
+    <div class="ap-section">
+      <form class="ap-reply" onsubmit="event.preventDefault()">
+        <label class="field"><span class="label">Заметка для команды</span><textarea class="textarea" rows="2" placeholder="Например, перезвонить после 18:00"></textarea></label>
+        <div class="btn-row"><button class="btn btn-primary" type="submit"><span>Сохранить</span></button></div>
+      </form>
+    </div>
+    <div class="ap-section">
+      <div class="acc"><details class="acc-item"><summary><span>Данные формы</span></summary><div class="acc-body"><pre class="ap-raw" id="ap-d-raw"></pre></div></details></div>
+    </div>
+  </div>
+</dialog>
+</body>
+</html>

@@ -1,0 +1,324 @@
+/* Флаги стран рисует отдельный шрифт (brand/fonts.css): первым в списке, в нём только знаки флагов */
+:root { --font-sans: "Twemoji Country Flags", "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif }
+/* monolit client. Только токены системы, свои классы с префиксом mc- */
+html, body { margin: 0; height: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: var(--font-sans); font-size: var(--fs-md); line-height: var(--lh-md); letter-spacing: var(--ls-md) }
+h1, h2, p { margin: 0 }
+[hidden] { display: none !important }
+.mc-num { font-variant-numeric: tabular-nums; letter-spacing: -.02em }
+
+.mc { height: 100vh; display: grid; grid-template-columns: 340px minmax(0, 1fr); padding-top: var(--sp-2); box-sizing: border-box }
+
+/* сцена с кнопкой питания */
+.mc-stage { display: grid; grid-template-rows: auto minmax(0, 1fr) auto auto minmax(0, 1fr) auto; justify-items: center; margin: 0 0 var(--sp-2) var(--sp-2); border-radius: var(--r-xl); background: var(--bg-raised); box-shadow: inset 0 0 0 1px var(--border-subtle) }
+.mc-pwr { width: 136px; height: 136px; display: grid; place-items: center; border: 0; border-radius: var(--r-full); cursor: pointer; color: var(--text-muted); background: var(--surface); box-shadow: inset 0 0 0 1px var(--border); transition: background var(--dur-state) var(--ease-out), color var(--dur-state) var(--ease-out), box-shadow var(--dur-state) var(--ease-out), opacity var(--dur-state) var(--ease-out) }
+.mc-pwr svg { width: 44px; height: 44px; stroke-width: 1.75 }
+.mc-pwr[aria-pressed="true"] { color: var(--accent-fg); background: var(--accent); box-shadow: none }
+/* занята: только тусклее, курсор обычный — «загрузка» выглядела как подвисание */
+.mc-pwr[aria-busy="true"] { opacity: .6 }
+.mc-pwr:disabled { opacity: .4; cursor: default }
+.mc-pwr:focus-visible { outline: 2px solid var(--focus); outline-offset: 4px }
+@media (hover: hover) and (pointer: fine) {
+  .mc-pwr:not(:disabled):hover { color: var(--text) }
+  .mc-pwr[aria-pressed="true"]:not(:disabled):hover { color: var(--accent-fg); background: var(--accent-hover) }
+}
+/* кнопка с подписью по центру. Высота подписи постоянная (заголовок и две строки), поэтому при смене текста ничего не сдвигается */
+.mc-pwr { grid-row: 3 }
+.mc-state { grid-row: 4; align-content: start; height: calc(var(--lh-lg) + var(--sp-1) + 2 * var(--lh-md)); margin-top: var(--sp-8); display: grid; justify-items: center; gap: var(--sp-1); text-align: center; padding: 0 var(--sp-6) }
+.mc-state span { max-width: 260px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden }
+.mc-title p { white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+.mc-state b { font-size: var(--fs-lg); font-weight: var(--w-semibold) }
+.mc-state span { color: var(--text-muted) }
+.mc-state span.mc-bad { color: var(--danger-text) }
+
+/* правая часть */
+.mc-main { position: relative; min-height: 0; min-width: 0 }
+.mc-view { position: absolute; inset: 0; display: grid; align-content: start; gap: var(--sp-6); padding: var(--sp-6) var(--sp-8) var(--sp-6); min-height: 0; animation: mc-in 200ms var(--ease-out) }
+@keyframes mc-in { from { opacity: 0 } to { opacity: 1 } }
+/* главная — панелями, как левая: те же поля 8px от краёв окна и между блоками */
+#v-home { grid-template-rows: minmax(0, 1fr) auto; gap: var(--sp-2); padding: 0 var(--sp-2) var(--sp-2) }
+/* сайты: столбиком, список забирает остаток — так спрятанные вкладки (у программ) и поле (у найденного) не ломают ряды */
+#v-sites { display: flex; flex-direction: column }
+#v-sites > .mc-list { flex: 1 }
+#site-tabs[hidden] { display: none }
+#v-settings, #v-log, .mc-page { grid-template-rows: auto minmax(0, 1fr) }
+
+.mc-top { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--sp-6) }
+.mc-title { min-width: 0 }
+.mc-title h1 { font-size: var(--fs-4xl); line-height: 1.05; letter-spacing: -.035em; font-weight: var(--w-semibold); white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+.mc-title p { margin-top: var(--sp-2); color: var(--text-muted) }
+.mc-nav { display: flex; gap: var(--sp-1); flex: none }
+.mc-live { display: flex; gap: var(--sp-12) }
+.mc-live div { display: grid; gap: 2px }
+.mc-live b { font-size: var(--fs-2xl); line-height: 1.1; font-weight: var(--w-semibold) }
+.mc-live span { color: var(--text-muted); font-size: var(--fs-sm) }
+
+.mc-modes { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: var(--sp-2) }
+.mc-mode[hidden] { display: none }
+.mc-mode { border: 0; font: inherit; display: grid; gap: var(--sp-2); align-content: start; padding: var(--sp-5); border-radius: var(--r-xl); background: var(--bg-raised); box-shadow: inset 0 0 0 1px var(--border-subtle); color: var(--text-secondary); text-align: left; cursor: pointer; transition: background var(--dur-state) var(--ease-out), box-shadow var(--dur-state) var(--ease-out) }
+.mc-mode svg { width: 20px; height: 20px; color: var(--text-muted); transition: color var(--dur-state) var(--ease-out) }
+.mc-mode b { color: var(--text); font-weight: var(--w-semibold) }
+.mc-mode span { font-size: var(--fs-sm); line-height: var(--lh-sm); color: var(--text-muted) }
+.mc-mode[aria-pressed="true"] { background: var(--surface-active); box-shadow: inset 0 0 0 1px var(--accent-border) }
+.mc-mode[aria-pressed="true"] svg { color: var(--accent) }
+.mc-mode:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px }
+@media (hover: hover) and (pointer: fine) { .mc-mode:not([aria-pressed="true"]):hover { background: var(--surface-hover) } }
+
+.mc-empty { color: var(--text-muted); font-size: var(--fs-sm); padding: var(--sp-3) 0 }
+
+/* подразделы */
+.mc-sub-h { display: flex; align-items: center; gap: var(--sp-2); margin-left: calc(-1 * var(--sp-2)) }
+.mc-sub-h h2 { font-size: var(--fs-2xl); font-weight: var(--w-semibold); letter-spacing: -.02em }
+.mc-subform { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: var(--sp-3); max-width: 560px }
+.mc-err { color: var(--danger-text) }
+.mc-add { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--sp-3) }
+.mc-list { overflow-y: auto; min-height: 0; display: grid; align-content: start }
+.mc-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--sp-3); align-items: center; min-height: 56px; padding: var(--sp-2) 0; border-bottom: 1px solid var(--border-subtle) }
+.mc-row:last-child { border-bottom: 0 }
+.mc-row-tx { display: grid; min-width: 0 }
+.mc-row-tx b { font-weight: var(--w-medium); overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+.mc-row-tx span { color: var(--text-muted); font-size: var(--fs-sm); overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+
+/* программы: значок из файла программы (24px) на месте общего знака; пришёл позже строки — проявляется */
+.mc-app { grid-template-columns: 32px minmax(0, 1fr) auto }
+.app-ic { display: grid; place-items: center; width: 32px; height: 32px; color: var(--text-muted) }
+.app-ic img { width: 24px; height: 24px; animation: app-ic-in var(--dur-enter) var(--ease-out) }
+@keyframes app-ic-in { from { opacity: 0 } }
+.mc-pick { justify-self: start; align-self: flex-start }
+/* ссылка-кнопка: без фона и рамки кнопки по умолчанию, как ссылка в тексте */
+button.link { padding: 0; border: 0; background: none; font: inherit; font-weight: var(--w-medium); text-align: left; cursor: pointer }
+/* окно выбора программы: поиск под подзаголовком в неподвижной шапке, список прокручивается */
+.pk-search { margin-top: var(--sp-4) }
+#dlg-apps .dialog-head { padding-bottom: var(--sp-4) }
+.pk-row:disabled { cursor: default }
+.pk-row:disabled .alist-tx { color: var(--text-muted) }
+@media (hover: hover) and (pointer: fine) { .pk-row:disabled:hover { background: transparent } }
+
+.mc-conn { grid-template-columns: auto minmax(0, 1fr) auto; cursor: pointer }
+.mc-conn .radio { margin: 0 }
+.mc-delay { font-size: var(--fs-sm); color: var(--text-secondary) }
+.mc-delay.mc-bad { color: var(--danger-text) }
+.mc-subinfo { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4); padding: var(--sp-5); border-radius: var(--r-lg); background: var(--surface); box-shadow: inset 0 0 0 1px var(--border-subtle) }
+.mc-subinfo-tx { display: grid; min-width: 0 }
+.mc-subinfo-tx span { color: var(--text-muted); font-size: var(--fs-sm) }
+
+.mc-set { overflow-y: auto; min-height: 0; display: grid; align-content: start; gap: var(--sp-8); padding-bottom: var(--sp-6); max-width: 560px }
+/* разделы настроек: строки-кнопки списка .alist; две группы — частое и редкое */
+#v-settings .mc-set { gap: var(--sp-4) }
+.alist-row { border: 0; font: inherit; width: 100%; text-align: left; color: inherit; background: transparent; cursor: pointer }
+/* наведение на разделы — быстрее мягкого стиля (220 мс появление, 480 мс угасание): за курсором тянулся
+   хвост, пункты казались тугими. Отклик в пределах 140–180 мс */
+.alist-row { --hd: 180ms }
+@media (hover: hover) and (pointer: fine) { .alist-row:hover { --hd: 140ms } }
+/* кружок иконки — на равном расстоянии от верхнего и левого края карточки (было 20 сверху и 26 слева) */
+.alist-row { padding: var(--sp-3) }
+.alist-row + .alist-row::before { left: calc(var(--sp-3) * 2 + 40px); right: var(--sp-3) }
+.alist-tx b, .alist-tx span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+.mc-start { justify-self: start }
+.mc-group { display: grid; gap: var(--sp-3) }
+/* «О программе»: знак 37е (линейная m) и название шрифтом бренда */
+.mc-brand { display: flex; align-items: center; gap: var(--sp-3); color: var(--text) }
+.mc-brand svg { width: 36px; height: 36px; flex: none; fill: none; stroke: var(--accent); stroke-width: 2.8; stroke-linecap: round; stroke-linejoin: round }
+.mc-brand .mp-wm { font-size: var(--fs-2xl) }
+.mc-group .seg { justify-self: start }
+.mc-port { max-width: 160px }
+.mc-about { display: flex; align-items: center; justify-content: space-between; color: var(--text-secondary) }
+.mc-log { margin: 0; overflow: auto; min-height: 0; font: var(--fs-xs)/1.6 var(--font-mono); color: var(--text-secondary); white-space: pre-wrap; word-break: break-all }
+.mc-add .input, .mc-subform .input { min-width: 0; width: 100%; box-sizing: border-box }
+.mc-about + .mc-about { padding-top: var(--sp-3); border-top: 1px solid var(--border-subtle) }
+
+/* разделы внизу левой панели */
+
+/* подписка вверху левой панели: переключатель (список подписок по нажатию) и «+» рядом */
+.mc-sw { grid-row: 1; justify-self: stretch; position: relative; display: flex; align-items: center; gap: var(--sp-1); padding: var(--sp-3) }
+/* меню подписок — во всю ширину шапки карточки (с отступами шапки), не шире карточки */
+.mc-subwrap { flex: 1; min-width: 0 }
+/* --menu-pad — поле меню (как в soft.css): края подобраны так, что текст пунктов стоит под названием подписки,
+   а правый край строки — под краем кнопки «+» */
+.mc-sw { --menu-pad: 8px }
+.mc-sw > .mc-subwrap .menu { top: calc(100% - var(--sp-1)); left: calc(var(--sp-3) - var(--menu-pad)); right: calc(var(--sp-3) - var(--menu-pad)); width: auto; min-width: 0 }
+/* переключатель подписки: только название и стрелка; при наведении светлеет текст, без подложки */
+.mc-subsel { display: inline-flex; align-items: center; gap: var(--sp-1); max-width: 100%; padding: var(--sp-2) var(--sp-3); border: 0; background: none; color: var(--text-secondary); font: inherit; text-align: left; cursor: pointer; transition: color var(--dur-state) var(--ease-out) }
+.mc-subsel b { font-weight: var(--w-semibold); white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+.mc-subsel svg { width: 16px; height: 16px; color: var(--text-muted); flex: none; transition: color var(--dur-state) var(--ease-out) }
+.mc-subsel:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: var(--r-sm) }
+@media (hover: hover) and (pointer: fine) { .mc-subsel:hover, .mc-subsel:hover svg { color: var(--text) } }
+.mc-subsel[aria-expanded="true"], .mc-subsel[aria-expanded="true"] svg { color: var(--text) }
+.mc-m-meta { margin-left: auto; padding-left: var(--sp-3); color: var(--text-muted) }
+
+/* конфиги выбранной подписки: простые строки без рамок, протокол бейджем; выбранная подсвечена только фоном, не жирнее */
+/* отдельный блок, как левая панель: фон на ступень выше, тонкая рамка; строки внутри без разделителей */
+.mc-srv { display: grid; grid-template-rows: auto minmax(0, auto); align-content: start; gap: var(--sp-2); min-height: 0; padding: var(--sp-4) var(--sp-2) var(--sp-2); border-radius: var(--r-xl); background: var(--bg-raised); box-shadow: inset 0 0 0 1px var(--border-subtle) }
+.mc-srv-h { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); min-height: 44px; padding: 0 var(--sp-2) 0 var(--sp-4) }
+/* пока идёт проверка, значок крутится; нажатие в это время ничего не делает */
+.mc-srv-acts { display: flex; gap: var(--sp-1) }
+.mc-check[aria-busy="true"] svg { animation: btn-spin .9s linear infinite }
+/* проверка серверов: спидометр не крутится, а качает стрелкой, как при замере */
+#srv-check[aria-busy="true"] svg { animation: none }
+#srv-check[aria-busy="true"] svg path:first-child { transform-box: view-box; transform-origin: 12px 14px; animation: gauge-sweep .8s ease-in-out infinite alternate }
+@keyframes gauge-sweep { from { rotate: -90deg } to { rotate: 15deg } }
+@media (prefers-reduced-motion: reduce) { #srv-check[aria-busy="true"] svg path:first-child { animation: none } #srv-check[aria-busy="true"] { opacity: .5 } }
+.mc-srv-h h2 { font-size: var(--fs-2xl); line-height: 1.2; letter-spacing: -.02em; font-weight: var(--w-semibold) }
+.mc-srvlist { display: grid; align-content: start; overflow-y: auto; min-height: 0 }
+.mc-srvi { display: flex; align-items: center; gap: var(--sp-4); min-height: 44px; padding: 0 var(--sp-4); border: 0; border-radius: var(--r-full); background: none; color: var(--text-secondary); font: inherit; text-align: left; cursor: pointer; transition: background var(--dur-state) var(--ease-out), color var(--dur-state) var(--ease-out) }
+.mc-srvi-tx { flex: 1; min-width: 0; display: flex; align-items: center; gap: var(--sp-2); white-space: nowrap; overflow: hidden }
+.mc-srvi-tx b { font-weight: var(--w-regular); overflow: hidden; text-overflow: ellipsis }
+.mc-srvi-tx .badge { flex: none }
+/* флаг страны в названии: отступ до текста как между иконкой и подписью */
+.mc-flag { display: inline-block; margin-right: var(--sp-2) }
+.mc-srvi em { font-style: normal; font-size: var(--fs-sm); color: var(--text-muted); white-space: nowrap }
+/* задержка: пять ступеней от салатового к красному. Одинаковые светлота и насыщенность, меняется только оттенок —
+   ни одна ступень не кричит громче других. Пороги — в app.js (pingStep) */
+:root:not([data-theme="light"]) { --ping-1: oklch(.80 .15 135); --ping-2: oklch(.80 .15 110); --ping-3: oklch(.80 .15 88); --ping-4: oklch(.78 .15 60); --ping-5: oklch(.74 .15 28) }
+:root[data-theme="light"] { --ping-1: oklch(.56 .15 140); --ping-2: oklch(.56 .14 115); --ping-3: oklch(.58 .13 85); --ping-4: oklch(.58 .15 55); --ping-5: oklch(.55 .17 28) }
+.mc-srvi em { transition: color var(--dur-state) var(--ease-out) }
+.mc-srvi em[data-ping="1"] { color: var(--ping-1) }
+.mc-srvi em[data-ping="2"] { color: var(--ping-2) }
+.mc-srvi em[data-ping="3"] { color: var(--ping-3) }
+.mc-srvi em[data-ping="4"] { color: var(--ping-4) }
+.mc-srvi em[data-ping="5"] { color: var(--ping-5) }
+.mc-srvi em.mc-bad { color: var(--danger-text) }
+.mc-srvi[aria-checked="true"] { color: var(--text); background: var(--fill) }
+.mc-srvi:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px }
+@media (hover: hover) and (pointer: fine) { .mc-srvi:hover { color: var(--text) } }
+.mc-mode span { text-wrap: balance }
+/* список подписок: название, выбранная подсвечена, справа тихая корзина */
+/* подложка — у всей строки вместе с корзиной: выбранная и под мышью */
+.mc-subitem { display: flex; align-items: center; gap: var(--sp-1); border-radius: calc(26px - var(--menu-pad)); /* угол меню (soft.css) минус поле */ transition: background-color var(--dur-item-out) var(--ease-hover) }
+.mc-subitem:has(.menu-item[aria-checked="true"]) { background: var(--fill) }
+.mc-subitem .menu-item { flex: 1; min-width: 0; background: none } /* подложку рисует строка */
+@media (hover: hover) and (pointer: fine) { .mc-subitem:hover { background: var(--tile); transition-duration: 0ms } .mc-subitem:hover .menu-item { color: var(--text) } }
+.mc-subitem:has(.menu-item:focus-visible) { background: var(--tile) }
+.mc-subitem .menu-item span { overflow: hidden; text-overflow: ellipsis }
+.mc-subitem .icon-btn { flex: none }
+/* трафик подписки внизу. Высота ряда — как у шапки сверху: кнопка включения стоит по центру карточки
+   и не сдвигается, когда у подписки появляется или пропадает лимит */
+.mc-traffic { grid-row: 6; justify-self: stretch; display: grid; align-content: end; gap: var(--sp-2); min-height: calc(var(--h-md) + var(--sp-3)); padding: 0 var(--sp-6) var(--sp-3) }
+.mc-traffic-tx { display: flex; justify-content: space-between; gap: var(--sp-3); font-size: var(--fs-sm); color: var(--text-muted) }
+.mc-traffic-tx span:first-child { color: var(--text-secondary) }
+.mc-traffic .progress i { display: block; height: 100%; width: calc(var(--p, 0) * 100%); border-radius: inherit; background: var(--accent); transition: width var(--dur-morph) var(--ease-out) }
+#dlg-add .input { width: 100%; min-width: 0; box-sizing: border-box }
+
+/* «Соединения»: сверху вид (время, группировка), под ним путь вкладками с числами, список забирает остаток.
+   Строки — системные .alist-row с колонками цифр; подробности — в шторке справа */
+.cx { display: flex; flex-direction: column; gap: var(--sp-4); min-height: 0 }
+/* меню времени и группировки — справа в заголовке; меню раскрывается от правого края кнопки */
+.cx-menus { display: flex; gap: var(--sp-2); margin-left: auto }
+.cx-mw { position: relative }
+.cx-mw .btn { white-space: nowrap }
+.cx-mw .menu { left: auto; right: 0; min-width: 180px }
+/* плитки путей — системные .stat кнопками: выбранная — рамкой акцента, как выбранный режим на главной */
+.cx-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-2) }
+.cx-st { border: 0; font: inherit; text-align: left; color: inherit; cursor: pointer; padding: var(--sp-4); transition: background var(--dur-state) var(--ease-out), box-shadow var(--dur-state) var(--ease-out) }
+.cx-st .stat-head { white-space: nowrap }
+.cx-st[aria-pressed="true"] { background: var(--surface-active); box-shadow: inset 0 0 0 1px var(--accent-border) }
+.cx-st:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px }
+@media (hover: hover) and (pointer: fine) { .cx-st:not([aria-pressed="true"]):hover { background: var(--surface-hover) } }
+#cx-list { flex: 1; align-content: start }
+#cx-list > .alist { margin-bottom: var(--sp-6) }
+/* компактнее разделов настроек: строк много, нужна плотность — значок 32, высота 48 */
+.cx-row { grid-template-columns: 32px minmax(0, 1fr) 176px 56px; min-height: 48px; padding: var(--sp-2) var(--sp-3) }
+.cx-row .alist-ic { width: 32px; height: 32px }
+.cx-row .alist-ic svg { width: 16px; height: 16px }
+.cx-row + .cx-row::before { left: calc(var(--sp-3) * 2 + 32px) }
+/* домен и сразу за ним метка пути; длинный домен сокращается, метка остаётся целой */
+.cx-name { display: flex; align-items: center; gap: var(--sp-2); min-width: 0 }
+.cx-name b { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: var(--w-medium); font-size: var(--fs-sm); color: var(--text) }
+.cx-name .badge { flex: none; white-space: nowrap }
+/* скорость одной строкой: две ячейки равной ширины, числа по правому краю; стрелка светится, пока идут данные */
+.cx-speed { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-3); font-size: var(--fs-sm); font-variant-numeric: tabular-nums; white-space: nowrap }
+.cx-speed > span { display: inline-flex; align-items: center; justify-content: flex-end; gap: 2px; color: var(--text-muted) }
+.cx-speed b { font-weight: var(--w-medium) }
+.cx-speed svg { width: 14px; height: 14px; color: var(--text-faint); transition: color var(--dur-state) var(--ease-out) }
+.cx-speed > span.on { color: var(--text) }
+.cx-speed > span.on svg { color: var(--accent-text) }
+.cx-ping { justify-self: end; font-size: var(--fs-sm); font-weight: var(--w-medium); font-variant-numeric: tabular-nums; white-space: nowrap }
+.cx-num { display: grid; justify-items: end; font-variant-numeric: tabular-nums; white-space: nowrap }
+.cx-num > span, .cx-num > small { display: inline-flex; align-items: center; gap: 2px }
+.cx-num b { font-weight: var(--w-medium); font-size: var(--fs-sm); line-height: var(--lh-sm); color: var(--text) }
+.cx-num small { font-size: var(--fs-xs); line-height: var(--lh-xs); color: var(--text-muted) }
+.cx-num svg { width: 12px; height: 12px; color: var(--text-faint) }
+/* шторка: шире системной 420 — пары «название — значение» и строки соединений */
+.sheet-side.cx-sheet { width: min(560px, 100vw); overflow: hidden }   /* меню сайта (fixed) на время выезда шторки считается от неё и раздвигало её вбок — полоса прокрутки снизу */
+.cx-sheet .sheet-head > div:first-child { flex: 1; min-width: 0 }
+.cx-sheet h2 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+.cx-sub { color: var(--text-muted); font-size: var(--fs-sm) }
+.cx-sheet .sheet-body { display: grid; align-content: start; gap: var(--sp-6) }
+/* путь сайта или программы: три сегмента во всю ширину, с иконками; выбранный ярче */
+.cx-mode { width: 100% }
+.cx-mode[hidden] { display: none }
+.cx-mode button { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: var(--sp-2); height: 36px; padding: 0 var(--sp-2); white-space: nowrap }
+.cx-mode .thumb { height: 36px }
+.cx-mode svg { width: 16px; height: 16px; flex: none; color: var(--text-faint); transition: color var(--dur-state) var(--ease-out) }
+.cx-mode button[aria-pressed=true] svg { color: var(--text) }
+.cx-mode button[data-mode=vpn][aria-pressed=true] svg { color: var(--accent-text) }
+.cx-mode.is-loading { pointer-events: none }
+.cx-tot { display: flex; flex-wrap: wrap; gap: var(--sp-1) var(--sp-4); font-size: var(--fs-sm); color: var(--text-muted); font-variant-numeric: tabular-nums }
+.cx-tot b { color: var(--text); font-weight: var(--w-medium) }
+.cx-groups { display: grid; gap: var(--sp-6) }
+.cx-grp { display: grid; gap: var(--sp-1) }
+.cx-grp .t-label { display: flex; justify-content: space-between }
+.cx-conns { display: grid }
+.cx-c { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--sp-3); align-items: center; padding: var(--sp-2) 0; border-bottom: 1px solid var(--border-subtle) }
+.cx-c:last-child { border-bottom: 0 }
+.cx-c > span:first-child { display: grid; min-width: 0 }
+.cx-c b { font-weight: var(--w-medium); font-size: var(--fs-sm); overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+.cx-c small { color: var(--text-muted); font-size: var(--fs-xs); overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+.cx-c .cx-num b { font-size: var(--fs-xs) }
+/* строка с иконкой пути: щит — VPN, стрелка — напрямую, запрет — заблокировано */
+.cx-c.pi { grid-template-columns: 24px minmax(0, 1fr) auto; padding: var(--sp-3) 0 }
+.cx-c.pi > span:first-child { place-items: center }
+.cx-c.pi > span:nth-child(2) { display: grid; min-width: 0 }
+.cx-c.pi > span:first-child svg { width: 20px; height: 20px; color: var(--text-muted) }
+/* цвет пути — как у меток в списке соединений: VPN акцентом, заблокировано красным */
+.cx-c.pi.vpn > span:first-child svg { color: var(--accent-text) }
+.cx-c.pi.block > span:first-child svg { color: var(--danger-text) }
+/* узкое окно (880): колонки цифр уже, подпись «отклик» убрана — место отдаём имени сайта */
+#cx-list { container-type: inline-size }
+@container (max-width: 520px) {
+  .cx-row { grid-template-columns: 32px minmax(0, 1fr) auto 48px; gap: var(--sp-2) }
+  .cx-speed { gap: var(--sp-2); grid-template-columns: 76px 64px }
+}
+/* узкое окно: иконки перед подписями меню прячем — заголовок и обе кнопки помещаются в строку */
+#v-s-net .mc-sub-h { container-type: inline-size }
+@container (max-width: 560px) { .cx-mw .btn > svg:first-child { display: none } #v-s-net h2 { font-size: var(--fs-xl) } }
+/* метка пути — только значок при любой ширине (надписи пользователь убрал), название пути подсказкой при наведении */
+.cx-name .badge { width: 24px; padding: 0; justify-content: center; gap: 0 }
+.cx-name .badge > span { display: none }
+.cx-name .badge svg { width: 14px; height: 14px }
+
+/* «i» с подсказкой у пункта настроек: круг тяжелее тонких знаков, поэтому 14px. Наведение — только ярче */
+.mc-info { display: inline-flex; vertical-align: -1px; margin-left: var(--sp-1); color: var(--text-muted); cursor: help; border-radius: var(--r-full); transition: color var(--dur-state) var(--ease-out) }
+.mc-info svg { width: 14px; height: 14px }
+.mc-info:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px }
+@media (hover: hover) and (pointer: fine) { .mc-info:hover { color: var(--text-secondary) } }
+/* подсказка в несколько строк: таблетка мягкого стиля только для одной строки, иначе выходит овал */
+.tip.multi { border-radius: var(--r-sm); padding: var(--sp-2) var(--sp-3) }
+
+/* Прокручиваемые области: край, за которым есть ещё, слегка гаснет (до 45% на самом краю, полоса 24 px) — видно, что дальше есть строки. Классы mc-ft/mc-fb ставит
+   app.js по факту: есть что прокручивать выше или ниже. Привязка анимации к прокрутке (как у .tabs) не годится: когда
+   список становится коротким и прокрутка пропадает, Chrome оставляет последнее значение и верх оставался погашенным */
+@property --mc-ft { syntax: '<length>'; inherits: false; initial-value: 0px }
+@property --mc-fb { syntax: '<length>'; inherits: false; initial-value: 0px }
+:is(.mc-list, .mc-srvlist, .mc-set) { transition: --mc-ft var(--dur-state) var(--ease-out), --mc-fb var(--dur-state) var(--ease-out);
+  mask-image: linear-gradient(to bottom, rgb(0 0 0 / .45), #000 var(--mc-ft), #000 calc(100% - var(--mc-fb)), rgb(0 0 0 / .45)) }
+.mc-ft { --mc-ft: 24px }
+.mc-fb { --mc-fb: 24px }
+/* сайт в шторке программы нажимается: меню пути. Наведение — светлеют причина и значок, без подложки */
+.cx-site { cursor: pointer; outline: 2px solid transparent; outline-offset: -2px; transition: outline-color var(--dur-focus) var(--ease-out) }
+.cx-site:focus-visible { outline-color: var(--focus) }
+.cx-site small, .cx-site > span:first-child svg { transition: color var(--dur-state) var(--ease-out) }
+.cx-site.on small { color: var(--text-secondary) }
+.cx-sm { min-width: 168px }
+.cx-sm .menu-item[data-mode=vpn][aria-checked=true] .lucide { color: var(--accent-text) }
+/* строка, у которой открыто меню, — на тёмной подложке: видно, к какому сайту меню. Подложка шире строки на шаг,
+   текст остаётся на линии остальных строк */
+.cx-site { position: relative; isolation: isolate }
+.cx-site::before { content: ""; position: absolute; z-index: -1; inset: 0 calc(var(--sp-3) * -1); border-radius: var(--r-md); background: var(--bg); opacity: 0; transition: opacity var(--dur-state) var(--ease-out) }
+[data-theme="light"] .cx-site::before { background: #0000000a }
+.cx-site.on::before { opacity: 1 }
+/* подписи строк списков (настройки, сайты и программы, шторка соединения): тише заголовка, но читаются —
+   между muted и secondary; muted на 12px терялся */
+:root { --text-sub: color-mix(in srgb, var(--text-muted) 55%, var(--text-secondary)) }
+.alist-tx span, .mc-row-tx span, .cx-c small, .mc-mode span { color: var(--text-sub) }
+/* иконки-кнопки (шестерёнка, плюс, крестики, назад): тем же светлее-серым, что подписи; при наведении — белые */
+.icon-btn { color: var(--text-sub) }

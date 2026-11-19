@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="ru" data-theme-default="system" data-accent-default="azure">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Возможности: три продукта</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&family=JetBrains+Mono:wght@400;500&family=Unbounded:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../tokens/colors.css"><link rel="stylesheet" href="../tokens/accents.css"><link rel="stylesheet" href="../tokens/palettes.css">
+<link rel="stylesheet" href="../tokens/motion.css"><link rel="stylesheet" href="../tokens/type.css"><link rel="stylesheet" href="../tokens/space.css">
+<link rel="stylesheet" href="../tokens/icons.css"><link rel="stylesheet" href="../tokens/components.css"><link rel="stylesheet" href="../tokens/data.css"><link rel="stylesheet" href="../tokens/tiles.css">
+<link rel="stylesheet" href="site.css"><link rel="stylesheet" href="landing.css">
+<script src="../js/theme.js"></script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<style>
+.var-note { display: grid; gap: 4px; margin-bottom: var(--sp-8); padding-bottom: var(--sp-6); box-shadow: inset 0 -1px 0 var(--border-subtle) }
+.var-note b { font-size: var(--fs-lg); font-weight: var(--w-semibold) }
+.var-note span { color: var(--text-muted); max-width: 90ch }
+main > section + section { padding-top: 0 }
+
+/* общие примитивы иллюстраций */
+.rows { display: grid }
+.row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--sp-4); height: 44px; box-shadow: inset 0 -1px 0 var(--border-subtle); font-size: var(--fs-sm); line-height: var(--lh-sm) }
+.row > span { color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+.row > b { font-weight: var(--w-regular); color: var(--text); white-space: nowrap; font-variant-numeric: tabular-nums }
+.row > b.off { color: var(--text-faint) }
+.ttl { display: flex; align-items: center; gap: var(--sp-2); font-size: var(--fs-md); line-height: var(--lh-md); font-weight: var(--w-semibold) }
+.ttl .lucide { width: 18px; height: 18px; color: var(--accent-text); flex: none }
+.dsc { font-size: var(--fs-sm); line-height: var(--lh-sm); color: var(--text-muted); text-wrap: pretty; max-width: 52ch }
+
+/* ===== 1. Тропка: главная вещь — список походов, она высокая; две мелкие разной формы ===== */
+.trips .row { grid-template-columns: 7ch minmax(0, 1fr) auto }
+.trips .row > i { font-style: normal; color: var(--text-faint); font-variant-numeric: tabular-nums }
+.pay { display: grid; gap: var(--sp-2) }
+.pay > div { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--sp-3); padding: var(--sp-3) var(--sp-4); border-radius: var(--r-md); background: var(--surface); box-shadow: inset 0 0 0 1px var(--border-subtle); font-size: var(--fs-sm); line-height: var(--lh-sm) }
+.pay small { display: block; color: var(--text-muted); font-size: var(--fs-xs); line-height: var(--lh-xs) }
+.pay b { font-weight: var(--w-medium); font-variant-numeric: tabular-nums }
+.gear { display: grid; gap: var(--sp-1); font-size: var(--fs-sm); line-height: var(--lh-sm) }
+.gear > div { display: flex; align-items: center; gap: var(--sp-2); height: 32px; color: var(--text-secondary) }
+.gear .lucide { width: 16px; height: 16px; color: var(--text-faint) }
+.gear .on .lucide { color: var(--accent-text) }
+.gear .on { color: var(--text) }
+.gear .sum { justify-content: space-between; margin-top: var(--sp-2); padding-top: var(--sp-2); box-shadow: inset 0 1px 0 var(--border-subtle); color: var(--text-muted) }
+.gear .sum b { color: var(--text); font-weight: var(--w-medium); font-variant-numeric: tabular-nums }
+
+/* ===== 2. Сверка: одна главная возможность с таблицей — на всю ширину, текст слева; три мелкие с одной строкой-примером — в ряд, пример над текстом ===== */
+.tbl { display: grid; font-size: var(--fs-sm); line-height: var(--lh-sm); border-radius: var(--r-md); background: var(--surface); box-shadow: inset 0 0 0 1px var(--border-subtle); overflow: hidden }
+.tbl > div { display: grid; grid-template-columns: 7ch minmax(0, 1fr) 11ch 13ch; gap: var(--sp-4); align-items: center; height: 44px; padding: 0 var(--sp-4); box-shadow: inset 0 -1px 0 var(--border-subtle) }
+.tbl > div:last-child { box-shadow: none }
+.tbl .h { height: 36px; font-size: var(--fs-xs); color: var(--text-faint) }
+.tbl span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-secondary) }
+.tbl .n { text-align: right; color: var(--text); font-variant-numeric: tabular-nums }
+.tbl .st { justify-self: end }
+.chip { display: flex; align-items: center; gap: var(--sp-3); height: 56px; padding: 0 var(--sp-4); border-radius: var(--r-md); background: var(--surface); box-shadow: inset 0 0 0 1px var(--border-subtle); font-size: var(--fs-sm); line-height: var(--lh-sm) }
+.chip .lucide { width: 18px; height: 18px; color: var(--text-muted); flex: none }
+.chip span { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+.chip .badge { flex: none }
+
+/* ===== 3. Ритм: три возможности, у каждой своя крупная картинка — по одной на ряд, текст и картинка чередуются; без карточек вокруг текста ===== */
+.rt { display: grid; gap: var(--sp-16) }
+.rt-row { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--sp-16); align-items: center }
+.rt-row.flip { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr) }
+.rt-row.flip .tx { order: 2 }
+.rt-row .tx { display: grid; gap: var(--sp-3) }
+.rt-row .ttl { font-size: var(--fs-2xl); line-height: var(--lh-2xl); letter-spacing: var(--ls-2xl); font-weight: var(--w-medium) }
+.rt-row .ttl .lucide { display: none }
+.rt-row .dsc { font-size: var(--fs-base); line-height: var(--lh-base) }
+.pane { padding: var(--sp-5); border-radius: var(--r-xl); background: var(--bg-raised); box-shadow: inset 0 0 0 1px var(--border) }
+.week { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--sp-2) }
+.week > b { font-size: var(--fs-xs); line-height: var(--lh-xs); font-weight: var(--w-regular); color: var(--text-faint); padding: 0 var(--sp-1) var(--sp-1) }
+.slot { display: grid; gap: 2px; padding: var(--sp-2) var(--sp-3); border-radius: var(--r-sm); background: var(--surface); box-shadow: inset 0 0 0 1px var(--border-subtle); font-size: var(--fs-xs); line-height: var(--lh-xs) }
+.slot i { font-style: normal; color: var(--text-faint) }
+.slot.on { background: var(--accent-tint); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 40%, transparent) }
+.slot.on i { color: var(--accent-text) }
+.slot.full { color: var(--text-faint) }
+.pass { display: grid; gap: var(--sp-4) }
+.pass-h { display: flex; align-items: baseline; justify-content: space-between; gap: var(--sp-4) }
+.pass-h b { font-size: var(--fs-2xl); line-height: var(--lh-2xl); font-weight: var(--w-medium); font-variant-numeric: tabular-nums }
+.pass-h span { color: var(--text-muted); font-size: var(--fs-sm) }
+.pass .progress > i { --p: .625 }
+.coach { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-3) }
+.ch { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: var(--sp-3); align-items: center; padding: var(--sp-3); border-radius: var(--r-md); background: var(--surface); box-shadow: inset 0 0 0 1px var(--border-subtle) }
+.ch .av { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--surface-strong); font-size: var(--fs-sm); color: var(--text-secondary) }
+.ch b { display: block; font-size: var(--fs-sm); font-weight: var(--w-medium) }
+.ch span { font-size: var(--fs-xs); color: var(--text-muted) }
+.ch .nx { font-size: var(--fs-xs); line-height: var(--lh-xs); color: var(--text-secondary); text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums }
+
+
+/* ===== 4. Лесенка Coreless — вещи из landing.css в сценах компонента ===== */
+
+@media (max-width: 1024px) {
+  .rt-row, .rt-row.flip { grid-template-columns: minmax(0, 1fr); gap: var(--sp-6) }
+  .rt-row.flip .tx { order: 0 }
+}
+@media (max-width: 600px) {
+  .tbl > div { grid-template-columns: minmax(0, 1fr) auto } .tbl > div > :first-child, .tbl .n { display: none }   /* на телефоне — контрагент и статус, остальное не влезает без обрезки */
+  .week { grid-template-columns: repeat(3, minmax(0, 1fr)) } .week > :nth-child(5n+4), .week > :nth-child(5n) { display: none }
+  .coach { grid-template-columns: minmax(0, 1fr) }
+  .rt-row .ttl { font-size: var(--fs-lg); line-height: var(--lh-lg); letter-spacing: 0 }   /* заголовок возможности на телефоне в одну строку */
+}
+</style>
+</head>
+<body>
+<main>
+
+<!-- 1 -->
+<section id="v1"><div class="wrap">
+  <div class="var-note"><b>Вариант 1. «Тропка», походы выходного дня</b><span>Вещи: список ближайших походов (главная и высокая: пять строк с датой и местами), оплата в два шага (две карточки этапов), снаряжение (отметки и итог). Главная высокая, поэтому ей плитка на два ряда, а две мелкие встают рядом столбиком. Формы у трёх вещей разные: список, этапы, отметки. Плиток три, больше у продукта нет.</span></div>
+  <div class="sec-head"><span class="t-label">Возможности</span><h2 class="sec-title">Собраться в поход без переписки в чате</h2></div>
+  <div class="tiles">
+    <article class="tile w-7 t-2">
+      <div class="tile-stage" style="--w:440px"><div class="vz-box rows trips" aria-hidden="true" style="padding:var(--sp-1) var(--sp-4)">
+        <div class="row"><i>12 окт</i><span>Ладожские шхеры</span><b class="hl">4 места</b></div>
+        <div class="row"><i>19 окт</i><span>Карельский перешеек</span><b>9 мест</b></div>
+        <div class="row"><i>26 окт</i><span>Вуокса на байдарках</span><b class="off">Мест нет</b></div>
+        <div class="row"><i>2 ноя</i><span>Приозерск, два дня</span><b>12 мест</b></div>
+        <div class="row" style="box-shadow:none"><i>9 ноя</i><span>Линдуловская роща</span><b>7 мест</b></div>
+      </div></div>
+      <div class="tile-tx"><h3><i data-lucide="calendar-days"></i>Места видно сразу</h3><p>Даты, маршрут и сколько осталось мест. Записались, и место за вами.</p></div>
+    </article>
+    <article class="tile w-5">
+      <div class="tile-stage" style="--w:320px"><div class="pay" aria-hidden="true">
+        <div class="hl-box"><span>Предоплата<small>при записи</small></span><b>2 000 ₽</b></div>
+        <div><span>Остаток<small>за 3 дня до выхода</small></span><b>6 500 ₽</b></div>
+      </div></div>
+      <div class="tile-tx"><h3><i data-lucide="wallet"></i>Оплата в два шага</h3><p>Остальное ближе к выходу, когда планы уже ясны.</p></div>
+    </article>
+    <article class="tile w-5">
+      <div class="tile-stage" style="--w:260px"><div class="gear" aria-hidden="true">
+        <div class="on"><i data-lucide="square-check"></i>Палатка на двоих</div>
+        <div class="on"><i data-lucide="square-check"></i>Спальник до −5°</div>
+        <div><i data-lucide="square"></i>Коврик</div>
+        <div class="sum">За весь поход<b class="hl">1 000 ₽</b></div>
+      </div></div>
+      <div class="tile-tx"><h3><i data-lucide="tent"></i>Снаряжение напрокат</h3><p>Отметьте при записи, привезём к месту сбора.</p></div>
+    </article>
+  </div>
+</div></section>
+
+<!-- 2 -->
+<section id="v2"><div class="wrap">
+  <div class="var-note"><b>Вариант 2. «Сверка», выписки банка против учёта</b><span>Вещи: таблица расхождений (главная, широкая и низкая: четыре колонки) и три файла или связи (мелкие, в одну строку). Таблице нужен весь ряд, а чтобы полоса не стала высокой, текст стоит слева от сцены (w-12). Три мелкие одной высоты и важности идут по трети под ней.</span></div>
+  <div class="sec-head"><span class="t-label">Возможности</span><h2 class="sec-title">Сверка за минуты, а не за вечер</h2></div>
+  <div class="tiles">
+    <article class="tile w-12">
+      <div class="tile-stage" style="--w:640px"><div class="tbl" aria-hidden="true">
+        <div class="h"><span>Дата</span><span>Контрагент</span><span class="n">Сумма</span><span class="st">Статус</span></div>
+        <div><span>03.10</span><span>ООО «Северный хлеб»</span><span class="n">48 200 ₽</span><span class="st"><span class="badge badge-success">Сошлось</span></span></div>
+        <div><span>04.10</span><span>ИП Карпова</span><span class="n hl">12 750 ₽</span><span class="st"><span class="badge badge-warning">Другая сумма</span></span></div>
+        <div><span>05.10</span><span>Тинькофф, комиссия</span><span class="n">390 ₽</span><span class="st"><span class="badge badge-danger">Нет в учёте</span></span></div>
+      </div></div>
+      <div class="tile-tx"><h3><i data-lucide="scan-search"></i>Сама ищет расхождения</h3><p>Сопоставляет каждую строку выписки с проводкой по сумме, дате и контрагенту. На проверку остаётся только то, что не сошлось.</p></div>
+    </article>
+    <article class="tile w-4">
+      <div class="tile-stage" style="--w:320px"><div class="chip" aria-hidden="true"><i data-lucide="file-spreadsheet"></i><span>vypiska_sber_okt.xlsx</span><span class="badge">214 строк</span></div></div>
+      <div class="tile-tx"><h3><i data-lucide="upload"></i>Любой банк</h3><p>Сбер, Т-Банк, Альфа или ВТБ в Excel или 1С.</p></div>
+    </article>
+    <article class="tile w-4">
+      <div class="tile-stage" style="--w:320px"><div class="chip hl-box" aria-hidden="true"><i data-lucide="link-2"></i><span>ИП Карпова → счёт 41</span><span class="badge badge-success">Связано</span></div></div>
+      <div class="tile-tx"><h3><i data-lucide="sparkles"></i>Запоминает решения</h3><p>Связали один раз, дальше такой платёж свяжется сам.</p></div>
+    </article>
+    <article class="tile w-4">
+      <div class="tile-stage" style="--w:320px"><div class="chip" aria-hidden="true"><i data-lucide="file-output"></i><span>Акт сверки за октябрь</span><span class="badge">PDF</span></div></div>
+      <div class="tile-tx"><h3><i data-lucide="file-check"></i>Акт за один клик</h3><p>С подписью и печатью из настроек.</p></div>
+    </article>
+  </div>
+</div></section>
+
+<!-- 3 -->
+<section id="v3"><div class="wrap">
+  <div class="var-note"><b>Вариант 3. «Ритм», студия йоги и пилатеса</b><span>Три возможности, у каждой своя крупная картинка разной формы (неделя, абонемент, тренеры). Ставить их рядом нельзя, размеры разные, поэтому по одной на ряд: текст и картинка чередуются, без плиток вокруг текста.</span></div>
+  <div class="sec-head"><span class="t-label">Возможности</span><h2 class="sec-title">Запись на занятие в два касания</h2></div>
+  <div class="rt">
+    <div class="rt-row">
+      <div class="tx"><h3 class="ttl">Вся неделя на одном экране</h3><p class="dsc">Занятия по дням и времени. Выбрали свободное, и запись подтверждена, без звонка администратору.</p></div>
+      <div class="pane" aria-hidden="true"><div class="week">
+        <b>Пн</b><b>Вт</b><b>Ср</b><b>Чт</b><b>Пт</b>
+        <div class="slot"><i>08:00</i>Хатха</div><div class="slot on"><i>09:00</i>Пилатес</div><div class="slot"><i>08:00</i>Хатха</div><div class="slot full"><i>09:00</i>Мест нет</div><div class="slot"><i>08:00</i>Хатха</div>
+        <div class="slot"><i>19:00</i>Виньяса</div><div class="slot"><i>19:30</i>Растяжка</div><div class="slot full"><i>19:00</i>Мест нет</div><div class="slot"><i>19:30</i>Пилатес</div><div class="slot"><i>18:00</i>Инь-йога</div>
+      </div></div>
+    </div>
+    <div class="rt-row flip">
+      <div class="tx"><h3 class="ttl">Абонемент всегда под рукой</h3><p class="dsc">Сколько занятий осталось и до какого числа. За три дня до конца срока придёт напоминание.</p></div>
+      <div class="pane" aria-hidden="true"><div class="pass">
+        <div class="pass-h"><b>5 из 8</b><span>до 14 ноября</span></div>
+        <div class="progress"><i></i></div>
+        <div class="rows"><div class="row"><span>Последнее занятие</span><b>Пилатес, вт 09:00</b></div><div class="row"><span>Заморозка</span><b>Ещё 7 дней</b></div></div>
+      </div></div>
+    </div>
+    <div class="rt-row">
+      <div class="tx"><h3 class="ttl">Тренер известен заранее</h3><p class="dsc">У каждого занятия видно, кто ведёт. Можно подписаться на своего тренера и видеть только его расписание.</p></div>
+      <div class="pane" aria-hidden="true"><div class="coach">
+        <div class="ch"><span class="av">АС</span><div><b>Анна Смирнова</b><span>Хатха, инь-йога</span></div><span class="nx">Пн 08:00</span></div>
+        <div class="ch"><span class="av">ДК</span><div><b>Дмитрий Козлов</b><span>Пилатес</span></div><span class="nx">Вт 09:00</span></div>
+        <div class="ch"><span class="av">ЕВ</span><div><b>Елена Волкова</b><span>Виньяса, растяжка</span></div><span class="nx">Пн 19:00</span></div>
+        <div class="ch"><span class="av">МО</span><div><b>Мария Орлова</b><span>Пилатес, растяжка</span></div><span class="nx">Чт 19:30</span></div>
+      </div></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 4 -->
+<section id="v4"><div class="wrap">
+  <div class="var-note"><b>Вариант 4. Лесенка на Coreless</b><span>Шесть вещей: три широких (поля, лог, JSON) и три узких (цена, макеты, статусы). Широкая и узкая встают парой 7 + 5 и меняются местами из ряда в ряд. Высоту пары выравнивают сцены: они одной высоты, вещь стоит по центру. Так же блок стоит на лендинге Coreless.</span></div>
+  <div class="sec-head"><span class="t-label">Возможности</span><h2 class="sec-title">Только то, что нужно для правок</h2></div>
+  <div class="tiles">
+    <article class="tile w-7">
+      <div class="tile-stage" style="--w:380px"><div class="viz viz-fields" aria-hidden="true"><div class="vf"><span>Заголовок</span><b class="hl">Кофе по пути</b></div><div class="vf"><span>Телефон</span><b>+7 900 000-00-00</b></div><div class="vf vf-lock"><span>Вёрстка и код</span><b><i data-lucide="lock"></i>Закрыто</b></div></div></div>
+      <div class="tile-tx"><h3><i data-lucide="text-cursor-input"></i>Поля вместо админки</h3><p>В панели только то, что можно менять. Вёрстка и код в неё не попадают.</p></div>
+    </article>
+    <article class="tile w-5">
+      <div class="tile-stage"><div class="viz viz-save" aria-hidden="true"><div class="vs-row"><span class="vs-old">260 ₽</span><i data-lucide="arrow-right"></i><span class="vs-new hl">290 ₽</span></div><div class="vs-done"><i data-lucide="check"></i>Сохранено</div></div></div>
+      <div class="tile-tx"><h3><i data-lucide="timer"></i>Правка за секунды</h3><p>Сохранили, и сайт уже обновился.</p></div>
+    </article>
+    <article class="tile w-5">
+      <div class="tile-stage" style="--w:340px"><div class="viz viz-layouts" aria-hidden="true"><div class="vl vl-a"><i></i><i></i><i></i></div><div class="vl vl-b"><i></i><i></i><i></i><i></i></div><div class="vl vl-c"><i></i><i></i></div></div></div>
+      <div class="tile-tx"><h3><i data-lucide="layout-template"></i>Любой дизайн</h3><p>Разработчик верстает сайт как хочет. Coreless подключается к готовой вёрстке.</p></div>
+    </article>
+    <article class="tile w-7">
+      <div class="tile-stage" style="--w:420px"><div class="viz viz-log" aria-hidden="true"><div class="vlg"><span class="m">GET</span><span class="p">/content/zerno/home</span><span class="s">200</span><span class="t hl">8 мс</span></div><div class="vlg"><span class="m">GET</span><span class="p">/content/zerno/menu</span><span class="s">200</span><span class="t">6 мс</span></div><div class="vlg"><span class="m">GET</span><span class="p">/content/zerno/news</span><span class="s">200</span><span class="t">9 мс</span></div></div></div>
+      <div class="tile-tx"><h3><i data-lucide="zap"></i>Быстрая загрузка</h3><p>Контент лежит в памяти сервера и отдаётся за миллисекунды.</p></div>
+    </article>
+    <article class="tile w-7">
+      <div class="tile-stage" style="--w:380px"><div class="viz viz-log" aria-hidden="true"><div class="vj">{</div><div class="vj in"><span class="k">"hero/title"</span>: <span class="s hl">"Кофе по пути"</span>,</div><div class="vj in"><span class="k">"phone"</span>: <span class="s">"+7 900…"</span></div><div class="vj">}</div></div></div>
+      <div class="tile-tx"><h3><i data-lucide="unlink"></i>Без привязки к подрядчику</h3><p>Контент выгружается в JSON по REST API.</p></div>
+    </article>
+    <article class="tile w-5">
+      <div class="tile-stage" style="--w:320px"><div class="viz viz-split" aria-hidden="true"><div class="vsp hl-box"><span class="vsp-h"><i data-lucide="panels-top-left"></i>Панель</span><span class="badge badge-warning">Ошибка в поле</span></div><div class="vsp"><span class="vsp-h"><i data-lucide="globe"></i>Сайт</span><span class="badge badge-success">Работает</span></div></div></div>
+      <div class="tile-tx"><h3><i data-lucide="shield-check"></i>Панель отдельно от сайта</h3><p>Ошибка редактора не уронит страницу.</p></div>
+    </article>
+  </div>
+</div></section>
+
+</main>
+<script>addEventListener('DOMContentLoaded', () => lucide.createIcons())</script>
+</body>
+</html>

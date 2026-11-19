@@ -1,0 +1,178 @@
+/* Блог и статья · Coreless. Раскладка снята с supabase.com/blog и supabase.com/blog/<статья> (1440×900).
+   База страницы, шапка и подвал — из site.css. */
+
+/* обложка: фото на месте ещё до загрузки (фон + соотношение сторон), кромка поверх фото */
+/* высота обложки — целые пиксели: дробная (312.3) сдвигала всё ниже на полпикселя и размывала рамки полей и кнопок */
+.cover { position: relative; display: block; container-type: inline-size; border-radius: var(--r-lg); overflow: hidden; background: var(--surface) }
+.cover img { display: block; width: 100%; aspect-ratio: 1200 / 630; height: auto; object-fit: cover; opacity: 0; transition: opacity var(--dur-state) var(--ease-out) }
+@supports (height: round(1px, 1px)) { .cover img { aspect-ratio: auto; height: round(nearest, calc(100cqw * 630 / 1200), 1px) } }
+.cover img.ok { opacity: 1 }
+.cover::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--border); pointer-events: none; transition: box-shadow var(--dur-hover-out) var(--ease-hover) }
+
+/* общие правила ссылок-карточек: наведение — светлее заголовок и кромка обложки, без подложки и без увеличения */
+:is(.feat, .sf, .post-card) { color: inherit; text-decoration: none; outline: var(--focus-outline) solid transparent; outline-offset: 4px; border-radius: var(--r-lg);
+  transition: outline-color var(--dur-focus) var(--ease-out) }
+:is(.feat, .sf, .post-card):focus-visible { outline-color: var(--focus) }
+:is(.feat-t, .sf-t, .pc-t) { transition: color var(--dur-hover-out) var(--ease-hover) }
+@media (hover: hover) and (pointer: fine) {
+  :is(.feat, .sf, .post-card):hover :is(.feat-t, .sf-t, .pc-t) { color: var(--text); transition-duration: var(--dur-hover-in) }
+  :is(.feat, .sf, .post-card):hover .cover::after { box-shadow: inset 0 0 0 1px var(--border-strong); transition-duration: var(--dur-hover-in) }
+}
+
+/* ---------- страница со статьями ---------- */
+.blog { padding-top: var(--sp-12) }
+.feat { display: grid; grid-template-columns: minmax(0, 504fr) minmax(0, 472fr); gap: var(--sp-12); align-items: center; padding: 0 var(--sp-4) }
+.feat-tx { display: grid; gap: var(--sp-4); min-width: 0 }
+.feat-t { font-size: var(--fs-3xl); line-height: var(--lh-3xl); letter-spacing: var(--ls-3xl); font-weight: var(--w-medium); color: var(--text); text-wrap: balance }
+.feat-x { font-size: var(--fs-lg); line-height: var(--lh-lg); letter-spacing: var(--ls-lg); color: var(--text-muted) }
+.feat-meta { display: flex; align-items: center; gap: var(--sp-3); margin-top: var(--sp-4); font-size: var(--fs-sm); line-height: var(--lh-sm); color: var(--text-muted); min-width: 0 }
+.meta-n { white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+.meta-d { margin-left: auto; white-space: nowrap; font-variant-numeric: tabular-nums }
+.avatar { font-size: 10px; font-weight: var(--w-semibold); letter-spacing: 0; background: var(--surface-strong); color: var(--text-secondary); box-shadow: inset 0 0 0 1px var(--border) }
+.avatars .avatar + .avatar { margin-left: -4px; box-shadow: 0 0 0 2px var(--bg), inset 0 0 0 1px var(--border) }
+
+.subfeat { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-12); margin-top: var(--sp-8); padding: var(--sp-8) var(--sp-4) 0; box-shadow: inset 0 1px 0 var(--border-subtle) }
+.sf { display: grid; grid-template-columns: 144px minmax(0, 1fr); gap: var(--sp-4); align-items: center }
+.sf .cover { border-radius: var(--r-md) }
+.sf-tx { display: grid; gap: 2px; min-width: 0 }
+.sf-t { font-size: var(--fs-base); line-height: var(--lh-base); font-weight: var(--w-medium); color: var(--text-secondary); margin-bottom: 2px }
+.sf-d, .sf-a { font-size: var(--fs-sm); line-height: var(--lh-sm); color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+
+/* панель рубрик: прилипает под шапкой */
+.blog-bar { position: sticky; top: 64px; z-index: 30; margin-top: var(--sp-10, 40px); background: var(--bg); box-shadow: inset 0 -1px 0 var(--border-subtle) }
+.bar-in { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-6); height: 64px }
+/* рубрики: системные вкладки, их полоса ложится на нижнюю линию панели */
+.cats { align-self: flex-end; min-width: 0; box-shadow: none }
+.cats .tab { padding: 0 var(--sp-2); white-space: nowrap; -webkit-tap-highlight-color: transparent }   /* 8px: текст вкладок в одну линию с текстом строк списка */
+.bar-end { display: flex; align-items: center; gap: var(--sp-2); flex: none }
+.bsearch { width: 280px }
+
+.posts { padding: var(--sp-6) 0 var(--section-y) }
+/* смена содержимого не торопится: гаснет за 200, проявляется за 360, только прозрачность, мягкая кривая */
+.plist, .pgrid, .blog-empty { transition: opacity var(--dur-swap-in) var(--ease-hover) }
+/* неактивный вид остаётся разложенным, но невидим и вне потока: смена вида не раскладывает карточки заново */
+.posts { position: relative; overflow: clip }
+.posts[data-view=list] .pgrid, .posts[data-view=grid] .plist { position: absolute; top: var(--sp-6); left: 0; right: 0; visibility: hidden; pointer-events: none }
+.posts.fading :is(.plist, .pgrid, .blog-empty) { opacity: 0; transition-duration: var(--dur-swap-out) }
+
+.plist { display: grid }
+.post-row { display: grid; grid-template-columns: minmax(0, 1fr) 96px 140px 136px; align-items: center; gap: var(--sp-6); height: 56px; padding: 0 var(--sp-2); border-radius: var(--r-md);
+  color: var(--text-secondary); text-decoration: none; outline: var(--focus-outline) solid transparent; outline-offset: -2px;
+  transition: background-color var(--dur-hover-out) var(--ease-hover), color var(--dur-hover-out) var(--ease-hover), outline-color var(--dur-focus) var(--ease-out) }
+@media (hover: hover) and (pointer: fine) { .post-row:hover { background: var(--tile); color: var(--text); transition-duration: var(--dur-hover-in) } }
+.post-row:focus-visible { outline-color: var(--focus) }
+.pr-t { font-size: var(--fs-base); line-height: var(--lh-base); font-weight: var(--w-medium); white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+.post-row .badge { justify-self: start }
+.pr-d { justify-self: end; font-size: var(--fs-sm); color: var(--text-muted); white-space: nowrap; font-variant-numeric: tabular-nums }
+
+.pgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-10, 40px) var(--sp-6); padding-top: var(--sp-4) }
+.post-card { display: grid; align-content: start; gap: var(--sp-3) }
+.post-card .cover { margin-bottom: var(--sp-2) }
+.pc-meta { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); font-size: var(--fs-sm); line-height: var(--lh-sm); color: var(--text-muted) }
+.pc-t { font-size: var(--fs-md); line-height: var(--lh-md); letter-spacing: var(--ls-md); font-weight: var(--w-medium); color: var(--text-secondary); text-wrap: balance }
+.pc-x { font-size: var(--fs-sm); line-height: var(--lh-sm); color: var(--text-muted) }
+[hidden] { display: none !important }
+
+.blog-empty { display: none; justify-items: center; gap: var(--sp-2); padding: var(--sp-16) 0; text-align: center; color: var(--text-muted); font-size: var(--fs-sm); line-height: var(--lh-sm) }
+.blog-empty.on { display: grid }
+.blog-empty .lucide { width: 24px; height: 24px; margin-bottom: var(--sp-2); color: var(--text-faint) }
+.blog-empty b { font-size: var(--fs-md); line-height: var(--lh-md); font-weight: var(--w-medium); color: var(--text) }
+.blog-empty .btn { margin-top: var(--sp-3) }
+
+/* ---------- статья ---------- */
+.read-progress { position: fixed; z-index: 41; top: 63px; left: 0; right: 0; height: 2px; pointer-events: none }
+.read-progress i { display: block; height: 100%; background: var(--accent); transform: scaleX(var(--p, 0)); transform-origin: left; will-change: transform }
+
+.art { padding-top: var(--sp-12) }
+.art-wrap { max-width: calc(648px + 72px + 264px + var(--gutter) * 2) }
+.art-head { max-width: 768px; margin-bottom: var(--sp-12) }
+.crumbs ol { font-size: var(--fs-base); line-height: var(--lh-base) }   /* системные крошки, на странице статьи на ступень крупнее, как у Supabase */
+.art-head h1 { margin: var(--sp-5) 0 var(--sp-4); font-size: var(--fs-3xl); line-height: var(--lh-3xl); letter-spacing: var(--ls-3xl); font-weight: var(--w-medium); text-wrap: balance }
+.art-meta { display: flex; flex-wrap: wrap; gap: var(--sp-1) var(--sp-6); margin: 0; font-size: var(--fs-base); line-height: var(--lh-base); color: var(--text-muted) }
+.authors { display: flex; flex-wrap: wrap; gap: var(--sp-4) var(--sp-8); margin-top: var(--sp-8) }
+.author { display: flex; align-items: center; gap: var(--sp-3) }
+.author b { display: block; font-size: var(--fs-base); line-height: var(--lh-base); font-weight: var(--w-medium) }
+.author small { display: block; font-size: var(--fs-sm); line-height: var(--lh-sm); color: var(--text-muted) }
+
+.art-grid { display: grid; grid-template-columns: minmax(0, 648px) 264px; gap: 72px; align-items: start }
+.art-cover { margin: 0 0 var(--sp-10, 40px) }
+
+/* текст статьи: 16/28, как у Supabase; заголовки разделов 24 */
+.prose { min-width: 0; font-size: var(--fs-md); line-height: 28px; letter-spacing: var(--ls-md); color: var(--text-secondary) }
+.prose > p, .prose > ul, .prose > ol { margin: 20px 0 }
+.prose .lead { font-size: var(--fs-lg); line-height: 30px; color: var(--text) }
+.prose h2 { margin: var(--sp-12) 0 var(--sp-6); font-size: 24px; line-height: 32px; letter-spacing: -.018em; font-weight: var(--w-medium); color: var(--text); scroll-margin-top: 96px }
+.prose ul, .prose ol { padding-left: 22px }
+.prose ul { list-style: disc } .prose ol { list-style: decimal }
+.prose li { margin-top: var(--sp-2); padding-left: 4px }
+.prose li::marker { color: var(--text-faint) }
+.prose a { color: var(--accent-text); text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--accent-text) 40%, transparent); text-underline-offset: 3px;
+  transition: text-decoration-color var(--dur-hover-out) var(--ease-hover) }
+@media (hover: hover) and (pointer: fine) { .prose a:hover { text-decoration-color: currentColor; transition-duration: var(--dur-hover-in) } }
+.prose code:not(pre code) { padding: 2px 6px; border-radius: var(--r-xs); background: var(--surface); box-shadow: inset 0 0 0 1px var(--border-subtle); font: .875em/1 var(--font-mono); color: var(--text) }
+.prose figure { margin: var(--sp-8) 0 }
+.prose figcaption { margin-top: var(--sp-3); font-size: var(--fs-sm); line-height: var(--lh-sm); color: var(--text-muted) }
+.prose blockquote { margin: var(--sp-8) 0; padding: 2px 0 2px var(--sp-5); box-shadow: inset 2px 0 0 var(--accent) }
+.prose blockquote p { margin: 0; font-size: var(--fs-lg); line-height: 30px; color: var(--text) }
+.prose .code, .prose .table-wrap, .prose .alert { margin: var(--sp-6) 0 }
+.prose .table td:first-child { color: var(--text) }
+.prose .alert p { margin: 2px 0 0 }
+.art-end { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4); margin-top: var(--sp-12); padding-top: var(--sp-6); box-shadow: inset 0 1px 0 var(--border-subtle) }
+.art-end .btn .lucide { width: 14px; height: 14px }
+
+/* правая колонка: системное оглавление (.onpage), метки, «поделиться» */
+.art-side { position: sticky; top: 96px }
+.side-in { display: grid; gap: var(--sp-4) }
+.tags { display: flex; flex-wrap: wrap; gap: var(--sp-2); margin-bottom: var(--sp-4) }
+.side-in .t-label + * { margin-top: calc(var(--sp-1) * -1) }
+.art-side .onpage { margin-bottom: var(--sp-4) }
+  transition: color var(--dur-hover-out) var(--ease-hover), outline-color var(--dur-focus) var(--ease-out) }
+.side-share { display: flex; gap: var(--sp-1) }
+
+/* содержание на узких экранах: системный аккордеон в рамке */
+.mtoc { display: none; margin: 0 0 var(--sp-6); padding: 0 var(--sp-4); border-radius: var(--r-lg); box-shadow: inset 0 0 0 1px var(--border) }
+.mtoc .acc-item > summary { min-height: 48px; color: var(--text); font-weight: var(--w-medium) }
+.mtoc .acc-body { padding: 0 0 var(--sp-3) }
+.mtoc nav { display: grid; gap: 2px; margin: 0 calc(var(--sp-2) * -1) }
+.mtoc nav a { padding: var(--sp-2); border-radius: var(--r-sm); font-size: var(--fs-base); line-height: var(--lh-base); color: var(--text-secondary); text-decoration: none; -webkit-tap-highlight-color: transparent }
+@media (hover: hover) and (pointer: fine) { .mtoc nav a:hover { background: var(--tile); color: var(--text) } }
+
+.related { margin-top: var(--section-y); padding: var(--sp-16) 0 var(--section-y); box-shadow: inset 0 1px 0 var(--border-subtle) }
+.rel-t { margin: 0 0 var(--sp-8); font-size: var(--fs-2xl); line-height: var(--lh-2xl); letter-spacing: var(--ls-2xl); font-weight: var(--w-medium) }
+.rel-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-6) }
+
+/* ---------- узкие экраны ---------- */
+@media (max-width: 1023px) {
+  .art-grid { grid-template-columns: minmax(0, 1fr) }
+  .art-side { display: none }
+  .mtoc { display: block }
+  .art-wrap { max-width: calc(720px + var(--gutter) * 2) }
+  .pgrid, .rel-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) }
+}
+@media (max-width: 860px) {
+  .feat { grid-template-columns: minmax(0, 1fr); gap: var(--sp-6); padding: 0 }
+  .feat-t { font-size: var(--fs-2xl); line-height: var(--lh-2xl); letter-spacing: var(--ls-2xl) }
+  .feat-x { font-size: var(--fs-md); line-height: var(--lh-md) }
+  .feat-meta { margin-top: var(--sp-1) }
+  .subfeat { grid-template-columns: minmax(0, 1fr); gap: var(--sp-6); padding: var(--sp-6) 0 0 }
+  .sf { grid-template-columns: 112px minmax(0, 1fr) }
+  .bar-in { flex-direction: column; align-items: stretch; gap: var(--sp-1); height: auto; padding-top: var(--sp-3) }
+  .cats { order: 2; align-self: stretch }
+  .cats { overflow-x: auto; scrollbar-width: none; margin: 0 calc(var(--gutter) * -1); padding: 0 var(--gutter) }
+  .cats::-webkit-scrollbar { display: none }
+  .bsearch { flex: 1; width: auto }
+  .post-row { grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto auto; row-gap: var(--sp-1); height: auto; padding: var(--sp-3) var(--sp-2) }
+  .post-row .pr-t { grid-column: 1 / -1; white-space: normal; text-wrap: balance }
+  .post-row .avatars { display: none }
+  .pr-d { justify-self: end }
+  .art-head h1 { font-size: var(--fs-2xl); line-height: var(--lh-2xl); letter-spacing: var(--ls-2xl) }
+}
+@media (max-width: 600px) {
+  .pgrid, .rel-grid { grid-template-columns: minmax(0, 1fr) }
+  .art-end { flex-direction: column; align-items: stretch }
+  .art-end .btn, .share, .share .btn { width: 100% }
+}
+@media (prefers-reduced-motion: reduce) {
+}
+/* переключатель вида рядом с полем поиска 36: кнопки 32 + отступы группы = 36, как у соседа */
+.view-tgl button { height: 32px; min-width: 32px }

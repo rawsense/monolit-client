@@ -1,0 +1,60 @@
+/* Цены Coreless — только раскладка этой страницы; общее для всех страниц сайта — в site.css. Цвета, шрифты, отступы, компоненты — из токенов системы. */
+
+/* ---------- Верх: слева заголовок и лид, справа период ---------- */
+.pr-hero { padding-top: calc(var(--section-y) + var(--sp-8)) }
+.pr-top { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--sp-8); align-items: end; margin-bottom: var(--sp-12) }
+.pr-head { display: grid; gap: var(--sp-4) }
+.pr-title { font-size: var(--fs-4xl); line-height: var(--lh-4xl); letter-spacing: var(--ls-4xl); font-weight: var(--w-medium); text-wrap: balance }
+.pr-lead { max-width: var(--measure-narrow); font-size: var(--fs-md); line-height: var(--lh-md); letter-spacing: var(--ls-md); color: var(--text-muted); text-wrap: pretty }
+.pr-period { display: flex; align-items: center; gap: var(--sp-3) }
+.pr-period .seg { align-self: center }
+.pr-period .badge { white-space: nowrap }
+/* у системного .seg кнопки 28px; на сенсорном экране зона касания добирается до 44px невидимым краем, вид не меняется */
+
+/* ---------- Тарифы: строки трёх карточек на общей подсетке ---------- */
+/* название, описание, цена, кнопка, список стоят на одних линиях при любой длине текста */
+.pr-plans { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: var(--sp-4); row-gap: 0 }
+.pr-plan { display: grid; grid-row: span 5; grid-template-rows: subgrid; row-gap: 0; align-content: start; padding: var(--sp-8);
+  border-radius: var(--r-xl); background: var(--bg-raised); box-shadow: inset 0 0 0 1px var(--border) }   /* рекомендуемый — без подсветки и цветной рамки */
+.pr-name { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); min-height: 24px }
+.pr-name h2 { font-size: var(--fs-md); line-height: var(--lh-md); letter-spacing: var(--ls-md); font-weight: var(--w-semibold) }
+.pr-desc { margin-top: var(--sp-2); font-size: var(--fs-sm); line-height: var(--lh-sm); color: var(--text-muted); text-wrap: pretty }
+.pr-price { display: grid; margin-top: var(--sp-6) }
+.pr-amt { display: flex; align-items: baseline; gap: var(--sp-2); white-space: nowrap }
+.pr-amt b { font-size: var(--fs-3xl); line-height: var(--lh-3xl); letter-spacing: var(--ls-3xl); font-weight: var(--w-medium) }
+.pr-amt span { font-size: var(--fs-sm); line-height: var(--lh-sm); color: var(--text-muted) }
+.pr-note { margin-top: var(--sp-1); font-size: var(--fs-sm); line-height: var(--lh-sm); color: var(--text-muted); white-space: nowrap }
+.pr-plan > .btn { margin-top: var(--sp-6) }
+.pr-plan > .ticks { margin-top: var(--sp-6) }
+
+/* смена периода — как смена содержимого: старое гаснет 200, новое проявляется 360, только прозрачность.
+   Обе цены в одной ячейке: ширина и высота = большая, соседи не двигаются */
+.pr-v { grid-area: 1 / 1; opacity: 0; transition: opacity var(--dur-swap-in) var(--ease-hover) }
+.pr-plans[data-period="month"] .pr-v[data-v="month"], .pr-plans[data-period="year"] .pr-v[data-v="year"] { opacity: 1 }
+.pr-plans.pr-fading .pr-v[data-v] { opacity: 0; transition-duration: var(--dur-swap-out) }
+
+/* ---------- Сравнение ---------- */
+.pr-yes, .pr-no { width: 16px; height: 16px; vertical-align: -3px }
+.pr-yes { color: var(--accent-text) }
+.pr-no { color: var(--text-muted) }
+/* подпись для читалки вместо иконки (в системе нет класса для скрытого текста) */
+/* правила широкого экрана — только выше порога table-stack, иначе перебьют системные */
+@media (min-width: 641px) {
+  .pr-cmp .table thead th { width: 20% }
+  .pr-cmp .table tbody th { color: var(--text-secondary); font-weight: var(--w-regular) }
+}
+
+/* ---------- Ширины ---------- */
+@media (max-width: 1100px) {
+  .pr-plan { padding: var(--sp-6) }
+}
+@media (max-width: 900px) {
+  /* одна колонка: подсетка не нужна, карточки идут столбиком */
+  .pr-plans { grid-template-columns: minmax(0, 1fr); row-gap: var(--sp-4) }
+  .pr-plan { grid-row: auto; grid-template-rows: none }
+}
+@media (max-width: 860px) {
+  .pr-hero { padding-top: var(--sp-16) }
+  .pr-top { grid-template-columns: minmax(0, 1fr); row-gap: var(--sp-6); margin-bottom: var(--sp-8) }
+  .pr-title { font-size: var(--fs-3xl); line-height: var(--lh-3xl); letter-spacing: var(--ls-3xl) }
+}

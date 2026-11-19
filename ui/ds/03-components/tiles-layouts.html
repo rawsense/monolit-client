@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Плитки — компоновки</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../tokens/colors.css"><link rel="stylesheet" href="../tokens/accents.css"><link rel="stylesheet" href="../tokens/palettes.css">
+<link rel="stylesheet" href="../tokens/motion.css">
+<link rel="stylesheet" href="../tokens/type.css">
+<link rel="stylesheet" href="../tokens/space.css">
+<link rel="stylesheet" href="../tokens/icons.css">
+<link rel="stylesheet" href="../tokens/components.css">
+<link rel="stylesheet" href="../tokens/tiles.css">
+<script src="../js/theme.js"></script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<style>
+*{box-sizing:border-box}
+html{color-scheme:dark}
+[data-theme="light"]{color-scheme:light}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-sans);font-size:var(--fs-base);line-height:var(--lh-base);letter-spacing:var(--ls-base);font-optical-sizing:auto;font-feature-settings:"cv01","ss03";-webkit-font-smoothing:antialiased}
+.wrap{max-width:var(--container);margin:0 auto;padding:0 var(--gutter)}
+main > section{padding:var(--sp-16) 0 0}
+main > section:last-child{padding-bottom:var(--sp-16)}
+.vh{display:grid;gap:var(--sp-2);margin-bottom:var(--sp-6)}
+.vh h2{margin:0;font-size:var(--fs-lg);line-height:var(--lh-lg);font-weight:var(--w-semibold)}
+.vh p{margin:0;max-width:76ch;color:var(--text-muted);font-size:var(--fs-sm);line-height:var(--lh-sm)}
+
+/* вещи этой страницы (у каждого продукта свои) */
+.vz-page{display:grid;border-radius:var(--r-md);background:var(--surface);box-shadow:inset 0 0 0 1px var(--border-subtle);overflow:hidden}
+.vz-page .bar{display:flex;align-items:center;gap:var(--sp-2);height:32px;padding:0 var(--sp-3);box-shadow:inset 0 -1px 0 var(--border-subtle);font:var(--fs-xs)/1 var(--font-mono);color:var(--text-faint)}
+.vz-page .bar .lucide{width:12px;height:12px}
+.vz-page .body{display:grid;gap:var(--sp-3);padding:var(--sp-8) var(--sp-4) var(--sp-4)}
+.vz-page .edit{position:relative;justify-self:start;padding:2px 6px;margin:-2px -6px;border-radius:var(--r-xs);box-shadow:inset 0 0 0 1px var(--accent-border);font-size:var(--fs-lg);line-height:var(--lh-lg);font-weight:var(--w-semibold)}
+.vz-page .edit small{position:absolute;left:-1px;bottom:calc(100% + 4px);padding:1px 6px;border-radius:var(--r-xs);background:var(--accent);color:var(--accent-fg);font-size:var(--fs-2xs);line-height:16px;font-weight:var(--w-medium)}
+.vz-page .ln{height:8px;border-radius:var(--r-xs);background:var(--tile-strong,var(--surface-strong))}
+.vz-page .cards{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-2);margin-top:var(--sp-2)}
+.vz-page .cards > div{display:grid;gap:2px;padding:var(--sp-3);border-radius:var(--r-sm);background:var(--bg-raised);box-shadow:inset 0 0 0 1px var(--border-subtle);font-size:var(--fs-sm);line-height:var(--lh-sm)}
+.vz-page .cards b{font-weight:var(--w-medium)}
+.vz-page .cards span{color:var(--text-muted);font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<!-- 2 -->
+<section>
+  <div class="vh"><h2>Две плитки</h2><p>Вещи разной ширины: поля широкие, цена узкая. Значит 7 + 5, а не 6 + 6.</p></div>
+  <div class="tiles">
+    <article class="tile w-7">
+      <div class="tile-stage" style="--w:380px"><div class="vz-box vz-rows" aria-hidden="true" style="padding:var(--sp-1) var(--sp-4)">
+        <div class="vz-row"><span>Заголовок</span><b class="hl">Кофе по пути</b></div>
+        <div class="vz-row"><span>Телефон</span><b>+7 900 000-00-00</b></div>
+        <div class="vz-row" style="box-shadow:none"><span>Вёрстка и код</span><b class="muted"><i data-lucide="lock"></i>Закрыто</b></div>
+      </div></div>
+      <div class="tile-tx"><h3>Поля вместо админки</h3><p>В панели только то, что можно менять. Вёрстка и код в неё не попадают.</p></div>
+    </article>
+    <article class="tile w-5">
+      <div class="tile-stage"><div class="vz-change" aria-hidden="true"><div><s>260 ₽</s><i data-lucide="arrow-right"></i><span class="hl">290 ₽</span></div><span><i data-lucide="check"></i>Сохранено</span></div></div>
+      <div class="tile-tx"><h3>Правка за секунды</h3><p>Сохранили, и сайт уже обновился.</p></div>
+    </article>
+  </div>
+</section>
+
+<!-- 3: одна главная -->
+<section>
+  <div class="vh"><h2>Три плитки, одна главная</h2><p>Главная вещь — страница сайта, она высокая. Ей плитка на два ряда, две мелкие встают рядом столбиком.</p></div>
+  <div class="tiles">
+    <article class="tile w-8 t-2">
+      <div class="tile-stage" style="--w:440px"><div class="vz-page" aria-hidden="true">
+        <div class="bar"><i data-lucide="lock"></i>zerno.coffee</div>
+        <div class="body">
+          <div class="edit"><small>Заголовок</small>Кофе по пути</div>
+          <div class="ln" style="width:86%"></div><div class="ln" style="width:64%"></div>
+          <div class="cards"><div><b>Латте</b><span class="hl">290 ₽</span></div><div><b>Капучино</b><span>250 ₽</span></div></div>
+        </div>
+      </div></div>
+      <div class="tile-tx"><h3>Правите прямо на сайте</h3><p>Нажали на заголовок или цену и поменяли. Остальное на странице закрыто.</p></div>
+    </article>
+    <article class="tile w-4">
+      <div class="tile-stage"><div class="vz-change" aria-hidden="true"><div><s>260 ₽</s><i data-lucide="arrow-right"></i><span class="hl">290 ₽</span></div><span><i data-lucide="check"></i>Сохранено</span></div></div>
+      <div class="tile-tx"><h3>Правка за секунды</h3><p>Сохранили, и сайт уже обновился.</p></div>
+    </article>
+    <article class="tile w-4">
+      <div class="tile-stage" style="--w:300px"><div class="vz-box vz-url" aria-hidden="true"><span><i data-lucide="globe"></i>zerno.coffee</span><span class="badge badge-success">SSL выдан</span></div></div>
+      <div class="tile-tx"><h3>Свой домен</h3><p>Подключается за минуту, сертификат сам.</p></div>
+    </article>
+  </div>
+</section>
+
+<!-- 3: равные -->
+<section>
+  <div class="vh"><h2>Три плитки, все мелкие</h2><p>Три вещи одного размера и одной важности. Тогда ровно в ряд по трети: формы разные, поэтому ряд не выглядит шаблоном.</p></div>
+  <div class="tiles">
+    <article class="tile w-4">
+      <div class="tile-stage" style="--w:300px"><div class="vz-items" aria-hidden="true">
+        <div class="vz-item"><span><i data-lucide="user-round"></i>Анна</span><span class="badge">Редактор</span></div>
+        <div class="vz-item hl-box"><span><i data-lucide="user-round"></i>Олег</span><span class="badge badge-accent">Владелец</span></div>
+      </div></div>
+      <div class="tile-tx"><h3>Доступ по ролям</h3><p>Редактор меняет тексты, владелец всё.</p></div>
+    </article>
+    <article class="tile w-4">
+      <div class="tile-stage"><div class="vz-change" aria-hidden="true"><div><s>260 ₽</s><i data-lucide="arrow-right"></i><span class="hl">290 ₽</span></div><span><i data-lucide="check"></i>Сохранено</span></div></div>
+      <div class="tile-tx"><h3>Правка за секунды</h3><p>Сохранили, и сайт уже обновился.</p></div>
+    </article>
+    <article class="tile w-4">
+      <div class="tile-stage" style="--w:300px"><div class="vz-box vz-url" aria-hidden="true"><span><i data-lucide="globe"></i>zerno.coffee</span><span class="badge badge-success">SSL выдан</span></div></div>
+      <div class="tile-tx"><h3>Свой домен</h3><p>Подключается за минуту, сертификат сам.</p></div>
+    </article>
+  </div>
+</section>
+
+<!-- 4 -->
+<section>
+  <div class="vh"><h2>Четыре плитки</h2><p>Лог широкий и низкий — ему ряд целиком, текст слева, чтобы полоса не росла в высоту. Три мелкие под ним.</p></div>
+  <div class="tiles">
+    <article class="tile w-12">
+      <div class="tile-stage" style="--w:520px"><div class="vz-box vz-mono" aria-hidden="true">
+        <div class="row"><span class="k">/content/zerno/home</span><span class="ok">200</span><span class="v hl">8 мс</span></div>
+        <div class="row"><span class="k">/content/zerno/menu</span><span class="ok">200</span><span class="v">6 мс</span></div>
+        <div class="row"><span class="k">/content/zerno/news</span><span class="ok">200</span><span class="v">9 мс</span></div>
+      </div></div>
+      <div class="tile-tx"><h3>Быстрая загрузка</h3><p>Контент лежит в памяти сервера и отдаётся за миллисекунды.</p></div>
+    </article>
+    <article class="tile w-4">
+      <div class="tile-stage" style="--w:320px"><div class="vz-box vz-rows" aria-hidden="true" style="padding:var(--sp-1) var(--sp-4)">
+        <div class="vz-row"><span>Заголовок</span><b class="hl">Кофе по пути</b></div>
+        <div class="vz-row" style="box-shadow:none"><span>Вёрстка</span><b class="muted"><i data-lucide="lock"></i>Закрыто</b></div>
+      </div></div>
+      <div class="tile-tx"><h3>Поля вместо админки</h3><p>Только то, что можно менять.</p></div>
+    </article>
+    <article class="tile w-4">
+      <div class="tile-stage"><div class="vz-change" aria-hidden="true"><div><s>260 ₽</s><i data-lucide="arrow-right"></i><span class="hl">290 ₽</span></div><span><i data-lucide="check"></i>Сохранено</span></div></div>
+      <div class="tile-tx"><h3>Правка за секунды</h3><p>Сохранили, и сайт уже обновился.</p></div>
+    </article>
+    <article class="tile w-4">
+      <div class="tile-stage" style="--w:300px"><div class="vz-items" aria-hidden="true">
+        <div class="vz-item hl-box"><span><i data-lucide="panels-top-left"></i>Панель</span><span class="badge badge-warning">Ошибка</span></div>
+        <div class="vz-item"><span><i data-lucide="globe"></i>Сайт</span><span class="badge badge-success">Работает</span></div>
+      </div></div>
+      <div class="tile-tx"><h3>Панель отдельно</h3><p>Ошибка редактора не уронит сайт.</p></div>
+    </article>
+  </div>
+</section>
+
+<!-- 5 -->
+<section>
+  <div class="vh"><h2>Пять плиток</h2><p>Две вещи покрупнее идут парой 7 + 5, три мелкие — рядом по трети. Пять не делится поровну, и не надо.</p></div>
+  <div class="tiles">
+    <article class="tile w-7">
+      <div class="tile-stage" style="--w:380px"><div class="vz-box vz-rows" aria-hidden="true" style="padding:var(--sp-1) var(--sp-4)">
+        <div class="vz-row"><span>Заголовок</span><b class="hl">Кофе по пути</b></div>
+        <div class="vz-row"><span>Телефон</span><b>+7 900 000-00-00</b></div>
+        <div class="vz-row" style="box-shadow:none"><span>Вёрстка и код</span><b class="muted"><i data-lucide="lock"></i>Закрыто</b></div>
+      </div></div>
+      <div class="tile-tx"><h3>Поля вместо админки</h3><p>В панели только то, что можно менять. Вёрстка и код в неё не попадают.</p></div>
+    </article>
+    <article class="tile w-5">
+      <div class="tile-stage" style="--w:260px"><div class="vz-box vz-mono vz-hist" aria-hidden="true">
+        <div><span class="t">12:04</span><span class="hl">Латте 260 → 290</span></div>
+        <div><span class="t">11:52</span><span>Новость «Осень»</span></div>
+        <div><span class="t">вчера</span><span>Фото витрины</span></div>
+      </div></div>
+      <div class="tile-tx"><h3>История правок</h3><p>Любую правку можно вернуть.</p></div>
+    </article>
+    <article class="tile w-4">
+      <div class="tile-stage" style="--w:300px"><div class="vz-items" aria-hidden="true">
+        <div class="vz-item"><span><i data-lucide="user-round"></i>Анна</span><span class="badge">Редактор</span></div>
+        <div class="vz-item hl-box"><span><i data-lucide="user-round"></i>Олег</span><span class="badge badge-accent">Владелец</span></div>
+      </div></div>
+      <div class="tile-tx"><h3>Доступ по ролям</h3><p>Редактор меняет тексты, владелец всё.</p></div>
+    </article>
+    <article class="tile w-4">
+      <div class="tile-stage" style="--w:300px"><div class="vz-box vz-url" aria-hidden="true"><span><i data-lucide="globe"></i>zerno.coffee</span><span class="badge badge-success">SSL выдан</span></div></div>
+      <div class="tile-tx"><h3>Свой домен</h3><p>Подключается за минуту, сертификат сам.</p></div>
+    </article>
+    <article class="tile w-4">
+      <div class="tile-stage"><div class="vz-change" aria-hidden="true"><div><s>260 ₽</s><i data-lucide="arrow-right"></i><span class="hl">290 ₽</span></div><span><i data-lucide="check"></i>Сохранено</span></div></div>
+      <div class="tile-tx"><h3>Правка за секунды</h3><p>Сохранили, и сайт уже обновился.</p></div>
+    </article>
+  </div>
+</section>
+
+<!-- 6 -->
+<section>
+  <div class="vh"><h2>Шесть плиток</h2><p>Высокая страница слева на два ряда, справа друг под другом две широкие и низкие (поля, лог). Три мелкие замыкают ряд.</p></div>
+  <div class="tiles">
+    <article class="tile w-5 t-2">
+      <div class="tile-stage" style="--w:400px"><div class="vz-page" aria-hidden="true">
+        <div class="bar"><i data-lucide="lock"></i>zerno.coffee</div>
+        <div class="body">
+          <div class="edit"><small>Заголовок</small>Кофе по пути</div>
+          <div class="ln" style="width:86%"></div><div class="ln" style="width:64%"></div>
+          <div class="cards"><div><b>Латте</b><span class="hl">290 ₽</span></div><div><b>Капучино</b><span>250 ₽</span></div></div>
+        </div>
+      </div></div>
+      <div class="tile-tx"><h3>Правите прямо на сайте</h3><p>Нажали на заголовок или цену и поменяли.</p></div>
+    </article>
+    <article class="tile w-7">
+      <div class="tile-stage" style="--w:380px"><div class="vz-box vz-rows" aria-hidden="true" style="padding:var(--sp-1) var(--sp-4)">
+        <div class="vz-row"><span>Заголовок</span><b class="hl">Кофе по пути</b></div>
+        <div class="vz-row" style="box-shadow:none"><span>Вёрстка и код</span><b class="muted"><i data-lucide="lock"></i>Закрыто</b></div>
+      </div></div>
+      <div class="tile-tx"><h3>Поля вместо админки</h3><p>В панели только то, что можно менять.</p></div>
+    </article>
+    <article class="tile w-7">
+      <div class="tile-stage" style="--w:420px"><div class="vz-box vz-mono" aria-hidden="true">
+        <div class="row"><span class="k">/content/zerno/home</span><span class="ok">200</span><span class="v hl">8 мс</span></div>
+        <div class="row"><span class="k">/content/zerno/menu</span><span class="ok">200</span><span class="v">6 мс</span></div>
+      </div></div>
+      <div class="tile-tx"><h3>Быстрая загрузка</h3><p>Контент отдаётся за миллисекунды.</p></div>
+    </article>
+    <article class="tile w-4">
+      <div class="tile-stage" style="--w:300px"><div class="vz-items" aria-hidden="true">
+        <div class="vz-item"><span><i data-lucide="user-round"></i>Анна</span><span class="badge">Редактор</span></div>
+        <div class="vz-item hl-box"><span><i data-lucide="user-round"></i>Олег</span><span class="badge badge-accent">Владелец</span></div>
+      </div></div>
+      <div class="tile-tx"><h3>Доступ по ролям</h3><p>Редактор меняет тексты, владелец всё.</p></div>
+    </article>
+    <article class="tile w-4">
+      <div class="tile-stage" style="--w:300px"><div class="vz-box vz-url" aria-hidden="true"><span><i data-lucide="globe"></i>zerno.coffee</span><span class="badge badge-success">SSL выдан</span></div></div>
+      <div class="tile-tx"><h3>Свой домен</h3><p>Подключается за минуту, сертификат сам.</p></div>
+    </article>
+    <article class="tile w-4">
+      <div class="tile-stage" style="--w:260px"><div class="vz-box vz-mono vz-hist" aria-hidden="true">
+        <div><span class="t">12:04</span><span class="hl">Латте 260 → 290</span></div>
+        <div><span class="t">11:52</span><span>Новость «Осень»</span></div>
+      </div></div>
+      <div class="tile-tx"><h3>История правок</h3><p>Любую правку можно вернуть.</p></div>
+    </article>
+  </div>
+</section>
+
+</main>
+<script>lucide.createIcons()</script>
+</body>
+</html>

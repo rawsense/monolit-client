@@ -1,0 +1,7 @@
+build/
+*.syso
+assets/monolit.ico
+DECISIONS.md
+monolit-client.exe
+design/
+*.log

@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ru" data-store="coreless" data-theme-default="system" data-accent-default="azure">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Вход в Coreless</title>
+<link rel="icon" href="coreless-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&family=JetBrains+Mono:wght@400;500&family=Unbounded:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../tokens/colors.css"><link rel="stylesheet" href="../tokens/accents.css"><link rel="stylesheet" href="../tokens/palettes.css">
+<link rel="stylesheet" href="../tokens/motion.css">
+<link rel="stylesheet" href="../tokens/type.css">
+<link rel="stylesheet" href="../tokens/space.css">
+<link rel="stylesheet" href="../tokens/scrollbar.css">
+<link rel="stylesheet" href="../tokens/icons.css">
+<link rel="stylesheet" href="../tokens/components.css">
+<link rel="stylesheet" href="../tokens/inputs.css">
+<link rel="stylesheet" href="../tokens/nav.css">
+<link rel="stylesheet" href="coreless.css">
+<link rel="stylesheet" href="auth.css">
+<script src="../js/theme.js"></script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<script src="../js/inputs.js" defer></script>
+<script src="auth.js" defer></script>
+</head>
+<body>
+<div class="auth">
+  <main class="auth-main">
+    <a class="logo auth-logo" href="landing.html" aria-label="Coreless, на главную"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12V6a3 3 0 0 1 3-3h6M21 12v6a3 3 0 0 1-3 3h-6" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/><rect x="8.5" y="8.5" width="7" height="7" rx="2" fill="currentColor"/></svg>Coreless</a>
+
+    <div class="auth-col">
+      <div class="views">
+
+        <!-- вход и регистрация: общий каркас, меняются заголовок, подписи и шкала пароля -->
+        <section class="view" data-view="auth" aria-labelledby="auth-h">
+          <header class="auth-head">
+            <h1 id="auth-h" class="sw" tabindex="-1"><span data-m="signin">С возвращением</span><span data-m="signup">Создайте аккаунт</span></h1>
+            <p class="sw"><span data-m="signin">Войдите в аккаунт Coreless</span><span data-m="signup">Бесплатно, пока идёт бета</span></p>
+          </header>
+
+          <div class="oauth">
+            <button type="button" class="btn btn-secondary btn-lg btn-block" data-oauth="GitHub"><span><i data-lucide="github"></i>Продолжить через GitHub</span></button>
+            <button type="button" class="btn btn-secondary btn-lg btn-block" data-oauth="Google"><span><svg class="brand" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"/></svg>Продолжить через Google</span></button>
+            <button type="button" class="btn btn-secondary btn-lg btn-block" data-oauth="Яндекс ID"><span><svg class="brand" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M13.6 21h3.1V3h-4.5C7.7 3 5.3 5.3 5.3 8.7c0 2.7 1.3 4.3 3.6 6L4.9 21h3.4l4.4-6.9-1.5-1c-1.9-1.3-2.8-2.3-2.8-4.4 0-1.9 1.3-3.2 3.9-3.2h1.3V21Z"/></svg>Продолжить через Яндекс ID</span></button>
+          </div>
+
+          <div class="or" role="separator"><span>или</span></div>
+
+          <form class="auth-form" id="auth-form" novalidate>
+            <div class="field">
+              <label class="label" for="email">Почта</label>
+              <input class="input" id="email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" aria-describedby="email-msg">
+              <span class="msg" id="email-msg"></span>
+            </div>
+            <div class="field">
+              <div class="label-row">
+                <label class="label" for="pw">Пароль</label>
+                <a class="forgot" href="#reset" data-m="signin">Забыли пароль?</a>
+              </div>
+              <span class="input-wrap pw"><input class="input" id="pw" name="password" type="password" autocomplete="current-password" placeholder="••••••••" aria-describedby="pw-msg"><span class="trail"><button type="button" class="icon-btn icon-btn-sm" data-pw-toggle aria-pressed="false" aria-label="Показать пароль"><i data-lucide="eye" class="i-show"></i><i data-lucide="eye-off" class="i-hide"></i></button></span></span>
+              <span class="msg" id="pw-msg"></span>
+              <div class="fold" data-m="signup"><div><div class="strength" data-for="pw" aria-live="polite"><div class="strength-bar"><i></i><i></i><i></i><i></i></div><span class="strength-text">Надёжность</span></div></div></div>
+            </div>
+            <button class="btn btn-accent btn-lg btn-block submit" type="submit"><span class="sw"><span data-m="signin">Войти</span><span data-m="signup">Создать аккаунт</span></span></button>
+          </form>
+
+          <p class="auth-switch sw"><span data-m="signin">Нет аккаунта? <a href="#signup">Зарегистрироваться</a></span><span data-m="signup">Уже есть аккаунт? <a href="#signin">Войти</a></span></p>
+        </section>
+
+        <!-- сброс пароля -->
+        <section class="view" data-view="reset" aria-labelledby="reset-h">
+          <header class="auth-head">
+            <h1 id="reset-h" tabindex="-1">Сброс пароля</h1>
+            <p>Пришлём на почту ссылку для нового пароля</p>
+          </header>
+          <form class="auth-form" id="reset-form" novalidate>
+            <div class="field">
+              <label class="label" for="r-email">Почта</label>
+              <input class="input" id="r-email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" aria-describedby="r-email-msg">
+              <span class="msg" id="r-email-msg"></span>
+            </div>
+            <button class="btn btn-accent btn-lg btn-block submit" type="submit"><span>Отправить ссылку</span></button>
+          </form>
+          <p class="auth-switch"><a href="#signin"><i data-lucide="arrow-left"></i>Вернуться ко входу</a></p>
+        </section>
+
+        <!-- письмо отправлено -->
+        <section class="view" data-view="sent" aria-labelledby="sent-h" aria-live="polite">
+          <header class="auth-head">
+            <i data-lucide="mail-check" class="sent-ic"></i>
+            <h1 id="sent-h" tabindex="-1">Проверьте почту</h1>
+            <p>Отправили письмо на <b id="sent-to">you@example.com</b><br><span id="sent-why">Перейдите по ссылке в нём, чтобы подтвердить адрес</span></p>
+          </header>
+          <div class="sent-actions">
+            <button type="button" class="btn btn-secondary btn-lg btn-block" id="resend"><span>Отправить ещё раз</span></button>
+            <span class="hint resend-hint" id="resend-hint" aria-live="polite"></span>
+          </div>
+          <p class="auth-switch"><a href="#signin"><i data-lucide="arrow-left"></i>Вернуться ко входу</a></p>
+        </section>
+
+      </div>
+    </div>
+
+    <p class="terms">Продолжая, вы соглашаетесь с <a href="#">условиями использования</a> и&nbsp;<a href="#">политикой конфиденциальности</a></p>
+  </main>
+</div>
+</body>
+</html>
