@@ -32,12 +32,12 @@ VPN-клиент для Windows на ядре Xray. Через VPN идёт то
 Тесты:
 
 ```bash
-go test -timeout 120s .
+go test -timeout 120s ./app
 ```
 
 ## Что внутри
 
-Ядро Xray и сетевой стек gVisor лежат в `third_party/` с правками, список чужих компонентов и их лицензий — в [THIRD_PARTY.md](THIRD_PARTY.md).
+Код программы — в `app/`: Go и интерфейс окна (`app/web`). Ядро Xray и сетевой стек gVisor лежат в `third_party/` с правками, список чужих компонентов и их лицензий — в [THIRD_PARTY.md](THIRD_PARTY.md).
 
 Файл пока не подписан, поэтому Windows может показать предупреждение при запуске.
 
