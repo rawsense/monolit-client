@@ -222,6 +222,15 @@ func buildConfig(s Settings, sub Sub, tun bool, physIf string) ([]byte, error) {
 		rules = append(rules, genRule{"process": d, "outboundTag": "direct", "ruleTag": "apps-direct"})
 	}
 	rules = append(rules, via(genRule{"domain": aiSites, "ruleTag": "ai"}))
+	// маршруты из подписки — ниже своих списков, программ и сайтов ИИ, выше правил режима
+	var subDirect []string
+	if s.SubRoutes {
+		for _, c := range pickConns(s, sub) {
+			var rs []any
+			rs, subDirect = subRouteRules(c.Routes, via)
+			rules = append(rules, rs...)
+		}
+	}
 	// правила по адресам (ruleTag nameless-*) работают, только когда имя сайта неизвестно: в TUN имя из
 	// рукопожатия решает так же, как в режиме прокси, а общие адреса Cloudflare из ru-blocked не уводят
 	// в VPN сайты, которые открываются напрямую
@@ -259,7 +268,7 @@ func buildConfig(s Settings, sub Sub, tun bool, physIf string) ([]byte, error) {
 	}
 	// DNS: российское и адреса самих серверов VPN — через Яндекс напрямую (+local), остальное — DoH через VPN
 	// (правило dns-internal выше): 1.1.1.1 и 8.8.8.8 напрямую из России не отвечают
-	local := append([]string{}, ruDirect...)
+	local := append(append([]string{}, ruDirect...), subDirect...) // что подписка ведёт напрямую, то и ищется напрямую
 	for _, c := range sub.Conns {
 		if c.Server != "" && net.ParseIP(c.Server) == nil {
 			local = append(local, "full:"+c.Server)

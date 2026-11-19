@@ -302,6 +302,18 @@ func (a *App) bindings() map[string]any {
 				safeGo("autostart", a.syncAutoStart) // schtasks — секунды, окно не ждёт
 			}
 			safeGo("apply", func() { a.apply(restart) })
+			if on, _ := patch["subRoutes"].(bool); on {
+				// подписка скачана до этой настройки или её кэш от прошлой версии: маршрутов в нём нет
+				a.mu.Lock()
+				need := len(routesFlat(a.sub)) == 0 && !a.refreshing && !isLink(a.activeURL())
+				if need {
+					a.refreshing, a.refreshErr, a.refreshNote = true, "", ""
+				}
+				a.mu.Unlock()
+				if need {
+					safeGo("refresh", a.refreshSub)
+				}
+			}
 			return nil
 		},
 		// mpRule: list — always | direct | found | apps; add=false удаляет

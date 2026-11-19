@@ -108,6 +108,9 @@ func parseXrayJSON(body []byte) ([]Conn, error) {
 	type cfg struct {
 		Remarks   string           `json:"remarks"`
 		Outbounds []map[string]any `json:"outbounds"`
+		Routing   struct {
+			Rules []map[string]any `json:"rules"`
+		} `json:"routing"`
 	}
 	var cfgs []cfg
 	if body[0] == '{' {
@@ -147,7 +150,10 @@ func parseXrayJSON(body []byte) ([]Conn, error) {
 			bad = append(bad, err.Error())
 			continue
 		}
-		conns = append(conns, newConn(len(conns), c.Remarks, pick))
+		ptag, _ := pick["tag"].(string)
+		conn := newConn(len(conns), c.Remarks, pick)
+		conn.Routes = subRoutes(c.Routing.Rules, c.Outbounds, ptag)
+		conns = append(conns, conn)
 	}
 	if len(conns) == 0 {
 		if len(bad) > 0 {

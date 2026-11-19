@@ -22,11 +22,12 @@ import (
 
 // Conn — одно подключение из подписки (сервер + протокол)
 type Conn struct {
-	Tag      string          `json:"tag"`      // px-0, px-1…
-	Name     string          `json:"name"`     // «north-star Vision»
-	Server   string          `json:"server"`   // адрес сервера
-	Proto    string          `json:"proto"`    // Vision | XHTTP | Hysteria2 | …
-	Outbound json.RawMessage `json:"outbound"` // готовый outbound Xray из подписки
+	Tag      string          `json:"tag"`              // px-0, px-1…
+	Name     string          `json:"name"`             // «north-star Vision»
+	Server   string          `json:"server"`           // адрес сервера
+	Proto    string          `json:"proto"`            // Vision | XHTTP | Hysteria2 | …
+	Outbound json.RawMessage `json:"outbound"`         // готовый outbound Xray из подписки
+	Routes   []SubRoute      `json:"routes,omitempty"` // маршруты из того же конфига (subroutes.go)
 }
 
 type Sub struct {

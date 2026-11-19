@@ -40,6 +40,7 @@ type Settings struct {
 	BlockAds    bool              `json:"blockAds"`
 	ShowAI      bool              `json:"showAI"`        // режим «Только ИИ» на главном экране
 	VpnFirst    bool              `json:"vpnFirst"`      // новый сайт идёт через VPN, пока его проверяет умный режим (race.go)
+	SubRoutes   bool              `json:"subRoutes"`     // маршруты из конфига подписки: напрямую и блокировка (subroutes.go)
 	UpdateHours int               `json:"updateHours"`   // обновление подписки
 	Always      []Rule            `json:"always"`        // всегда через VPN
 	Direct      []Rule            `json:"direct"`        // всегда напрямую
