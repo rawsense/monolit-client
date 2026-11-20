@@ -64,7 +64,21 @@ var (
 	setPath = filepath.Join(appDir(), "settings.json")
 )
 
+// dataRoot — папка данных, которую задала оболочка (SetDataDir). Пусто — папка настроек пользователя
+var dataRoot string
+
+// SetDataDir: где хранить настройки, подписки и журнал. Нужна системам, где у программы своя закрытая
+// папка (Android). Вызывать до New
+func SetDataDir(d string) {
+	os.MkdirAll(d, 0o755)
+	dataRoot = d
+	setPath, subsDir, hwidFile = filepath.Join(d, "settings.json"), filepath.Join(d, "subs"), filepath.Join(d, "hwid")
+}
+
 func appDir() string {
+	if dataRoot != "" {
+		return dataRoot
+	}
 	base, err := os.UserConfigDir() // %APPDATA%
 	if err != nil {
 		base = os.TempDir()
