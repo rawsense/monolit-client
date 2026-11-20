@@ -27,6 +27,9 @@ addEventListener('DOMContentLoaded', function () {
   if (!matchMedia('(max-width: 640px)').matches) return;
   var modes = document.querySelector('#v-home .mc-modes'), set = document.querySelector('#v-s-routes .mc-set');
   if (modes && set) set.insertBefore(modes, set.firstChild);
+  // проверка серверов и обновление подписки — в угол, к названию подписки; шапка «Серверы» у списка убрана
+  var acts = document.querySelector('.mc-srv-acts'), sw = document.querySelector('.mc-sw');
+  if (acts && sw) sw.appendChild(acts);
 });
 
 // Телефон: список серверов, когда не помещается, обрезается посередине строки — нижнее затемнение

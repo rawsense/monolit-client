@@ -322,10 +322,11 @@
       const c = list[i];
       b.setAttribute('aria-checked', c.name === s.conn);
       const m = b.querySelector('em');
-      const bad = s.on && c.known && !c.alive;
-      setText(m, !s.on || !c.known ? '' : c.alive ? `${c.delay} мс` : 'нет ответа');
+      // задержка видна и без VPN: проверку можно запустить и при выключенном (ядро на время замера)
+      const bad = c.known && !c.alive;
+      setText(m, !c.known ? '' : c.alive ? `${c.delay} мс` : 'нет ответа');
       m.classList.toggle('mc-bad', bad);
-      const step = s.on && c.known && c.alive ? pingStep(c.delay) : 0;
+      const step = c.known && c.alive ? pingStep(c.delay) : 0;
       if (step) m.dataset.ping = step; else delete m.dataset.ping;
     });
   }

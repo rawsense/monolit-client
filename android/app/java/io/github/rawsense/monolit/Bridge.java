@@ -123,7 +123,7 @@ final class Bridge implements Host {
     @Override
     public boolean protect(int fd) {
         VpnSvc s = service;
-        return s != null && s.protect(fd);
+        return s == null || s.protect(fd); // VPN нет — выводить сокет не из чего (проверка серверов без VPN)
     }
 
     // openTun зовёт библиотека из своего потока: можно ждать согласия пользователя и запуска сервиса

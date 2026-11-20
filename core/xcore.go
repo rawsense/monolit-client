@@ -421,10 +421,54 @@ func (c *Core) Check(tags []string) map[string]Probe {
 	c.mu.Lock()
 	inst, gen, rgen := c.inst, c.gen, c.rgen
 	c.mu.Unlock()
-	out := map[string]Probe{}
 	if inst == nil {
-		return out
+		return map[string]Probe{}
 	}
+	out := probeAll(inst, tags)
+	c.mu.Lock()
+	stale, rerouted := c.gen != gen, c.rgen != rgen
+	c.mu.Unlock()
+	if stale {
+		return map[string]Probe{}
+	}
+	if rerouted { // маршруты сменились посреди замера: удачи настоящие, а неудачи — возможно, оборванные соединения
+		for tag, p := range out {
+			if !p.Alive {
+				delete(out, tag)
+			}
+		}
+	}
+	return out
+}
+
+// CheckIdle — та же проверка, когда VPN выключен и ядра нет: на время замера поднимается отдельное ядро
+// только с выходами (без входов и TUN — ни портов, ни перехвата трафика), потом закрывается
+func CheckIdle(cfgJSON []byte, tags []string) (map[string]Probe, error) {
+	var cfg map[string]any
+	if err := json.Unmarshal(cfgJSON, &cfg); err != nil {
+		return nil, err
+	}
+	cfg["inbounds"] = []any{}
+	b, _ := json.Marshal(cfg)
+	os.Setenv("XRAY_LOCATION_ASSET", geoDir())
+	pb, err := jsonconf.LoadJSONConfig(bytes.NewReader(b))
+	if err != nil {
+		return nil, fmt.Errorf("конфиг: %w", err)
+	}
+	inst, err := core.New(pb)
+	if err != nil {
+		return nil, fmt.Errorf("ядро: %w", err)
+	}
+	defer inst.Close()
+	if err := inst.Start(); err != nil {
+		return nil, fmt.Errorf("запуск ядра: %w", err)
+	}
+	return probeAll(inst, tags), nil
+}
+
+// probeAll проверяет каждое подключение по две попытки
+func probeAll(inst *core.Instance, tags []string) map[string]Probe {
+	out := map[string]Probe{}
 	var mu sync.Mutex
 	var wg sync.WaitGroup
 	for _, tag := range tags {
@@ -447,19 +491,6 @@ func (c *Core) Check(tags []string) map[string]Probe {
 		}()
 	}
 	wg.Wait()
-	c.mu.Lock()
-	stale, rerouted := c.gen != gen, c.rgen != rgen
-	c.mu.Unlock()
-	if stale {
-		return map[string]Probe{}
-	}
-	if rerouted { // маршруты сменились посреди замера: удачи настоящие, а неудачи — возможно, оборванные соединения
-		for tag, p := range out {
-			if !p.Alive {
-				delete(out, tag)
-			}
-		}
-	}
 	return out
 }
 

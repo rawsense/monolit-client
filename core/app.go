@@ -194,9 +194,19 @@ func (a *App) refreshSub() {
 // recheck: заново проверить каждый конфиг выбранной подписки, по две попытки
 func (a *App) recheck() {
 	a.mu.Lock()
-	sub := a.sub
+	sub, set := a.sub, a.set
 	a.mu.Unlock()
-	res := a.core.Check(tagsOf(sub))
+	var res map[string]Probe
+	if a.core.Running() {
+		res = a.core.Check(tagsOf(sub))
+	} else if cfg, err := buildConfig(set, sub, false, ""); err != nil {
+		logLine("проверка серверов: " + err.Error())
+	} else if res, err = CheckIdle(cfg, tagsOf(sub)); err != nil {
+		logLine("проверка серверов без VPN: " + err.Error())
+	}
+	if res == nil {
+		res = map[string]Probe{}
+	}
 	a.mu.Lock()
 	a.record(sub, res, true)
 	a.checking = false

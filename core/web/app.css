@@ -336,8 +336,11 @@ button.link { padding: 0; border: 0; background: none; font: inherit; font-weigh
 @media (max-width: 640px) {
   .mc { height: 100dvh; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, auto) minmax(40px, 1fr) auto auto minmax(var(--sp-4), 1fr) auto auto; padding: 0 var(--sp-2) var(--sp-4) }
   .mc-stage { display: contents }
-  .mc-sw { grid-row: 1; min-height: 64px; padding: 0 }
+  /* кнопки проверки и обновления (переносит native.js) — в правом углу, глиф на линии пинга в строках */
+  .mc-sw { grid-row: 1; min-height: 64px; padding: 0 calc(var(--sp-2) + var(--sp-4) - (44px - 16px) / 2) 0 0 }
   .mc-sw > .icon-btn { display: none }
+  .mc-sw .mc-srv-acts { display: flex; gap: 0 }
+  .mc-sw .mc-srv-acts .icon-btn { width: 44px; height: 44px }
   .mc-subsel b { font-size: var(--fs-xl) }
   .mc-subsel svg { width: 20px; height: 20px }
   .mc-main { grid-row: 2; display: grid }
@@ -345,12 +348,8 @@ button.link { padding: 0; border: 0; background: none; font: inherit; font-weigh
   #v-home[hidden] { display: none }
   #v-home .mc-modes { display: none }
   /* панель списка: поле снизу такое же, как по бокам, а угол концентричен выбранной строке (её радиус + поле) */
-  .mc-srv { grid-template-rows: auto minmax(0, 1fr); gap: 0; padding: var(--sp-1) var(--sp-2) var(--sp-2); border-radius: calc(56px / 2 + var(--sp-2)) }
-  /* кнопки шапки списка — 44px под палец; правый край значка на одной линии с пингом в строках */
-  .mc-srv-h { min-height: 44px; padding-right: calc(var(--sp-4) - (44px - 16px) / 2) }
-  .mc-srv-h .icon-btn { width: 44px; height: 44px }
-  .mc-srv-acts { gap: 0 }
-  .mc-srv-h h2 { font-size: var(--fs-md); line-height: var(--lh-md); letter-spacing: 0 }
+  .mc-srv { grid-template-rows: minmax(0, 1fr); gap: 0; padding: var(--sp-2); border-radius: calc(56px / 2 + var(--sp-2)) }
+  .mc-srv-h { display: none }
   .mc-srvlist { max-height: 384px }
   .mc-srvlist { mask-image: linear-gradient(to bottom, rgb(0 0 0 / .15), #000 var(--mc-ft), #000 calc(100% - var(--mc-fb)), rgb(0 0 0 / .15)) }
   .mc-srvlist.mc-ft { --mc-ft: 60px }
@@ -358,13 +357,16 @@ button.link { padding: 0; border: 0; background: none; font: inherit; font-weigh
   .mc-srvi { min-height: 56px; font-size: var(--fs-md) }
   .mc-srvi .badge { height: 20px; padding: 0 var(--sp-2); font-size: var(--fs-xs) }
   .mc-srvi em { font-size: var(--fs-base) }
-  .mc-pwr { grid-row: 4; justify-self: center; width: 120px; height: 120px }
-  .mc-pwr svg { width: 40px; height: 40px }
+  /* выбранная строка: на телефоне одной подложки мало (яркость экрана, солнце) — ещё тонкая рамка */
+  .mc-srvi { transition: background var(--dur-state) var(--ease-out), color var(--dur-state) var(--ease-out), box-shadow var(--dur-state) var(--ease-out) }
+  .mc-srvi[aria-checked="true"] { box-shadow: inset 0 0 0 1px var(--border-strong) }
+  .mc-pwr { grid-row: 4; justify-self: center; width: 144px; height: 144px }
+  .mc-pwr svg { width: 48px; height: 48px }
   .mc-state { grid-row: 5; height: auto; margin-top: var(--sp-4) }
   /* трафик на одной вертикали с текстом строк списка (слева) и пингом (справа); до кнопок — как в макете */
   .mc-traffic { grid-row: 7; min-height: 0; padding: 0 var(--sp-6) var(--sp-6) }
   .mc-acts { grid-row: 8; display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-2); padding: 0 var(--sp-4) }
-  .mc-acts .btn { height: 44px }
+  .mc-acts .btn { height: 52px }
   /* остальные экраны (настройки, сайты, первая подписка) — во весь экран */
   .mc:has(#v-home[hidden]) { grid-template-rows: minmax(0, 1fr) }
   .mc:has(#v-home[hidden]) .mc-stage > * { display: none }
