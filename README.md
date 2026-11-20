@@ -34,12 +34,12 @@ VPN-клиент для Windows на ядре Xray. Через VPN идёт то
 Тесты:
 
 ```bash
-go test -timeout 120s ./app
+go test -timeout 120s ./core ./windows
 ```
 
 ## Что внутри
 
-Код программы — в `app/`: Go и интерфейс окна (`app/web`). Ядро Xray и сетевой стек gVisor лежат в `third_party/` с правками, список чужих компонентов и их лицензий — в [THIRD_PARTY.md](THIRD_PARTY.md).
+Вся логика — в `core/`: подписки, конфиг ядра, маршруты, умный режим, настройки и интерфейс окна (`core/web`). Она общая для всех систем; в `windows/` — только то, чем отличается Windows: окно, трей, виртуальная сетевая карта, системный прокси, установка. Ядро Xray и сетевой стек gVisor лежат в `third_party/` с правками, список чужих компонентов и их лицензий — в [THIRD_PARTY.md](THIRD_PARTY.md).
 
 Файл пока не подписан, поэтому Windows может показать предупреждение при запуске.
 
@@ -51,4 +51,4 @@ go test -timeout 120s ./app
 
 [GPL-3.0](LICENSE)
 
-Шрифт с флагами стран `app/web/brand/flags.woff2` — Twemoji Country Flags из [country-flag-emoji-polyfill](https://github.com/talkjs/country-flag-emoji-polyfill) (MIT); рисунки флагов — [Twemoji](https://github.com/twitter/twemoji), CC-BY 4.0. Сервер AmneziaWG в ядре — [amneziawg-go](https://github.com/amnezia-vpn/amneziawg-go) (MIT), копия в `third_party/amneziawg-go`.
+Шрифт с флагами стран `core/web/brand/flags.woff2` — Twemoji Country Flags из [country-flag-emoji-polyfill](https://github.com/talkjs/country-flag-emoji-polyfill) (MIT); рисунки флагов — [Twemoji](https://github.com/twitter/twemoji), CC-BY 4.0. Сервер AmneziaWG в ядре — [amneziawg-go](https://github.com/amnezia-vpn/amneziawg-go) (MIT), копия в `third_party/amneziawg-go`.

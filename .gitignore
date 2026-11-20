@@ -1,6 +1,6 @@
 build/
 *.syso
-app/assets/monolit.ico
+windows/assets/monolit.ico
 DECISIONS.md
 monolit-client.exe
 design/
