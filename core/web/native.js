@@ -36,11 +36,16 @@ addEventListener('DOMContentLoaded', function () {
   var l = document.querySelector('#servers');
   if (!l) return;
   var snap = function () {
+    var was = l.style.maxHeight;
     l.style.maxHeight = '';
-    var row = l.firstElementChild ? l.firstElementChild.offsetHeight : 56, h = l.clientHeight;
-    if (l.scrollHeight > h + 1 && h % row < row * 0.35) l.style.maxHeight = Math.max(1, Math.floor((h - row / 2) / row)) * row + row / 2 + 'px';
+    var row = l.firstElementChild ? l.firstElementChild.offsetHeight : 56, h = l.clientHeight, want = '';
+    if (l.scrollHeight > h + 1 && h % row < row * 0.35) want = Math.max(1, Math.floor((h - row / 2) / row)) * row + row / 2 + 'px';
+    l.style.maxHeight = want;
+    if (want !== was) l.dispatchEvent(new Event('scroll')); // края списка (затемнение) пересчитать под новую высоту
   };
+  // высота списка меняется не только от числа строк: появился трафик, сменилась подпись состояния, повернули экран
   addEventListener('resize', snap);
   new MutationObserver(snap).observe(l, { childList: true });
+  if (window.ResizeObserver) new ResizeObserver(snap).observe(l.closest('.mc-main') || l);
   snap();
 });
