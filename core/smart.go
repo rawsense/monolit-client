@@ -48,6 +48,9 @@ func hookLog() { xlog.RegisterHandler(logHandler{}) }
 
 func logLine(s string) {
 	line := time.Now().Format("15:04:05 ") + s
+	if logSink != nil {
+		logSink(line)
+	}
 	logMu.Lock()
 	defer logMu.Unlock()
 	logRing = append(logRing, line)

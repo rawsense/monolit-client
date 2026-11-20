@@ -88,3 +88,8 @@ func (a *App) BindingNames() []string {
 	}
 	return names
 }
+
+// logSink — куда ещё отдавать строки журнала (журнал системы на Android). Задать до New
+var logSink func(string)
+
+func SetLogSink(f func(string)) { logSink = f }

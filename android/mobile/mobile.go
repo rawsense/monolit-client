@@ -9,6 +9,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net"
 	"os"
 	"strconv"
@@ -66,9 +67,16 @@ func Start(dataDir string, h Host) string {
 	}
 	core.SetDataDir(dataDir)
 	core.SetPlatform(droid{})
+	// журнал программы — ещё и в журнал Android (adb logcat -s GoLog): файл в закрытой папке приложения снаружи не прочитать
+	core.SetLogSink(func(s string) { fmt.Fprintln(os.Stderr, s) })
 	protect := func(network, address string, c syscall.RawConn) error {
-		return c.Control(func(fd uintptr) { h.Protect(int32(fd)) })
+		return c.Control(func(fd uintptr) {
+			if !h.Protect(int32(fd)) {
+				core.Log("сокет к " + address + " не выведен из VPN")
+			}
+		})
 	}
+	os.Setenv("MONOLIT_LOGLEVEL", "info") // ВРЕМЕННО: проба на телефоне
 	internet.RegisterDialerController(protect)
 	internet.RegisterListenerController(protect)
 	app = core.New(false)

@@ -138,6 +138,16 @@ func buildConfig(s Settings, sub Sub, tun bool, physIf string) ([]byte, error) {
 			so["interface"] = physIf
 			ss["sockopt"] = so
 		}
+		if tun && physIf == "" {
+			// выходы отделяет сама система (Android), а её поиск адресов при поднятом VPN идёт в туннель:
+			// адрес сервера искался бы через сам сервер. Ищем его встроенным DNS ядра (серверы VPN — напрямую)
+			so, _ := ss["sockopt"].(map[string]any)
+			if so == nil {
+				so = map[string]any{}
+			}
+			so["domainStrategy"] = "ForceIPv4"
+			ss["sockopt"] = so
+		}
 		outbounds = append(outbounds, ob)
 		if picked[c.Tag] {
 			tags = append(tags, c.Tag)
@@ -291,7 +301,7 @@ func buildConfig(s Settings, sub Sub, tun bool, physIf string) ([]byte, error) {
 		"queryStrategy": "UseIPv4",
 	}
 	cfg := genRule{
-		"log":    genRule{"loglevel": "warning"},
+		"log":    genRule{"loglevel": logLevel()},
 		"dns":    dns,
 		"stats":  genRule{},
 		"policy": genRule{"system": genRule{"statsOutboundUplink": true, "statsOutboundDownlink": true}},
@@ -577,4 +587,12 @@ func hysteriaLiveness(ss map[string]any) {
 	if _, ok := qp["maxIdleTimeout"]; !ok {
 		qp["maxIdleTimeout"] = hyMaxIdle
 	}
+}
+
+// logLevel — подробность журнала ядра. MONOLIT_LOGLEVEL=info или debug — для разбора неполадок
+func logLevel() string {
+	if l := os.Getenv("MONOLIT_LOGLEVEL"); l != "" {
+		return l
+	}
+	return "warning"
 }
