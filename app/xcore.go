@@ -122,6 +122,9 @@ func buildConfig(s Settings, sub Sub, tun bool, physIf string) ([]byte, error) {
 			ss = map[string]any{}
 			ob["streamSettings"] = ss
 		}
+		if ob["protocol"] == "hysteria" {
+			hysteriaLiveness(ss)
+		}
 		if s.Fingerprint != "" {
 			if tls, ok := ss["tlsSettings"].(map[string]any); ok {
 				tls["fingerprint"] = s.Fingerprint
@@ -543,4 +546,32 @@ func buildConfigNoGeo(s Settings, sub Sub) ([]byte, error) {
 		"inbounds":  []any{genRule{"tag": "probe-in", "protocol": "mixed", "listen": "127.0.0.1", "port": s.Port + 7}},
 		"outbounds": outbounds,
 	})
+}
+
+// Hysteria2 по умолчанию не шлёт поддерживающих пакетов и считает соединение живым 30 секунд без ответа:
+// если путь перестал пропускать пакеты, всё висит полминуты, пока соединение не пересоздастся.
+// Поддержка каждые 3 с не даёт записи у роутера и провайдера протухнуть в простое, срок молчания 8 с
+// сокращает простой при настоящем обрыве. Заданное в подписке не трогаем
+const (
+	hyKeepAlive = 3
+	hyMaxIdle   = 8
+)
+
+func hysteriaLiveness(ss map[string]any) {
+	fm, _ := ss["finalmask"].(map[string]any)
+	if fm == nil {
+		fm = map[string]any{}
+		ss["finalmask"] = fm
+	}
+	qp, _ := fm["quicParams"].(map[string]any)
+	if qp == nil {
+		qp = map[string]any{}
+		fm["quicParams"] = qp
+	}
+	if _, ok := qp["keepAlivePeriod"]; !ok {
+		qp["keepAlivePeriod"] = hyKeepAlive
+	}
+	if _, ok := qp["maxIdleTimeout"]; !ok {
+		qp["maxIdleTimeout"] = hyMaxIdle
+	}
 }
