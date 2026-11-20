@@ -59,6 +59,7 @@ public class MainActivity extends Activity {
             return in;
         });
         setContentView(box);
+        listenBack();
         Bridge.I.activity = this;
         Mobile.log("окно: открыто");
         if (android.os.Build.VERSION.SDK_INT >= 33 && checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
@@ -77,9 +78,34 @@ public class MainActivity extends Activity {
         super.onDestroy();
     }
 
+    // «Назад» (жест или кнопка). Интерфейс сообщает, есть ли в нём куда идти назад (открыто окно, меню или
+    // не главный экран): тогда шаг назад делает он. На главном приложение сворачивается, а не закрывается:
+    // без своего обработчика HyperOS закрывала окно, и при следующем открытии интерфейс грузился заново
+    private volatile boolean canBack;
+
+    private void setBack(boolean on) {
+        canBack = on;
+    }
+
+    private void back() {
+        if (canBack) {
+            web.evaluateJavascript("window.mpBack && mpBack()", null);
+        } else {
+            moveTaskToBack(true); // VPN и окно остаются
+        }
+    }
+
+    // с Android 13 (и обязательно с 16) система зовёт только этот обработчик, onBackPressed — для старых
+    private void listenBack() {
+        if (android.os.Build.VERSION.SDK_INT >= 33) {
+            getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
+                    android.window.OnBackInvokedDispatcher.PRIORITY_DEFAULT, this::back);
+        }
+    }
+
     @Override
     public void onBackPressed() {
-        moveTaskToBack(true); // «назад» сворачивает, VPN и окно остаются
+        back();
     }
 
     // update: новое состояние от общей логики — в окно
@@ -116,6 +142,11 @@ public class MainActivity extends Activity {
 
     // Native — мост из окна: вызов по имени идёт в фоне, ответ возвращается в то же обещание
     private final class Native {
+        @JavascriptInterface
+        public void setBack(boolean on) {
+            runOnUiThread(() -> MainActivity.this.setBack(on));
+        }
+
         @JavascriptInterface
         public String names() {
             return Mobile.names();

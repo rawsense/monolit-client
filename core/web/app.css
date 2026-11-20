@@ -378,4 +378,13 @@ button.link { padding: 0; border: 0; background: none; font: inherit; font-weigh
   .cx-st { padding: var(--sp-3) }
   /* режимы в «Маршрутах»: плитки в ряд, как были на главном */
   .mc-set > .mc-modes { margin-bottom: var(--sp-2) }
+  /* смена экранов — как у приложений Android (общая ось X, Material): оба экрана сдвигаются на 30px,
+     старый гаснет за первые 90 мс, новый проявляется за остальные 210. Своё проявление раздела не нужно */
+  .mc-view { animation: none }
+  :root { --nav-dx: 30px }
+  :root[data-nav="back"] { --nav-dx: -30px }
+  ::view-transition-old(root) { animation: nav-out 300ms cubic-bezier(.2, 0, 0, 1) both }
+  ::view-transition-new(root) { animation: nav-in 300ms cubic-bezier(.2, 0, 0, 1) both }
 }
+@keyframes nav-out { 30%, 100% { opacity: 0 } 100% { transform: translateX(calc(var(--nav-dx) * -1)) } }
+@keyframes nav-in { 0% { transform: translateX(var(--nav-dx)) } 0%, 30% { opacity: 0 } 100% { opacity: 1; transform: none } }

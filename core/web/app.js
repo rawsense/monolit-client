@@ -63,16 +63,19 @@
   // ---------- смена разделов: гаснет 120 мс, проявляется 200 мс ----------
   // переход — отклик на нажатие, а не смена читаемого текста: при 200 + 360 мс пункты ощущались тугими.
   // Данные просим сразу, пока старый экран гаснет: новый появляется уже заполненным, без подстановки на виду
-  function show(v) {
+  // На телефоне — переход как у приложений Android (общая ось X): весь экран целиком уезжает в сторону
+  // и гаснет, новый въезжает с другой стороны; назад — в обратную. Снимки делает сам браузер (View Transitions),
+  // поэтому вместе с разделом едут и кнопка питания, и подписка, которые живут вне раздела
+  const phone = matchMedia('(max-width: 640px)');
+  const calm = matchMedia('(prefers-reduced-motion: reduce)');
+  function show(v, back) {
     if (v === view) return;
     const cur = $(`#v-${view}`), next = $(`#v-${v}`);
     view = v;
     const needSet = v === 'sites' || v === 'settings' || v.startsWith('s-');
     const pre = needSet ? Promise.resolve().then(() => go.mpSettings()).catch((x) => { toastErr('Настройки не загрузились', x); return null; }) : null;
-    cur.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 120, easing: 'ease-out' }).onfinish = async () => {
+    const swap = (data) => {
       cur.hidden = true;
-      const data = pre ? await pre : null;
-      if (view !== v) return; // пока гасло, раздел сменился (например, удалили последнюю подписку)
       if (data) settings = data;
       next.hidden = false;
       if (v === 'sites') renderList(false, !!data);
@@ -81,7 +84,45 @@
       if (v === 'log') loadLog();
       if (v === 's-net') cxStart();
       if (v === 'settings') cxCount();
+      syncBack();
     };
+    if (phone.matches && document.startViewTransition && !calm.matches) {
+      (async () => {
+        const data = pre ? await pre : null; // данные — до снимка: новый экран въезжает уже заполненным
+        if (view !== v) return;
+        document.documentElement.dataset.nav = back ? 'back' : 'fwd';
+        document.startViewTransition(() => swap(data));
+      })();
+      return;
+    }
+    cur.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 120, easing: 'ease-out' }).onfinish = async () => {
+      const data = pre ? await pre : null;
+      if (view !== v) { cur.hidden = true; return; } // пока гасло, раздел сменился (например, удалили последнюю подписку)
+      swap(data);
+    };
+  }
+
+  // «Назад» системы (жест или кнопка Android): сначала закрывается открытое окно или меню, потом —
+  // шаг назад по разделам, как кнопкой-стрелкой. На главной ничего не делает: окно сворачивает сама система.
+  // syncBack сообщает приложению, есть ли куда идти назад, — от этого зависит, перехватывать ли жест
+  window.mpBack = () => {
+    const d = [...document.querySelectorAll('dialog[open]')].pop();
+    if (d) { const x = d.querySelector('[data-close]'); x ? x.click() : d.close(); return; }
+    const m = document.querySelector('[aria-haspopup][aria-expanded="true"]');
+    if (m) { m.click(); return; }
+    document.querySelector(`#v-${view} [aria-label="Назад"]`)?.click();
+  };
+  let canBack = null;
+  function syncBack() {
+    const c = (view !== 'home' && view !== 'welcome') || !!document.querySelector('dialog[open], [aria-haspopup][aria-expanded="true"]');
+    if (c === canBack) return;
+    canBack = c;
+    window.MonolitNative?.setBack?.(c);
+  }
+  if (window.MonolitNative) {
+    let q = 0;
+    new MutationObserver(() => { if (!q) q = requestAnimationFrame(() => { q = 0; syncBack(); }); })
+      .observe(document.body, { subtree: true, attributes: true, attributeFilter: ['open', 'aria-expanded', 'hidden'] }); // hidden — разделы, сменённые без show (приветствие)
   }
   // сайты и программы — один экран: у программ нет вкладок и свой заголовок
   function sitesFor(v) {
@@ -97,7 +138,7 @@
     if (!b) return;
     let v = b.dataset.go;
     if (v === 'apps' || v === 'sites') { sitesFor(v); v = 'sites'; }
-    show(v);
+    show(v, b.getAttribute('aria-label') === 'Назад');
   });
 
   // ---------- главная ----------
