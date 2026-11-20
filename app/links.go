@@ -337,6 +337,8 @@ func parseLink(link string) (string, map[string]any, error) {
 		return parseVmess(link)
 	case "ss":
 		return parseSS(link)
+	case "vpn": // ключ приложения AmneziaVPN
+		return parseVPNLink(link)
 	}
 	u, err := url.Parse(link)
 	if err != nil {

@@ -1,7 +1,12 @@
 package main
 
 import (
+	"bytes"
+	"compress/zlib"
+	"encoding/base64"
+	"encoding/json"
 	"errors"
+	"io"
 	"net"
 	"strconv"
 	"strings"
@@ -106,4 +111,52 @@ func isAWG(ob map[string]any) bool {
 	st, _ := ob["settings"].(map[string]any)
 	m, _ := st["awg"].(map[string]any)
 	return len(m) > 0
+}
+
+// parseVPNLink: ключ vpn:// приложения AmneziaVPN. Внутри base64url — JSON приложения, сжатый как qCompress
+// (4 байта длины и поток zlib), либо сам текст .conf. Берётся только WireGuard и AmneziaWG: из JSON достаётся
+// исходный текст .conf (last_config.config) и разбирается как обычный файл
+func parseVPNLink(link string) (string, map[string]any, error) {
+	bad := errors.New("ключ vpn:// не читается")
+	raw, err := base64.RawURLEncoding.DecodeString(strings.TrimRight(strings.TrimPrefix(strings.TrimSpace(link), "vpn://"), "="))
+	if err != nil || len(raw) == 0 {
+		return "", nil, bad
+	}
+	if len(raw) > 4 {
+		if zr, err := zlib.NewReader(bytes.NewReader(raw[4:])); err == nil {
+			if plain, err := io.ReadAll(io.LimitReader(zr, 1<<20)); err == nil && len(plain) > 0 {
+				raw = plain
+			}
+		}
+	}
+	text := string(raw)
+	if looksLikeWGConf(text) {
+		return parseWGConf(text)
+	}
+	var cfg struct {
+		Description string
+		Containers  []map[string]json.RawMessage
+	}
+	if json.Unmarshal(raw, &cfg) != nil {
+		return "", nil, bad
+	}
+	for _, c := range cfg.Containers {
+		for _, key := range []string{"awg", "wireguard"} {
+			var box struct {
+				LastConfig string `json:"last_config"`
+			}
+			var last struct {
+				Config string
+			}
+			if json.Unmarshal(c[key], &box) != nil || json.Unmarshal([]byte(box.LastConfig), &last) != nil || !looksLikeWGConf(last.Config) {
+				continue
+			}
+			name, ob, err := parseWGConf(last.Config)
+			if err == nil && strings.TrimSpace(cfg.Description) != "" {
+				name = strings.TrimSpace(cfg.Description)
+			}
+			return name, ob, err
+		}
+	}
+	return "", nil, errors.New("в ключе vpn:// нет подключения WireGuard или AmneziaWG")
 }
