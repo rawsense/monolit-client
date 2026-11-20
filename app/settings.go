@@ -28,15 +28,16 @@ type SubRef struct {
 type Settings struct {
 	SubURL      string            `json:"subUrl,omitempty"` // старое поле: одна подписка, переносится в Subs
 	Subs        []SubRef          `json:"subs"`
-	Active      string            `json:"active"`      // id выбранной подписки. Серверы берутся только из неё
-	Conn        string            `json:"conn"`        // название выбранного конфига; "" или нет такого — первый в подписке
-	Mode        string            `json:"mode"`        // smart | ai | all
-	Connect     string            `json:"connect"`     // auto | tun | proxy
-	Port        int               `json:"port"`        // порт прокси на 127.0.0.1
-	AutoStart   bool              `json:"autoStart"`   // запуск при входе в Windows
-	AutoOn      bool              `json:"autoOn"`      // включать VPN при запуске
-	DNS         string            `json:"dns"`         // DoH для заблокированного
-	Fingerprint string            `json:"fingerprint"` // "" — как в подписке
+	Active      string            `json:"active"`           // id выбранной подписки. Серверы берутся только из неё
+	Conn        string            `json:"conn"`             // название выбранного конфига; "" или нет такого — первый в подписке
+	ConnBy      map[string]string `json:"connBy,omitempty"` // id подписки → что в ней выбирали: при возврате к подписке выбор возвращается
+	Mode        string            `json:"mode"`             // smart | ai | all
+	Connect     string            `json:"connect"`          // auto | tun | proxy
+	Port        int               `json:"port"`             // порт прокси на 127.0.0.1
+	AutoStart   bool              `json:"autoStart"`        // запуск при входе в Windows
+	AutoOn      bool              `json:"autoOn"`           // включать VPN при запуске
+	DNS         string            `json:"dns"`              // DoH для заблокированного
+	Fingerprint string            `json:"fingerprint"`      // "" — как в подписке
 	BlockAds    bool              `json:"blockAds"`
 	ShowAI      bool              `json:"showAI"`        // режим «Только ИИ» на главном экране
 	VpnFirst    bool              `json:"vpnFirst"`      // новый сайт идёт через VPN, пока его проверяет умный режим (race.go)
@@ -134,8 +135,42 @@ func (s Settings) clone() Settings {
 	s.Apps = slices.Clone(s.Apps)
 	s.AppsDirect = slices.Clone(s.AppsDirect)
 	s.Svc = maps.Clone(s.Svc)
+	s.ConnBy = maps.Clone(s.ConnBy)
 	s.TempIP = slices.Clone(s.TempIP)
 	return s
+}
+
+// pickConn запоминает выбранное подключение и для текущей подписки
+func (s *Settings) pickConn(name string) {
+	s.Conn = name
+	if s.Active == "" {
+		return
+	}
+	if s.ConnBy == nil {
+		s.ConnBy = map[string]string{}
+	}
+	if name == "" {
+		delete(s.ConnBy, s.Active)
+	} else {
+		s.ConnBy[s.Active] = name
+	}
+}
+
+// useSub переходит на подписку и возвращает подключение, которое в ней выбирали в прошлый раз.
+// Если его там больше нет, pickConns возьмёт первое
+func (s *Settings) useSub(id string) {
+	if s.Active != "" && s.Conn != "" { // выбор сделан до появления ConnBy — не теряем его
+		s.pickConn(s.Conn)
+	}
+	s.Active, s.Conn = id, s.ConnBy[id]
+}
+
+// dropSub забывает выбор в удалённой подписке
+func (s *Settings) dropSub(id string) {
+	delete(s.ConnBy, id)
+	if s.Active == id {
+		s.Active, s.Conn = "", ""
+	}
 }
 
 func now() int64 { return time.Now().Unix() }

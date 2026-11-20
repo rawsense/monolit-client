@@ -139,7 +139,7 @@ func (a *App) bindings() map[string]any {
 		},
 		"mpConn": func(name string) {
 			a.mu.Lock()
-			a.set.Conn = name
+			a.set.pickConn(name)
 			a.mu.Unlock()
 			safeGo("apply", func() { a.apply(false) }) // только маршрут: ядро не перезапускается, замеры и соединения остаются
 		},
@@ -172,7 +172,8 @@ func (a *App) bindings() map[string]any {
 			}
 			id := newSubID(a.set.Subs)
 			a.set.Subs = append(slices.Clip(a.set.Subs), SubRef{ID: id, URL: url})
-			a.set.Active, a.set.Conn, a.lastTag = id, "", ""
+			a.set.useSub(id)
+			a.lastTag = ""
 			a.mu.Unlock()
 			a.setSub(id, ns)
 			safeGo("apply", func() { a.apply(true) })
@@ -189,7 +190,7 @@ func (a *App) bindings() map[string]any {
 				a.mu.Unlock()
 				return errors.New("в этой подписке пока нет серверов: обновите её или отключите VPN")
 			}
-			a.set.Active, a.set.Conn = id, ""
+			a.set.useSub(id)
 			a.sub = a.subs[id]
 			a.lastTag = ""
 			// выбранную подписку сразу скачиваем заново: список в кэше мог устареть, пока была выбрана другая
@@ -220,8 +221,9 @@ func (a *App) bindings() map[string]any {
 			empty := len(a.set.Subs) == 0
 			active := a.set.Active == id
 			noServers := false
+			a.set.dropSub(id) // и выбор в ней забыт, даже если она не была текущей
 			if active {
-				a.set.Active, a.set.Conn, a.sub, a.lastTag = "", "", Sub{}, ""
+				a.sub, a.lastTag = Sub{}, ""
 				if !empty {
 					next := a.set.Subs[0].ID
 					if a.on { // VPN включён: переходим на подписку, где есть серверы, как в mpSubUse
@@ -233,7 +235,7 @@ func (a *App) bindings() map[string]any {
 						}
 						noServers = len(a.subs[next].Conns) == 0
 					}
-					a.set.Active = next
+					a.set.useSub(next)
 					a.sub = a.subs[next]
 				}
 			}
