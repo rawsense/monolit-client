@@ -10,6 +10,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
 
 import org.json.JSONObject;
 
@@ -42,8 +43,12 @@ public class MainActivity extends Activity {
         web.setOverScrollMode(View.OVER_SCROLL_NEVER);
         web.setWebViewClient(new WebViewClient());
         web.addJavascriptInterface(new Native(), "MonolitNative");
-        // с Android 15 окно рисуется под строкой состояния и кнопками системы: отступаем на их высоту
-        web.setOnApplyWindowInsetsListener((v, in) -> {
+        // с Android 15 окно рисуется под строкой состояния и кнопками системы: отступаем на их высоту.
+        // Отступ — у рамки вокруг браузера: сам встроенный браузер свои отступы не учитывает
+        FrameLayout box = new FrameLayout(this);
+        box.setBackgroundColor(getColor(R.color.bg));
+        box.addView(web);
+        box.setOnApplyWindowInsetsListener((v, in) -> {
             if (android.os.Build.VERSION.SDK_INT >= 30) {
                 android.graphics.Insets b = in.getInsets(WindowInsets.Type.systemBars() | WindowInsets.Type.ime());
                 v.setPadding(b.left, b.top, b.right, b.bottom);
@@ -53,7 +58,7 @@ public class MainActivity extends Activity {
             }
             return in;
         });
-        setContentView(web);
+        setContentView(box);
         Bridge.I.activity = this;
         web.loadUrl(ui);
     }

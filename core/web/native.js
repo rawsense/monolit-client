@@ -20,3 +20,10 @@
     };
   });
 })();
+
+// Телефон: режимы живут в настройках («Маршруты»), а не на главном — тот же блок переезжает туда
+addEventListener('DOMContentLoaded', function () {
+  if (!matchMedia('(max-width: 640px)').matches) return;
+  var modes = document.querySelector('#v-home .mc-modes'), set = document.querySelector('#v-s-routes .mc-set');
+  if (modes && set) set.insertBefore(modes, set.firstChild);
+});

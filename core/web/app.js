@@ -293,7 +293,7 @@
   $('#sub-refresh').addEventListener('click', () => { if (!st?.refreshing) call(() => go.mpRefresh(), 'Обновление не запустилось'); });
   // окно новой подписки: при каждом открытии и закрытии — пустое поле без старой ошибки
   const resetAddSub = () => { $('#add-sub-url').value = ''; $('#add-sub-err').hidden = true; setText($('#add-sub-err'), ''); };
-  $('[data-open="dlg-add"]').addEventListener('click', resetAddSub);
+  $$('[data-open="dlg-add"]').forEach((b) => b.addEventListener('click', resetAddSub));
   $('#dlg-add').addEventListener('close', resetAddSub);
   $('#add-sub-form').addEventListener('submit', async (e) => {
     e.preventDefault();
