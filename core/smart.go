@@ -122,8 +122,12 @@ func (logHandler) Handle(msg xlog.Message) {
 			smart.candidate(d)
 		}
 	case *xlog.GeneralMessage:
+		c := fmt.Sprint(m.Content)
+		if dbg := os.Getenv("MONOLIT_LOGFILTER"); dbg != "" && strings.Contains(c, dbg) { // разбор неполадок: подробные строки ядра по слову
+			logLine(c)
+			return
+		}
 		if m.Severity <= xlog.Severity_Warning {
-			c := fmt.Sprint(m.Content)
 			if strings.Contains(c, "deprecated") && !firstNotice(c) {
 				return // предупреждение об устаревшем протоколе: проверка каждой ссылки подписки повторяет его, в журнал — один раз
 			}

@@ -76,7 +76,8 @@ func Start(dataDir string, h Host) string {
 			}
 		})
 	}
-	os.Setenv("MONOLIT_LOGLEVEL", "info") // ВРЕМЕННО: проба на телефоне
+	os.Setenv("MONOLIT_LOGLEVEL", "debug")      // ВРЕМЕННО: проба на телефоне
+	os.Setenv("MONOLIT_LOGFILTER", "wireguard") // ВРЕМЕННО
 	internet.RegisterDialerController(protect)
 	internet.RegisterListenerController(protect)
 	app = core.New(false)
