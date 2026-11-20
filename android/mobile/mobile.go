@@ -7,6 +7,7 @@ package mobile
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"net"
 	"os"
@@ -89,6 +90,12 @@ func current() Host {
 func Call(name, args string) (string, error) {
 	res, err := app.Call(name, []byte(args))
 	return string(res), err
+}
+
+// Names — имена вызовов в JSON: окно заводит по ним функции window.mpXxx
+func Names() string {
+	b, _ := json.Marshal(app.BindingNames())
+	return string(b)
 }
 
 // Connect, Disconnect, Toggle — для плитки в шторке и уведомления, без окна

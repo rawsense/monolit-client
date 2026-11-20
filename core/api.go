@@ -79,3 +79,12 @@ func crashNote(msg string) {
 		fmt.Fprintln(crashFile, time.Now().Format("2006-01-02 15:04:05"), msg)
 	}
 }
+
+// BindingNames — имена вызовов интерфейса: оболочка без привязок Go (Android) заводит их в окне сама
+func (a *App) BindingNames() []string {
+	var names []string
+	for n := range a.bindings() {
+		names = append(names, n)
+	}
+	return names
+}
