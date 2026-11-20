@@ -6,6 +6,7 @@ import (
 	"net/netip"
 	"runtime"
 	"strconv"
+	"sync"
 
 	"github.com/amnezia-vpn/amneziawg-go/v3/conn"
 	"github.com/amnezia-vpn/amneziawg-go/v3/device"
@@ -29,6 +30,7 @@ type netBind struct {
 	workers   int
 	readQueue chan *netReadInfo
 	closedCh  chan struct{}
+	closeMu   sync.Mutex
 }
 
 // SetMark implements conn.Bind
@@ -107,8 +109,16 @@ func (bind *netBind) Open(uport uint16) ([]conn.ReceiveFunc, uint16, error) {
 // Close implements conn.Bind
 func (bind *netBind) Close() error {
 	errors.LogDebug(context.Background(), "bind closed")
+	// monolit: привязку закрывают дважды — устройство при своём закрытии и обработчик при пересоздании.
+	// Повторное закрытие канала роняло всю программу (close of closed channel)
+	bind.closeMu.Lock()
+	defer bind.closeMu.Unlock()
 	if bind.closedCh != nil {
-		close(bind.closedCh)
+		select {
+		case <-bind.closedCh:
+		default:
+			close(bind.closedCh)
+		}
 	}
 	return nil
 }

@@ -26,6 +26,7 @@ import (
 	"net/netip"
 	"strings"
 	"sync"
+	"sync/atomic"
 
 	"github.com/xtls/xray-core/common"
 	"github.com/xtls/xray-core/common/buf"
@@ -55,6 +56,7 @@ type Handler struct {
 	endpoints        []netip.Addr
 	hasIPv4, hasIPv6 bool
 	wgLock           sync.Mutex
+	closed           atomic.Bool // monolit: обработчик закрыт вместе с ядром и новых устройств не создаёт
 }
 
 // New creates a new wireguard handler.
@@ -78,6 +80,7 @@ func New(ctx context.Context, conf *DeviceConfig) (*Handler, error) {
 }
 
 func (h *Handler) Close() (err error) {
+	h.closed.Store(true)
 	go func() {
 		h.wgLock.Lock()
 		defer h.wgLock.Unlock()
@@ -97,6 +100,11 @@ func (h *Handler) processWireGuard(ctx context.Context, dialer internet.Dialer) 
 
 	if h.bind != nil && h.bind.dialer == dialer && h.net != nil {
 		return nil
+	}
+	// monolit: ядро закрывается (перезапуск после обновления подписки), а запрос ещё в пути.
+	// Раньше здесь заново создавалось устройство, которое уже никто не закрывал
+	if h.closed.Load() {
+		return errors.New("wireguard handler is closed")
 	}
 
 	log.Record(&log.GeneralMessage{
