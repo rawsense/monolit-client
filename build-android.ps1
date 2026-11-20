@@ -1,7 +1,8 @@
 ﻿# Сборка build\android\monolit.apk: библиотека общей логики и ядра (gomobile), затем приложение
 # инструментами Android SDK, без Gradle. Нужны: Go, gomobile и gobind (go install golang.org/x/mobile/cmd/...),
 # Android SDK с NDK, JDK 17. Пути берутся из JAVA_HOME и ANDROID_HOME, иначе из обычных мест.
-# Подпись: ключ из MONOLIT_KEYSTORE (пароль MONOLIT_KEYPASS), без него — отладочный ключ build\android\debug.jks
+# Подпись: ключ MONOLIT_KEYSTORE или ..\monolit-keys\monolit-release.jks, пароль — в файле .pass рядом с ключом.
+# Ключа нет — отладочный build\android\debug.jks (такую сборку поверх выпускной не поставить)
 $ErrorActionPreference = 'Stop'
 Set-Location $PSScriptRoot
 
@@ -49,13 +50,16 @@ Push-Location "$out\stage"
 Pop-Location
 if ($ok -ne 0) { Write-Host 'не вышло: aapt add'; exit 1 }
 & "$bt\zipalign.exe" -f -p 4 "$out\base.apk" "$out\aligned.apk"; Step 'zipalign'
-$ks = $env:MONOLIT_KEYSTORE; $pass = $env:MONOLIT_KEYPASS; $key = 'выпускной'
-if (-not $ks) {
-  $ks = "$out\debug.jks"; $pass = 'android'; $key = 'отладочный'
+$ks = $env:MONOLIT_KEYSTORE; $key = 'выпускной'
+if (-not $ks) { $ks = '..\monolit-keys\monolit-release.jks' }
+$passFile = [IO.Path]::ChangeExtension($ks, '.pass')
+if (-not (Test-Path $ks) -or -not (Test-Path $passFile)) {
+  $ks = "$out\debug.jks"; $passFile = "$out\debug.pass"; $key = 'отладочный'
   if (-not (Test-Path $ks)) {
-    keytool -genkeypair -keystore $ks -storepass $pass -keypass $pass -alias monolit -keyalg RSA -keysize 2048 -validity 10000 -dname 'CN=Monolit debug' | Out-Null; Step 'keytool'
+    [IO.File]::WriteAllText("$PWD\$passFile", 'android')
+    keytool -genkeypair -keystore $ks -storepass:file $passFile -alias monolit -keyalg RSA -keysize 2048 -validity 10000 -dname 'CN=Monolit debug' | Out-Null; Step 'keytool'
   }
 }
-& "$bt\apksigner.bat" sign --ks $ks --ks-pass "pass:$pass" --out "$out\monolit.apk" "$out\aligned.apk"; Step 'apksigner'
+& "$bt\apksigner.bat" sign --ks $ks --ks-pass "file:$passFile" --out "$out\monolit.apk" "$out\aligned.apk"; Step 'apksigner'
 Remove-Item "$out\base.apk", "$out\aligned.apk", "$out\res.zip", "$out\app.jar" -ErrorAction SilentlyContinue
 "$out\monolit.apk $ver, $([math]::Round((Get-Item "$out\monolit.apk").Length / 1MB, 1)) МБ, ключ $key"
