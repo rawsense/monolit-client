@@ -42,7 +42,7 @@ require (
 	golang.org/x/text v0.35.0 // indirect
 	golang.org/x/time v0.12.0 // indirect
 	golang.org/x/tools v0.42.0 // indirect
-	golang.zx2c4.com/wireguard v0.0.0-20250521234502-f333402bd9cb // indirect
+	github.com/amnezia-vpn/amneziawg-go/v3 v3.1.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20251202230838-ff82c1b0f217 // indirect
 	google.golang.org/grpc v1.79.3 // indirect
 	google.golang.org/protobuf v1.36.11 // indirect
@@ -53,3 +53,5 @@ require (
 replace github.com/xtls/xray-core => ./third_party/xray-core
 
 replace gvisor.dev/gvisor => ./third_party/gvisor
+
+replace github.com/amnezia-vpn/amneziawg-go/v3 => ./third_party/amneziawg-go

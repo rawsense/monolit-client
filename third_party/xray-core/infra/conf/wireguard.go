@@ -59,6 +59,8 @@ type WireGuardConfig struct {
 	NumWorkers     int32                  `json:"workers"`
 	Reserved       []byte                 `json:"reserved"`
 	DomainStrategy string                 `json:"domainStrategy"`
+	// monolit: параметры маскировки AmneziaWG — имена как в конфиге (Jc, S1, H1, HeaderProtectionKey…)
+	AWG map[string]string `json:"awg"`
 }
 
 func (c *WireGuardConfig) Build() (proto.Message, error) {
@@ -119,6 +121,11 @@ func (c *WireGuardConfig) Build() (proto.Message, error) {
 
 	config.IsClient = c.IsClient
 	config.NoKernelTun = c.NoKernelTun
+
+	config.Awg, err = buildAWG(c.AWG)
+	if err != nil {
+		return nil, err
+	}
 
 	return config, nil
 }

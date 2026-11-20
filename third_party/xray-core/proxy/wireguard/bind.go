@@ -7,8 +7,8 @@ import (
 	"runtime"
 	"strconv"
 
-	"golang.zx2c4.com/wireguard/conn"
-	"golang.zx2c4.com/wireguard/device"
+	"github.com/amnezia-vpn/amneziawg-go/v3/conn"
+	"github.com/amnezia-vpn/amneziawg-go/v3/device"
 
 	"github.com/xtls/xray-core/common/errors"
 	"github.com/xtls/xray-core/common/net"
@@ -139,7 +139,9 @@ func (bind *netBindClient) connectTo(endpoint *netEndpoint) error {
 				return
 			}
 
-			if n > 3 {
+			// monolit: обнулять только когда заданы reserved (WARP). У AmneziaWG заголовок зашифрован
+			// и идёт после случайной добавки: обнуление портит пакет
+			if n > 3 && len(bind.reserved) == 3 {
 				buff[1] = 0
 				buff[2] = 0
 				buff[3] = 0

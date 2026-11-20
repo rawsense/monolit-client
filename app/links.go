@@ -58,6 +58,16 @@ func parseSubRaw(body []byte) ([]Conn, error) {
 	if text == "" {
 		return nil, errors.New("подписка пустая")
 	}
+	if looksLikeWGConf(text) { // файл .conf от WireGuard или AmneziaWG — тоже начинается с «[»
+		name, ob, err := parseWGConf(text)
+		if err == nil {
+			err = checkOutbound(ob)
+		}
+		if err != nil {
+			return nil, err
+		}
+		return []Conn{newConn(0, name, ob)}, nil
+	}
 	if text[0] == '[' || text[0] == '{' {
 		return parseXrayJSON([]byte(text))
 	}
@@ -304,6 +314,9 @@ func protoLabel(ob map[string]any) string {
 	case "hysteria":
 		return "Hysteria2"
 	case "wireguard":
+		if isAWG(ob) {
+			return "AmneziaWG"
+		}
 		return "WireGuard"
 	case "socks":
 		return "SOCKS"

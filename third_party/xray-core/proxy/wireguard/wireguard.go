@@ -61,6 +61,7 @@ func createIPCRequest(conf *DeviceConfig) string {
 	var request strings.Builder
 
 	request.WriteString(fmt.Sprintf("private_key=%s\n", conf.SecretKey))
+	request.WriteString(conf.Awg) // monolit: параметры AmneziaWG, уже проверены в infra/conf
 
 	if !conf.IsClient {
 		// placeholder, we'll handle actual port listening on Xray

@@ -31,4 +31,6 @@ message DeviceConfig {
   DomainStrategy domain_strategy = 7;
   bool is_client = 8;
   bool no_kernel_tun = 9;
+  // monolit: extra AmneziaWG UAPI lines (jc=..., s1=..., h1=...), one per line
+  string awg = 10;
 }

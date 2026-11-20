@@ -112,6 +112,11 @@ func buildConfig(s Settings, sub Sub, tun bool, physIf string) ([]byte, error) {
 			continue
 		}
 		ob["tag"] = c.Tag
+		if ob["protocol"] == "wireguard" { // свой сетевой стек внутри ядра: системный адаптер WireGuard нам не нужен
+			if st, _ := ob["settings"].(map[string]any); st != nil {
+				st["noKernelTun"] = true
+			}
+		}
 		ss, _ := ob["streamSettings"].(map[string]any)
 		if ss == nil {
 			ss = map[string]any{}
