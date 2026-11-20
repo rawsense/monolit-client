@@ -25,11 +25,13 @@ public class VpnSvc extends VpnService {
         super.onCreate();
         Bridge.I.start(this);
         Bridge.I.serviceUp(this);
+        Mobile.log("сервис VPN: создан");
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         String act = intent == null ? null : intent.getAction();
+        Mobile.log("сервис VPN: запуск, действие " + act);
         if (STOP.equals(act)) { // «Отключить» в уведомлении
             new Thread(Mobile::disconnect, "stop").start();
         } else if (SERVICE_INTERFACE.equals(act)) {
@@ -42,12 +44,14 @@ public class VpnSvc extends VpnService {
     @Override
     public void onDestroy() {
         Bridge.I.service = null;
+        Mobile.log("сервис VPN: завершён");
         super.onDestroy();
     }
 
     // onRevoke: VPN отнял пользователь в настройках или другое приложение VPN
     @Override
     public void onRevoke() {
+        Mobile.log("сервис VPN: система отняла VPN (выключен в настройках или включён другой VPN)");
         new Thread(Mobile::disconnect, "revoke").start();
     }
 
@@ -64,6 +68,7 @@ public class VpnSvc extends VpnService {
             b.addAddress(addr6, prefix6).addRoute("::", 0);
         } catch (Exception e) {
             Log.w(Bridge.TAG, "IPv6 в VPN не добавлен: " + e);
+            Mobile.log("IPv6 в VPN не добавлен: " + e);
         }
         if (Build.VERSION.SDK_INT >= 29) {
             b.setMetered(false); // тариф сети — как у сети под VPN, а не «лимитная» по умолчанию
@@ -105,6 +110,7 @@ public class VpnSvc extends VpnService {
             }
         } catch (Exception e) {
             Log.e(Bridge.TAG, "уведомление не показано", e);
+            Mobile.log("уведомление не показано: " + e);
         }
     }
 

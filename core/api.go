@@ -3,6 +3,7 @@ package core
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"sync"
 	"time"
 )
@@ -93,3 +94,10 @@ func (a *App) BindingNames() []string {
 var logSink func(string)
 
 func SetLogSink(f func(string)) { logSink = f }
+
+// SetLogDir: папка журнала monolit.log, если она не та, где настройки (на Android — папка, откуда журнал
+// можно забрать по USB). Задать до New
+func SetLogDir(d string) {
+	os.MkdirAll(d, 0o755)
+	logPath = func() string { return filepath.Join(d, "monolit.log") }
+}

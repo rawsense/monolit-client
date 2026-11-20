@@ -12,9 +12,12 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"path/filepath"
+	"runtime/debug"
 	"strconv"
 	"sync"
 	"syscall"
+	"time"
 
 	"monolit-client/core"
 
@@ -36,6 +39,8 @@ type Host interface {
 	Push(state string)
 	OSVersion() string
 	Device() string
+	// TimeZone — часовой пояс телефона (Europe/Moscow): сам Go на Android его не знает и считает время по UTC
+	TimeZone() string
 }
 
 // адреса TUN те же, что в Windows: DNS на 172.19.0.2 ядро перехватывает правилом, IPv6 заводится в туннель
@@ -57,15 +62,30 @@ var (
 )
 
 // Start готовит программу: папка данных приложения, настройки и подписки, раздача интерфейса.
+// logDir — папка журнала и файла аварий (её можно забрать с телефона по USB).
 // Возвращает адрес интерфейса для окна. Повторный вызов (окно открыли заново) отдаёт тот же адрес
-func Start(dataDir string, h Host) string {
+func Start(dataDir, logDir string, h Host) string {
 	mu.Lock()
 	defer mu.Unlock()
 	host = h
 	if app != nil {
 		return ui
 	}
+	if loc, err := time.LoadLocation(h.TimeZone()); err == nil {
+		time.Local = loc // время в журнале и счёт трафика «за сегодня» — по часам телефона
+	}
 	core.SetDataDir(dataDir)
+	core.SetLogDir(logDir)
+	// аварии — в crash.log рядом с журналом: необработанные пишет сам рантайм, перехваченные — core
+	crashPath := filepath.Join(logDir, "crash.log")
+	if st, err := os.Stat(crashPath); err == nil && st.Size() > 2<<20 {
+		os.Rename(crashPath, crashPath+".1")
+	}
+	if f, err := os.OpenFile(crashPath, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0o644); err == nil {
+		fmt.Fprintln(f, "=== запуск", time.Now().Format("2006-01-02 15:04:05"), "===")
+		debug.SetCrashOutput(f, debug.CrashOptions{})
+		core.SetCrashFile(f)
+	}
 	core.SetPlatform(droid{})
 	// журнал программы — ещё и в журнал Android (adb logcat -s GoLog): файл в закрытой папке приложения снаружи не прочитать
 	core.SetLogSink(func(s string) { fmt.Fprintln(os.Stderr, s) })
@@ -79,6 +99,7 @@ func Start(dataDir string, h Host) string {
 	internet.RegisterDialerController(protect)
 	internet.RegisterListenerController(protect)
 	app = core.New(false)
+	core.Log("запуск: Monolit " + core.Version + ", Android " + h.OSVersion() + ", " + h.Device())
 	app.SetPush(func(js string) { current().Push(js) })
 	core.HookIntercept()
 	core.Go("loop", app.Loop)
@@ -98,6 +119,9 @@ func Call(name, args string) (string, error) {
 	res, err := app.Call(name, []byte(args))
 	return string(res), err
 }
+
+// Log — строка в журнал программы от приложения: жизнь сервиса VPN, смена сети, аварии Java
+func Log(s string) { core.Log(s) }
 
 // Names — имена вызовов в JSON: окно заводит по ним функции window.mpXxx
 func Names() string {
@@ -130,8 +154,10 @@ func (droid) TunCheck() error { return nil }
 func (droid) TunBefore(ctx context.Context) error {
 	fd := current().OpenTun(tunMTU, tunAddr4, tunPrefix4, tunDNS4, tunAddr6, tunPrefix6)
 	if fd <= 0 {
+		core.Log("VPN: Android не дал поднять туннель")
 		return errors.New("Android не дал поднять VPN")
 	}
+	core.Log("VPN: туннель поднят, дескриптор " + strconv.Itoa(int(fd)))
 	return os.Setenv(platform.TunFdKey, strconv.Itoa(int(fd)))
 }
 

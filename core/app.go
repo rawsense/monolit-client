@@ -467,6 +467,11 @@ func (a *App) connect(ctx context.Context) error {
 	a.connMode, a.connPort = s.Connect, s.Port
 	a.prevUp, a.prevDown = up, down
 	a.mu.Unlock()
+	name := ""
+	if p := pickConns(s, sub); len(p) > 0 {
+		name = p[0].Name
+	}
+	logLine("подключено: " + name + ", способ " + via)
 	safeGo("svcCheck", func() { // YouTube и Discord: напрямую или через VPN — сразу после подключения
 		time.Sleep(3 * time.Second)
 		a.svcCheckAll(0)
@@ -559,6 +564,7 @@ func (a *App) teardown() {
 	a.mu.Lock()
 	a.on, a.busy, a.via = false, "", ""
 	a.mu.Unlock()
+	logLine("отключено")
 	a.notify()
 }
 

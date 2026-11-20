@@ -40,6 +40,7 @@ public class TileSvc extends TileService {
             }
             return;
         }
+        Mobile.log("плитка: нажата, VPN " + (Bridge.I.on ? "включён" : "выключен"));
         new Thread(Mobile::toggle, "tile").start();
     }
 }
