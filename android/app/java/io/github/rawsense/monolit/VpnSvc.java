@@ -1,6 +1,11 @@
 package io.github.rawsense.monolit;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.pm.ServiceInfo;
 import android.net.VpnService;
 import android.os.Build;
 import android.os.ParcelFileDescriptor;
@@ -11,14 +16,26 @@ import mobile.Mobile;
 // VpnSvc — VPN системы: отдаёт весь трафик телефона ядру через дескриптор TUN.
 // Сам трафик не трогает: адреса и маршруты задаёт общая логика, пакеты читает ядро
 public class VpnSvc extends VpnService {
+    static final String STOP = "io.github.rawsense.monolit.STOP";
+    private static final String CHANNEL = "vpn";
+    private static final int NOTE = 1;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        Bridge.I.start(this);
         Bridge.I.serviceUp(this);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        String act = intent == null ? null : intent.getAction();
+        if (STOP.equals(act)) { // «Отключить» в уведомлении
+            new Thread(Mobile::disconnect, "stop").start();
+        } else if (SERVICE_INTERFACE.equals(act)) {
+            // «постоянный VPN»: система запустила сервис сама (после перезагрузки или обрыва), окна нет
+            new Thread(Mobile::connect, "always-on").start();
+        }
         return START_NOT_STICKY;
     }
 
@@ -55,6 +72,54 @@ public class VpnSvc extends VpnService {
         if (pfd == null) {
             return -1;
         }
+        foreground();
         return pfd.detachFd();
+    }
+
+    // close: VPN снят — убрать уведомление и завершиться
+    void close() {
+        stopForeground(true);
+        stopSelf();
+    }
+
+    // refresh: состояние поменялось — обновить текст уведомления
+    void refresh() {
+        if (Bridge.I.on || !Bridge.I.busy.isEmpty()) {
+            getSystemService(NotificationManager.class).notify(NOTE, note());
+        }
+    }
+
+    // foreground: сервис с уведомлением система не выгружает из памяти, пока VPN включён
+    private void foreground() {
+        try {
+            NotificationManager nm = getSystemService(NotificationManager.class);
+            if (Build.VERSION.SDK_INT >= 26 && nm.getNotificationChannel(CHANNEL) == null) {
+                NotificationChannel ch = new NotificationChannel(CHANNEL, "Состояние VPN", NotificationManager.IMPORTANCE_LOW);
+                ch.setShowBadge(false);
+                nm.createNotificationChannel(ch);
+            }
+            if (Build.VERSION.SDK_INT >= 34) {
+                startForeground(NOTE, note(), ServiceInfo.FOREGROUND_SERVICE_TYPE_SYSTEM_EXEMPTED);
+            } else {
+                startForeground(NOTE, note());
+            }
+        } catch (Exception e) {
+            Log.e(Bridge.TAG, "уведомление не показано", e);
+        }
+    }
+
+    private Notification note() {
+        PendingIntent open = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent stop = PendingIntent.getService(this, 1, new Intent(this, VpnSvc.class).setAction(STOP), PendingIntent.FLAG_IMMUTABLE);
+        String busy = Bridge.I.busy;
+        Notification.Builder b = Build.VERSION.SDK_INT >= 26 ? new Notification.Builder(this, CHANNEL) : new Notification.Builder(this);
+        b.setSmallIcon(R.drawable.ic_stat)
+                .setContentTitle(busy.isEmpty() ? "Подключено" : busy)
+                .setContentText(Bridge.I.conn)
+                .setContentIntent(open)
+                .setOngoing(true)
+                .setShowWhen(false)
+                .addAction(new Notification.Action.Builder(null, "Отключить", stop).build());
+        return b.build();
     }
 }

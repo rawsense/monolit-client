@@ -1,10 +1,14 @@
 package io.github.rawsense.monolit;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.VpnService;
 import android.os.Build;
+import android.service.quicksettings.TileService;
 import android.util.Log;
+
+import org.json.JSONObject;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -22,6 +26,10 @@ final class Bridge implements Host {
     private String ui;
     volatile MainActivity activity;
     volatile VpnSvc service;
+    // последнее состояние общей логики: для уведомления и плитки
+    volatile boolean on;
+    volatile String busy = "";
+    volatile String conn = "";
     private volatile CountDownLatch svcReady = new CountDownLatch(0);
 
     // start запускает общую логику (один раз на процесс) и отдаёт адрес интерфейса для окна
@@ -75,7 +83,7 @@ final class Bridge implements Host {
     public void closeTun() {
         VpnSvc s = service;
         if (s != null) {
-            s.stopSelf();
+            s.close();
         }
     }
 
@@ -85,6 +93,24 @@ final class Bridge implements Host {
         if (a != null) {
             a.update(state);
         }
+        try {
+            JSONObject o = new JSONObject(state);
+            boolean nowOn = o.optBoolean("on");
+            String nowBusy = o.optString("busy"), nowConn = o.optString("conn");
+            if (nowOn == on && nowBusy.equals(busy) && nowConn.equals(conn)) {
+                return; // состояние приходит каждую секунду: уведомление и плитку трогаем только при перемене
+            }
+            on = nowOn;
+            busy = nowBusy;
+            conn = nowConn;
+        } catch (Exception e) {
+            return;
+        }
+        VpnSvc s = service;
+        if (s != null) {
+            s.refresh();
+        }
+        TileService.requestListeningState(app, new ComponentName(app, TileSvc.class));
     }
 
     @Override

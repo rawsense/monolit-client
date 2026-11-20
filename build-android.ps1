@@ -38,7 +38,7 @@ Remove-Item "$out\monolit.zip"
 # 3. код приложения
 $src = @(Get-ChildItem android\app\java, "$out\gen" -Recurse -Filter *.java | ForEach-Object FullName)
 New-Item -ItemType Directory -Force "$out\classes" | Out-Null
-javac -nowarn -source 8 -target 8 -bootclasspath $jar -classpath "$out\aar\classes.jar;$bt\core-lambda-stubs.jar" -d "$out\classes" $src; Step 'javac'
+javac -nowarn -encoding UTF-8 -source 8 -target 8 -bootclasspath $jar -classpath "$out\aar\classes.jar;$bt\core-lambda-stubs.jar" -d "$out\classes" $src; Step 'javac'
 jar --create --file "$out\app.jar" -C "$out\classes" .; Step 'jar'
 New-Item -ItemType Directory -Force "$out\stage\lib\$abi" | Out-Null
 & "$bt\d8.bat" --release --min-api 24 --lib $jar --output "$out\stage" "$out\app.jar" "$out\aar\classes.jar"; Step 'd8'
