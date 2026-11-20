@@ -348,7 +348,9 @@
   function renderRoot() {
     const cur = curSub(st);
     setText($('#sr-sub'), cur ? [cur.title, cur.expire ? 'до ' + date(cur.expire) : ''].filter(Boolean).join(', ') : 'Нет подписки');
-    if (settings) setText($('#sr-conn'), [connName[settings.connect] || '', settings.autoStart ? 'запуск с Windows' : ''].filter(Boolean).join(', '));
+    if (settings) setText($('#sr-conn'), document.documentElement.classList.contains('os-android')
+      ? (settings.autoOn ? 'VPN при запуске' : '')
+      : [connName[settings.connect] || '', settings.autoStart ? 'запуск с Windows' : ''].filter(Boolean).join(', '));
     setText($('#sr-about'), st?.update ? `Доступна версия ${st.update}` : `Monolit ${st?.version || ''}`.trim());
   }
   function updatedText(t) {

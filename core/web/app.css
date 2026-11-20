@@ -323,42 +323,49 @@ button.link { padding: 0; border: 0; background: none; font: inherit; font-weigh
 /* иконки-кнопки (шестерёнка, плюс, крестики, назад): тем же светлее-серым, что подписи; при наведении — белые */
 .icon-btn { color: var(--text-sub) }
 
+.os-android [data-os="windows"] { display: none }
+
 /* ---------- телефон ---------- */
 /* Та же страница на узком экране: подписка сверху, список серверов, кнопка питания посередине свободного места,
    внизу трафик и кнопки «Настройки» и «Добавить». Режимы — в настройках («Маршруты») */
 .mc-acts { display: none }
 .mc-btn-tonal { background: color-mix(in srgb, var(--accent) 22%, transparent); color: var(--accent-text); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent) }
 @media (max-width: 640px) {
-  .mc { height: 100dvh; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, auto) minmax(0, 1fr) auto minmax(0, 1fr) auto auto; padding: 0 var(--sp-2) var(--sp-2) }
+  .mc { height: 100dvh; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, auto) minmax(40px, 1fr) auto auto minmax(var(--sp-4), 1fr) auto auto; padding: 0 var(--sp-2) var(--sp-2) }
   .mc-stage { display: contents }
   .mc-sw { grid-row: 1; min-height: 64px; padding: 0 }
   .mc-sw > .icon-btn { display: none }
   .mc-subsel b { font-size: var(--fs-xl) }
   .mc-subsel svg { width: 20px; height: 20px }
-  .mc-main { grid-row: 2 }
-  #v-home { position: static; display: block; padding: 0; animation: none }
+  .mc-main { grid-row: 2; display: grid }
+  #v-home { position: static; display: grid; grid-template-rows: minmax(0, 1fr); padding: 0; animation: none }
   #v-home[hidden] { display: none }
   #v-home .mc-modes { display: none }
-  .mc-srv { padding: var(--sp-1) var(--sp-2) }
+  .mc-srv { grid-template-rows: auto minmax(0, 1fr); gap: 0; padding: var(--sp-1) var(--sp-2) }
   .mc-srv-h { min-height: 40px }
   .mc-srv-h h2 { font-size: var(--fs-md); letter-spacing: 0 }
   .mc-srvlist { max-height: 384px }
+  .mc-srvlist { mask-image: linear-gradient(to bottom, rgb(0 0 0 / .15), #000 var(--mc-ft), #000 calc(100% - var(--mc-fb)), rgb(0 0 0 / .15)) }
   .mc-srvlist.mc-ft { --mc-ft: 60px }
   .mc-srvlist.mc-fb { --mc-fb: 60px }
   .mc-srvi { min-height: 56px; font-size: var(--fs-md) }
   .mc-srvi .badge { height: 20px; padding: 0 var(--sp-2); font-size: var(--fs-xs) }
   .mc-srvi em { font-size: var(--fs-base) }
-  .mc-pwr { grid-row: 3; align-self: end; justify-self: center; width: 120px; height: 120px; margin-top: var(--sp-8) }
+  .mc-pwr { grid-row: 4; justify-self: center; width: 120px; height: 120px }
   .mc-pwr svg { width: 40px; height: 40px }
-  .mc-state { grid-row: 4; height: auto; margin-top: var(--sp-4) }
-  .mc-traffic { grid-row: 6; min-height: 0; padding: 0 var(--sp-2) var(--sp-2) }
-  .mc-acts { grid-row: 7; display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-2) }
+  .mc-state { grid-row: 5; height: auto; margin-top: var(--sp-4) }
+  .mc-traffic { grid-row: 7; min-height: 0; padding: 0 var(--sp-2) var(--sp-2) }
+  .mc-acts { grid-row: 8; display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-2) }
   .mc-acts .btn { height: 44px }
   /* остальные экраны (настройки, сайты, первая подписка) — во весь экран */
   .mc:has(#v-home[hidden]) { grid-template-rows: minmax(0, 1fr) }
   .mc:has(#v-home[hidden]) .mc-stage > * { display: none }
   .mc:has(#v-home[hidden]) .mc-main { grid-row: 1 }
   .mc-view { padding: var(--sp-4) var(--sp-2) }
+  /* «Соединения»: имени сайта нужно место — скорость по строкам убрана (объём и скорость есть в шторке строки), пинг остаётся */
+  .cx-row { grid-template-columns: 32px minmax(0, 1fr) auto }
+  .cx-speed { display: none }
+  .cx-st { padding: var(--sp-3) }
   /* режимы в «Маршрутах»: плитки в ряд, как были на главном */
   .mc-set > .mc-modes { margin-bottom: var(--sp-2) }
 }

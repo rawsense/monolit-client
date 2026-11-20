@@ -91,7 +91,7 @@
           <button class="alist-row" type="button" data-go="s-sub"><span class="alist-ic"><i data-lucide="ticket"></i></span><span class="alist-tx"><b>Подписка</b><span id="sr-sub">&nbsp;</span></span><i data-lucide="chevron-right" class="alist-go"></i></button>
           <button class="alist-row" type="button" data-go="s-routes"><span class="alist-ic"><i data-lucide="route"></i></span><span class="alist-tx"><b>Маршруты</b><span>Сайты, программы, реклама</span></span><i data-lucide="chevron-right" class="alist-go"></i></button>
           <button class="alist-row" type="button" data-go="s-net"><span class="alist-ic"><i data-lucide="activity"></i></span><span class="alist-tx"><b>Соединения</b><span id="sr-net">Что открыто сейчас и через что</span></span><i data-lucide="chevron-right" class="alist-go"></i></button>
-          <button class="alist-row" type="button" data-go="s-conn"><span class="alist-ic"><i data-lucide="plug"></i></span><span class="alist-tx"><b>Подключение</b><span id="sr-conn">&nbsp;</span></span><i data-lucide="chevron-right" class="alist-go"></i></button>
+          <button class="alist-row" type="button" data-go="s-conn" data-os="windows"><span class="alist-ic"><i data-lucide="plug"></i></span><span class="alist-tx"><b>Подключение</b><span id="sr-conn">&nbsp;</span></span><i data-lucide="chevron-right" class="alist-go"></i></button>
         </div>
         <div class="alist">
           <button class="alist-row" type="button" data-go="s-adv"><span class="alist-ic"><i data-lucide="sliders-horizontal"></i></span><span class="alist-tx"><b>Для опытных</b><span>DNS, отпечаток TLS, порт прокси</span></span><i data-lucide="chevron-right" class="alist-go"></i></button>
@@ -168,15 +168,15 @@
     <section class="mc-view mc-page" id="v-s-conn" hidden>
       <header class="mc-sub-h"><button class="icon-btn" data-go="settings" aria-label="Назад"><i data-lucide="arrow-left"></i></button><h2>Подключение</h2></header>
       <div class="mc-set sb">
-        <div class="mc-group">
+        <div class="mc-group" data-os="windows">
           <span class="t-label">Способ подключения</span>
           <div class="seg" role="group" aria-label="Подключение" id="s-connect"><span class="thumb"></span>
             <button data-v="auto" aria-pressed="true">Авто</button><button data-v="tun" aria-pressed="false">TUN</button><button data-v="proxy" aria-pressed="false">Прокси</button></div>
           <p class="hint" id="s-connect-hint"></p>
         </div>
         <div class="mc-group">
-          <label class="choice"><input type="checkbox" role="switch" class="switch" data-set="autoStart"><span>Запускать вместе с Windows</span></label>
-          <label class="choice"><input type="checkbox" role="switch" class="switch" data-set="autoOn"><span>Подключать VPN при запуске</span></label>
+          <label class="choice" data-os="windows"><input type="checkbox" role="switch" class="switch" data-set="autoStart"><span>Запускать вместе с Windows</span></label>
+          <label class="choice" data-os="windows"><input type="checkbox" role="switch" class="switch" data-set="autoOn"><span>Подключать VPN при запуске</span></label>
         </div>
       </div>
     </section>
