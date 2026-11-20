@@ -50,3 +50,5 @@ go test -timeout 120s ./app
 ## Лицензия
 
 [GPL-3.0](LICENSE)
+
+Шрифт с флагами стран `app/web/brand/flags.woff2` — Twemoji Country Flags из [country-flag-emoji-polyfill](https://github.com/talkjs/country-flag-emoji-polyfill) (MIT); рисунки флагов — [Twemoji](https://github.com/twitter/twemoji), CC-BY 4.0. Сервер AmneziaWG в ядре — [amneziawg-go](https://github.com/amnezia-vpn/amneziawg-go) (MIT), копия в `third_party/amneziawg-go`.
